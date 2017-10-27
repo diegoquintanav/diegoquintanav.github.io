@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "On jekyll"
+date:   2017-10-27 17:01:00 -0300
+categories: jekyll update
+---
 # Guide on Jekyll
 
 I've decided to start a blog, for the $n_th$ time and this time I am giving a try on [jekyll](https://jekyllrb.com/) and the [github pages](https://pages.github.com), since they seem to do quite a fine job.

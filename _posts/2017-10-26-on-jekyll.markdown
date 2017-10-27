@@ -3,6 +3,7 @@ layout: post
 title:  "On Jekyll"
 date:   2017-10-26 18:01:00 -0300
 categories: jekyll update
+mathjax: true
 ---
 # Guide on Jekyll
 
@@ -62,6 +63,7 @@ In line ```15``` you can observe the ``` Skipping: _posts/2017-10-27-on-jekyll.m
 
 Other reasons may involve a bad filename formatting or the presence of colons ```:``` in it. You can read more about this [here](https://stackoverflow.com/questions/30625044/jekyll-post-not-generated).
 
+2.  Using Latex equations:
 
 
 

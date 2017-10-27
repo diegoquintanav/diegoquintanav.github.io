@@ -1,0 +1,32 @@
+# Guide on Jekyll
+
+I've decided to start a blog, for the $n_th$ time and this time I am giving a try on [jekyll](https://jekyllrb.com/) and the [github pages](https://pages.github.com), since they seem to do quite a fine job.
+
+Setting things up was easy. I'm not going to copy and paste the guide already present in both sites, since it won't add anything. Instead I will try to share a bit of troubleshooting I had to do during the process.
+
+# First steps
+
+Okay, it took me about nothing to have my site showing a humble *Hello World* in my ```index.html``` on my site.
+
+## Creating your personal page
+
+You can create a site for yourself or for some repo you own. I'm dealing with the first for now. 
+
+Long story short, I did:
+
+1.  Create a repo named *[**your username**].github.io*. In my case, it was *diegoquintanav*. You can change that later, it seems. Let's not care about it for now.
+2.  Add a file named ```index.html``` in the root folder of the repo, and write *Hello World* in it.
+3.  ???
+1.  Profit! go to *[**your username**].github.io* and you should see it too.
+
+That was a piece of cake. Next stuff you can do is to set up **Jekyll**. This requires a bit more of work, but don't be scared. Before doing anything, I believe is a good thing to understand why should you use **Jekyll** and not just **Wordpress**  or anything similar. Since this is a personal issue and a matter of preference, I can only share my experience and talk about my needs.
+
+## Why Jekyll *vs* [insert framework here]
+
+
+
+
+
+
+
+

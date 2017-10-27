@@ -23,7 +23,9 @@ github_username: diegoquintanav
 
 # Build settings
 markdown: kramdown
-theme:  minima
+theme: minima
+# can be mminima, which is the default
+# jekyll-theme-cayman 
 plugins:
   - jekyll-feed
 

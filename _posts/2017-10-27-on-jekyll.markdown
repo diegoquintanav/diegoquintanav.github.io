@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "On jekyll"
+title:  "On Jekyll"
 date:   2017-10-27 17:01:00 -0300
 categories: jekyll update
 ---

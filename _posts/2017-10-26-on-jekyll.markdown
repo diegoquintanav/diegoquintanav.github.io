@@ -79,6 +79,23 @@ With a bit of help of some nice anons, I found out that
 1.  Inside the ```_layouts``` folder you should find ```head.html```. Copy that file inside your own project, in a folder called ```_layouts``` if you don't have it yet. By doing this you are basically overriding the base files inside the *Gem theme* with your own. 
 
 1.  Now you can edit it. Copy the script node from the extras site on Jekyll and there you go. You should be able to render $$ \LaTeX $$ equations easily.
+    *  Please beware that in comparison to the traditional way, *inline equations* and almost every equation is rendered using doble dollar signs i.e. 
+
+{% highlight tex %} $$ A LaTeX equation $$ {% endhighlight %}
+
+Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using [kramdown](https://kramdown.gettalong.org/syntax.html#math-blocks) which is set by default. 
+
+# Next Steps
+
+I think there are a lot of other things to play around, which I will document and comment in the future posts. Not yet. This is my *MVP* for now. Next iteration should include:
+
+*  Comments section. Might prove useful somewhere.
+*  Add more sections, editing the ```navbar``` or something equivalent. Add more endpoints.
+*  Change the site's domain.
+*  Add some google analytics sorcery or equivalent.
+*  Theme editing and/or theme changing
+*  Add embedded python REPL instances. I saw them somewhere on the internet. I want them.
+
 
 
 

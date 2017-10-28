@@ -2,7 +2,7 @@
 layout: post
 title:  "On Jekyll"
 date:   2017-10-26 18:01:00 -0600
-categories: jekyll update
+categories: blog jekyll
 ---
 I've decided to start a blog, (again, for the $$ n_{th} $$ time) and this time I am giving a try on [jekyll](https://jekyllrb.com/) and the [github pages](https://pages.github.com), since they seem to do quite a fine job.
 

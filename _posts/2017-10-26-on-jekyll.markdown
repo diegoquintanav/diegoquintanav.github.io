@@ -18,11 +18,11 @@ You can create a site for yourself or for some repo you own. I'm dealing with th
 
 Long story short, what I did was:
 
-0.  Have a [Github](https://github.com) account. Duh.
-1.  Create a repo named *[**your username**].github.io*. In my case, my username is *diegoquintanav*. You can change that later, it seems. Let's not care about that *for now*.
+
+1.  Have a [Github](https://github.com) account. Duh. Then create a repo named *[**your username**].github.io*. In my case, my username is *diegoquintanav*. You can change that later, it seems. Let's not care about that *for now*.
 2.  Add a file named ```index.html``` in the root folder of the repo, and write *Hello World* in it.
 3.  ???
-1.  Profit! go to *[**your username**].github.io* and you should be able to see the words too.
+4.  Profit! go to *[**your username**].github.io* and you should be able to see the words too.
 
 That was a piece of cake. Next thing you can do is to set up **Jekyll**. This requires a bit more of work, but don't be scared. 
 Before doing anything, I believe it's a good thing to understand *why* should you use **Jekyll** and not just plain HTML or **Wordpress** for this matter. Since this is a personal issue and a matter of preference, I can only share my experience and talk about my needs.
@@ -58,7 +58,7 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
 ...
 {% endhighlight %}
 
-In line ```15``` you can observe the ``` Skipping: _posts/2017-10-27-on-jekyll.md has a future date```. Changing the date solved the problem. About the ```sudo``` thing, consider it a malpractice. The ruby environment manager [```rbenv```](https://github.com/rbenv/rbenv) fought bravely against the [Anaconda's](https://anaconda.org/) ```gcc``` dependencies and I just could not manage to have a ruby instance outside of ```root```. *Sorry*.
+In line ```15``` you can observe the ``` Skipping: _posts/2017-10-27-on-jekyll.md has a future date```. Changing the date solved the problem. About the ```sudo``` thing, consider it a malpractice. The ruby environment manager [```rbenv```](https://github.com/rbenv/rbenv) fought bravely against the [Anaconda's](https://anaconda.org/) ```gcc``` dependencies and I just could not manage to have a ruby instance outside of ```root```. *Sorry*. 
 
 Other reasons may involve a bad filename formatting or the presence of colons ```:``` in it. You can read more about this [here](https://stackoverflow.com/questions/30625044/jekyll-post-not-generated).
 

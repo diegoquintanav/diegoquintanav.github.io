@@ -36,10 +36,10 @@ What I didn't like about the post, though, is that doing things manually usually
 ## Issues
 
 ### New posts are not being displayed
- If you deployed **Jekyll** correctly, it should use ```minima``` template by default. You should be able to add more posts inside the folder ```_posts``` and see them instantly on the ```localhost```. That didn't happen in my case. A short way to debug this issue that solved my problem required ```bundle```. In my case, this post () was not being displayed on my index. 
+ If you deployed **Jekyll** correctly, it should use ```minima``` template by default. You should be able to add more posts inside the folder ```_posts``` and see them instantly on the ```localhost```. That didn't happen in my case. A short way to debug this issue that solved my problem required the ```--verbose``` flag when firing up the service.
 
 {% highlight bash linenos %}
-sudo bundle exec jekyll serve --verbose 
+$ sudo bundle exec jekyll serve --verbose 
   Logging at level: debug
 Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
   Logging at level: debug
@@ -58,7 +58,7 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
 ...
 {% endhighlight %}
 
-In line ```15``` you can observe the ``` Skipping: _posts/2017-10-27-on-jekyll.md has a future date```. Changing the date solved the problem.
+In line ```15``` you can observe the ``` Skipping: _posts/2017-10-27-on-jekyll.md has a future date```. Changing the date solved the problem. About the ```sudo``` thing, consider it a malpractice. The ruby environment manager [```rbenv```](https://github.com/rbenv/rbenv) fought bravely against the [Anaconda's](https://anaconda.org/) ```gcc``` dependencies and I just could not manage to have a ruby instance outside of ```root```. *Sorry*.
 
 Other reasons may involve a bad filename formatting or the presence of colons ```:``` in it. You can read more about this [here](https://stackoverflow.com/questions/30625044/jekyll-post-not-generated).
 

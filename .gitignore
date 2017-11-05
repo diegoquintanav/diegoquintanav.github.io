@@ -170,5 +170,5 @@ build-iPhoneSimulator/
 
 # End of https://www.gitignore.io/api/git,ruby,python,jekyll
 .vscode/temp.sql
-.vscode/
 sandbox/
+.vscode/

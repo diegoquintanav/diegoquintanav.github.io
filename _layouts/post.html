@@ -18,8 +18,11 @@ layout: default
   <div class="post-content" itemprop="articleBody">
     {{ content }}
   </div>
+  
+  {% include share-bar.html %}
 
   {% if site.disqus.shortname %}
     {% include disqus_comments.html %}
   {% endif %}
+
 </article>

@@ -11,12 +11,14 @@
             {% if site.author %}
               {{ site.author | escape }}
             {% else %}
-              {{ site.title | escape }}
+              {{ site.title | escape }} 
             {% endif %}
-            </li>
-            {% if site.email %}
-            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-            {% endif %}
+          </li>
+          {% if site.email %}
+          <li>
+            <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
 
@@ -26,8 +28,8 @@
           <li>
             {% include icon-github.html username=site.github_username %}
           </li>
-          {% endif %}
-
+          {% endif %} 
+          
           {% if site.twitter_username %}
           <li>
             {% include icon-twitter.html username=site.twitter_username %}
@@ -39,8 +41,15 @@
       <div class="footer-col footer-col-3">
         <p>{{ site.description | escape }}</p>
       </div>
-    </div>
 
+    </div>
+    <div>
+      <small>
+        <i>Built with
+          <a href="https://jekyllrb.com/">Jekyll</a> and hosted in
+          <a href="https://pages.github.com/">Github</a>. Fork the 
+          <a href="https://github.com/diegoquintanav/diegoquintanav.github.io">repo</a>.</i>
+    </div>
   </div>
 
 </footer>

@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "Sistemas recomendadores, parte 4"
+date:   2017-11-08 20:01:00 -0600
+categories: sysrec
+---
+<!-- entry 4, clase al 08.11 -->
+
 # Clase 8.11.2017
 
 ## repaso 

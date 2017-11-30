@@ -20,7 +20,7 @@ Hoy
 *  Laboratorio
     *  usando *Bag of Words*
     *  LDA
-    *  Usando un software llamado *Sensing*
+    *  Usando un software llamado *gensim*
 
 ## Evaluación de una lista de recomendaciones
 

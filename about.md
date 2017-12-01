@@ -19,7 +19,7 @@ I'm always up for tea or whatever. Feel free to reach me if you feel like it. I 
  *  My [LinkedIn profile](https://www.linkedin.com/in/diego-quintana-valenzuela/)
  *  Or you can have a look at my CV in spanish and english [here](https://goo.gl/DXW6jr).
 
-**On the shoulders of giants** is an expression I heard somewhere. It means that we should be always aware and thankful of the people behind us that built and shared magnificent stuff so we can work on new stuff now. From [Wikipedia](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants)  (Which is also the work of other people):
+**On the shoulders of giants** expresses a powerful idea: It means that we should be always aware and thankful of the people behind us that did a wonderful work in the past, building and sharing magnificent stuff so we can work on new stuff now. From [Wikipedia](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants)  (Which is also the work of other people):
 
 > The metaphor of dwarfs standing on the shoulders of giants expresses the meaning of "discovering truth by building on previous discoveries". This concept has been traced to the 12th century, attributed to Bernard of Chartres. Its most familiar expression in English is by Isaac Newton in 1675: *"If I have seen further, it is by standing on the shoulders of giants."* 
 

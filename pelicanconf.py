@@ -6,6 +6,8 @@ AUTHOR = 'Diego Quintana'
 SITENAME = 'On the shoulders of giants'
 SITEURL = ''
 
+
+
 PATH = 'content/blog'
 
 TIMEZONE = 'Europe/Paris'
@@ -35,7 +37,21 @@ DEFAULT_PAGINATION = 5
 #RELATIVE_URLS = True
 THEME = 'themes/pelican-alchemy/alchemy'
 
-# MARKUP = ('md', 'ipynb')
+MARKUP = ('md', 'ipynb')
 
-# PLUGIN_PATHS = ['./plugins']
-# PLUGINS = ['ipynb.markup']
+PLUGIN_PATHS = ['./plugins']
+PLUGINS = ['ipynb.markup', 'pelican_plugins.render_math']
+
+
+# pelican-alchemy settings
+# https://github.com/nairobilug/pelican-alchemy/wiki/Settings
+
+DESCRIPTION = "A github blog, by Diego Quintana"
+HIDE_AUTHORS = True
+ICONS = (
+    ('github', 'https://github.com/diegoquintanav'),
+    ('linkedin', 'https://www.linkedin.com/in/diego-quintana-valenzuela/'),
+    ('envelope', 'mailto:daquintanav@gmail.com')
+)
+
+GOOGLE_ANALYTICS = 'UA-108898322-1'

@@ -6,11 +6,11 @@ Tags: recommender systems; recsys
 Slug: recsys-2
 Authors: Diego Quintana
 Summary: Segunda parte de sistemas recomendadores
+Status: published
 
 # _Previously_
 
-
-En la [parte 1]({filename}/sysrec-1.md) se vieron varios aspectos elementales de los sistemas recomendadores. El concepto del error, la definición ~~matemática~~ de una recomendación, y la necesidad que cubren estos sistemas. Mencionamos [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&rep=rep1&type=pdf) que es mucho más riguroso incluso. La idea ahora es introducir algunos conceptos generales sobre los tipos de sistemas recomendadores.
+En la [parte 1]({filename}/blog/sysrec-1.md) se vieron varios aspectos elementales de los sistemas recomendadores. El concepto del error, la definición ~~matemática~~ de una recomendación, y la necesidad que cubren estos sistemas. Mencionamos [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&rep=rep1&type=pdf) que es mucho más riguroso incluso. La idea ahora es introducir algunos conceptos generales sobre los tipos de sistemas recomendadores.
 
 En general es posible delimitar el uso de clasificadores según sus características. Esto suena muy vago al principio, aunque [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.702.4429&rep=rep1&type=pdf) presenta algunas directrices.
 
@@ -56,8 +56,7 @@ $$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})(r_{u,j}-\bar{r
 
 Donde $r_{u,j}$ es el rating del usuario $u$ sobre el ítem $j$ y $\bar{r}_{j}$ es el _rating_ promedio sobre el otro ítem.
 
-{: style="text-align:center"}
-![IB-CF]({{ "/assets/img/CF-IB_1.png" | absolute_url }} "IB-CF" )
+![IB-CF1]({filename}/images/CF-IB_1.png "IB-CF")
 
 #### Similitud coseno ajustada
 
@@ -67,8 +66,7 @@ $$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})(r_{u,j}-\bar{r
 
 De los tres métodos indicados, es esta noción de similitud la que obtiene mejores resultados
 
-{: style="text-align:center"}
-![IB-CF]({{ "/assets/img/similarities.png" | absolute_url }} "Similarities comparison" )
+![IB-CF2]({filename}/images/similarities.png "Similarities comparison")
 
 ## Otra clasificación
 
@@ -121,10 +119,10 @@ Al respecto existen varios tipos de algoritmos basados en el filtrado colaborati
 En términos generales, se puede resumir que
 
 1. La predicción del rating sobre un ítem $i$ mejora mientras más vecinos $k$ de un _pool_ de $n$ elementos de dimensión $d$ se consideren en el cálculo de similitud.
-1. La complejidad de calcular la distancia a un ejemplo es de $\mathcal{O}(d)$$
-1. La complejidad de calcular la distancia a $n$ ejemplos es de $\mathcal{O}(dn)$$
-1. Una vez calculadas las $n$ distancias, la complejidad de recorrer los $k$ vecinos más cercanos es de $\mathcal{O}(nk)$$
-1. El tiempo total entonces es de $\mathcal{O}(nd+nk)$, (o $\mathcal{O}(ndk)$ [en función de cómo se recorren los elementos.](https://stats.stackexchange.com/questions/219655/k-nn-computational-complexity)) lo cual vuelve a KNN un algoritmo costoso cuando $n$ es lo suficientemente grande.
+2. La complejidad de calcular la distancia a un ejemplo es de \$\mathcal{O}(d)\$\$
+3. La complejidad de calcular la distancia a \$n\$ ejemplos es de \$\mathcal{O}(dn)\$\$
+4. Una vez calculadas las \$n\$ distancias, la complejidad de recorrer los \$k\$ vecinos más cercanos es de \$\mathcal{O}(nk)\$\$
+5. El tiempo total entonces es de $\mathcal{O}(nd+nk)$, (o $\mathcal{O}(ndk)$ [en función de cómo se recorren los elementos.](https://stats.stackexchange.com/questions/219655/k-nn-computational-complexity)) lo cual vuelve a KNN un algoritmo costoso cuando $n$ es lo suficientemente grande.
 
 Un SR alternativo al _User Based_ (UB-CF) es la del filtrado colaborativo basado en **ítems**, o _Item based collaborative filtering (IB-CF)_
 
@@ -141,7 +139,7 @@ Como se indicó en los casos anteriores, los SR basados en contenido y en filtra
 
 ## A continuación
 
-En la [parte 3]({{ site.baseurl }}{% post_url 2017-11-05-sysrec-3 %}) se verán los sistemas de recomendación basados en contenido
+En la [parte 3]({filename}/blog/sysrec-3.md) se verán los sistemas de recomendación basados en contenido
 
 ## Anexo: KNN y la maldición de la dimensionalidad
 
@@ -151,7 +149,7 @@ En la [parte 3]({{ site.baseurl }}{% post_url 2017-11-05-sysrec-3 %}) se verán 
 
 Este algoritmo asiste en la fase de obtención de patrones sobre un dataset de preferencias, estableciendo grupos o _clusters_ de instancias que guardan relación entre sí de acuerdo a una métrica preestablecida. La idea de KNN en el contexto de recomendación es, en términos simples:
 
-> Para un subconjunto de usuarios $\mathcal{U} \in U$, encuentra los ratings para un item $i \in I$ sobre los primeros $k$ usuarios (vecinos en este contexto) que sean _objetivamente_ similares a un usuario $u \in \mathcal{U}$$.
+> Para un subconjunto de usuarios $\mathcal{U} \in U$, encuentra los ratings para un item $i \in I$ sobre los primeros $k$ usuarios (vecinos en este contexto) que sean _objetivamente_ similares a un usuario $u \in \mathcal{U}$\$.
 
 ¿Pero cómo se logra establecer similitud _objetivamente_?. Se mide la distancia entre dos objetos y vemos si la distancia es lo suficientemente pequeña. Esto se puede conseguir generalmente a través de una distancia euclidiana o coseno. [Esta página tiene algunas definiciones sobre esto, y presenta algunos ejemplos usando Python](https://blog.dominodatalab.com/recommender-systems-collaborative-filtering/).
 
@@ -163,7 +161,7 @@ donde $\alpha$ es un elemento de _regularización_, $\bar{r}_u$ es el promedio d
 
 ## Curse of dimensionality
 
-![curse-of-dimenzinality]({{ "/assets/img/curse-of-dimensionality.png" | absolute_url }} "omg" )
+![curse-of-dimenzionality]({filename}/images/curse-of-dimensionality.png "omgsocursed")
 
 Básicamente se trata de lo siguiente: Mientras más características tengan los vectores usados en la modelación de un ítem o recomendación, la distancia entre dos elementos **pierde significancia**.
 
@@ -172,10 +170,9 @@ Suponiendo un espacio de características de $d$ dimensiones se tiene que la **p
 _The curse of dimensionality_ es un tema recurrente en este tipo de problemas, y me limitaré a recorrer algunas lecturas muy completas sobre el tema:
 
 - [_Explain Like I am Five Years Old_](https://stats.stackexchange.com/questions/169156/explain-curse-of-dimensionality-to-a-child) tiene una versión muy simple del problema.
-> _Si debes elegir qué galletas te gustan de un camión de galletas en base al sabor, y asumiendo que hay cuatro tipos de sabores (dulce, salado, ácido, amargo), bastaría con encontrar 4 tipos de galletas diferentes para saber cuál te gusta más. Si a esto añadimos además una característica de color y asumiendo que sólo hay cuatro colores, entonces tienes que comer 4x4 tipos de galletas distintas. Asumiendo que la descripción de galleta se hace cada vez más compleja, resulta cada vez más difícil saber qué galletas te gustan, y probablemente sufras un dolor de estómago antes de poder decidir._
+  > _Si debes elegir qué galletas te gustan de un camión de galletas en base al sabor, y asumiendo que hay cuatro tipos de sabores (dulce, salado, ácido, amargo), bastaría con encontrar 4 tipos de galletas diferentes para saber cuál te gusta más. Si a esto añadimos además una característica de color y asumiendo que sólo hay cuatro colores, entonces tienes que comer 4x4 tipos de galletas distintas. Asumiendo que la descripción de galleta se hace cada vez más compleja, resulta cada vez más difícil saber qué galletas te gustan, y probablemente sufras un dolor de estómago antes de poder decidir._
 - [Este post](https://math.stackexchange.com/questions/346775/confusion-related-to-curse-of-dimensionality-in-k-nearest-neighbor) también es una discusión interesante sobre el tema.
 - [Este blog](https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html) tiene más información aún ~~además de ahorrarme el tiempo de hacer mi propia imagen~~.
 - [Este otro post](http://www.visiondummy.com/2014/04/curse-dimensionality-affect-classification/) presenta una explicación más detallada, _que también incluye perritos._
 
-{: style="text-align:center"}
-![curse-of-dimenzinality]({{ "/assets/img/3Dproblem_separated.png" | absolute_url }} "omg, 3D" )
+![curse-of-dimenzinality]({filename}/images/3Dproblem_separated.png "omgin3D")

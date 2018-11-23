@@ -5,11 +5,13 @@ Tags: recommender systems; recsys
 Slug: recsys-3
 Authors: Diego Quintana
 Summary: Tercera parte de sistemas recomendadores
+Status: published
+
 <!-- Modified: 2010-12-05 19:30 -->
 
 # _previously_
 
-En la [parte 2]({filename}/sysrec-2.md) se vieron algunas clasificaciones de SR, con algo más de detalle en aquellos basados en memoria y basados en modelos. Otras clasificación que se mencionó es la de aquellos SR basados en contenido
+En la [parte 2]({filename}/blog/sysrec-2.md) se vieron algunas clasificaciones de SR, con algo más de detalle en aquellos basados en memoria y basados en modelos. Otras clasificación que se mencionó es la de aquellos SR basados en contenido
 
 ## Sistemas recomendadores basados en contenido
 
@@ -34,12 +36,11 @@ herramientas para esto, [NLTK](www.nltk.org) y [Spacy](https://spacy.io/)), infe
 
 Los componentes principales de este tipo de SR son
 
-1.  Análisis de contenido
-1.  Aprendizaje del perfil de usuario
-1.  Filtrado de contenido
+1. Análisis de contenido
+1. Aprendizaje del perfil de usuario
+1. Filtrado de contenido
 
-{: style="text-align:center"}
-![cbrs]( {{ "/assets/img/cbrs.png" | absolute_url }} "cbrs_process")
+![cbrs]({filename}/image/cbrs.png "cbrs_process")
 
 Estos SR presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido, sin embargo puede ocurrir lo que se conoce como _filter bubble_, situación en la que las nuevas recomendaciones terminan siendo muy similares a lo ya consumido. Por ejemplo, si me gusta Harry Potter, puede ocurrir que el SR sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general.
 
@@ -56,12 +57,13 @@ En ese sentido, la forma más inmediata es la de analizar el texto en las descri
 La primera representación que se hace del texto es a través de lo que se conoce como _bag of words_, donde todas las palabras se consideran como instancias de cada palabra, en forma de repeticiones.
 Esto a su vez permite otras representaciones, una es VSM o _Vector space model_. Básicamente se trata de vectorizar términos en función de su aparición en una familia de documentos como por ejemplo
 
-{: style="text-align:center"}
-![vsm1]( {{ "/assets/img/vsm1.png" | absolute_url }} "vsm1")
+![vsm1]({filename}/image/vsm1.png "vsm1")
 
 Un documento entonces puede representarse como un vector donde cada elemento es la frecuencia de cada palabra del corpus en el documento,
 
-$$v = [f_{1},f_{2},...,f_{n}]$$
+$$
+v = [f_{1},f_{2},...,f_{n}]
+$$
 
 donde $f_{i}$ es la frecuencia de cada palabra. Un vector de palabras, o _corpus_, para el caso del español por ejemplo, es de aproximadamente 60000 palabras. Estos vectores tienen propiedades geométricas que permiten establecer comparaciones entre ellos.
 
@@ -69,41 +71,52 @@ La frecuencia de las palabras por sí sola en un documento no ayuda necesariamen
 
 Es por esto que se desarrollan métodos de regularización, el primero es normalizar la frecuencia de los términos, a través de lo que se conoce como TF o _term frequency_
 
-$$\mbox{TF}(\mbox{palabra},\mbox{documento}) = \frac{\mbox{veces que sale la palabra en el documento}}{\mbox{cantidad máxima de veces que sale la palabra en todos los documentos}}$$
+$$
+\mbox{TF}(\mbox{palabra},\mbox{documento}) = \frac{\mbox{veces que sale la palabra en el documento}}{\mbox{cantidad máxima de veces que sale la palabra en todos los documentos}}
+$$
 
 Además, si se considera nuevamente como ejemplo la palabra _qué_, esta no es más importante en un documento si aparece 10000 veces, versus otras palabras que aparecen con menor frecuencia. Para incorporar esto se usan logaritmos
 
 $$
-\left\{\begin{aligned}
-& 1+\log_{10} \mbox{TF}_{p,d} & \mbox{TF}_{p,d} \ge 1\\
-& 0 & \mbox{TF}_{p,d} = 0\\
-\end{aligned}
-\right.$$
+\left\{
+    \begin{aligned}
+    & 1+\log_{10} \mbox{TF}_{p,d} & \mbox{TF}_{p,d} \ge 1\\
+    & 0 & \mbox{TF}_{p,d} = 0\\
+    \end{aligned}
+\right.
+$$
 
 <!-- slide 8 -->
+
 Finalmente combinando ambos elementos, es posible obtener una representación estable a través de TF-IDF
-$$
 
 $$
+\mbox{TF-IDF}{p,d} = \mbox{TF}{p,d} \times \log \frac{N}{n\_{p}}
+$$
+
 Algunas observaciones
-*  N es la cantidad de documentos del dataset
-*  $n_{p}$ es la cantidad de documentos donde aparece la palabra
-*  El valor de $\log(N/n_{p})$ tiende a cero cuando la palabra aparece en muchos documentos (por ejemplo artículos, preposiciones, etc.)
+
+- $N$ es la cantidad de documentos del dataset
+- $n_{p}$ es la cantidad de documentos donde aparece la palabra
+- El valor de $\log(N/n_{p})$ tiende a cero cuando la palabra aparece en muchos documentos (por ejemplo artículos, preposiciones, etc.)
 
 #### Representación semántica del contenido
 
-El texto visto como *bag of words* pierde sentido contextual, es decir la vectorización no incorpora semántica en las recomendaciones. El contexto en sí mismo añade una nueva capa al análisis de texto, y entre las formas de incorporarlo  se pueden usar *ontologías*. La [web semántica](https://en.wikipedia.org/wiki/Semantic_Web) intenta modelar los contenidos de internet a través de estructuras ontológicas estandarizadas llamadas [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework)
+El texto visto como _bag of words_ pierde sentido contextual. El contexto en sí mismo añade una nueva capa al análisis de texto, y entre las formas de incorporarlo se pueden usar _ontologías_.
+
+Al respecto, la idea de una [web semántica](https://en.wikipedia.org/wiki/Semantic_Web) intenta modelar los contenidos de internet a través de estructuras ontológicas estandarizadas llamadas [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework)
 
 #### Métricas de similitud
 
 La vectorización de documentos permite operaciones geométricas y en consecuencia es posible establecer métricas de distancia entre ellos. Las más conocidas ya se han visto y corresponden a
 
-*  Distancia euclidiana
-*  Distancia coseno
+- Distancia euclidiana
+- Distancia coseno
 
-Sin embargo, los *corpus* como se vio son de alta dimensionalidad, (60000 palabras para el español, por ejemplo) donde la maldición de la dimensionalidad se presenta nuevamente como un problema. Al respecto, si se normalizan todos los vectores, es posible obtener mejores resultados con la distancia coseno.
+Sin embargo, los _corpus_ como se vio son de alta dimensionalidad, (60000 palabras para el español, por ejemplo) donde la maldición de la dimensionalidad se presenta nuevamente como un problema. Al respecto, si se normalizan todos los vectores, es posible obtener mejores resultados con la distancia coseno.
 
 Las métricas posibles incluyen [OKAPI BM25](https://dl.acm.org/citation.cfm?doid=1639714.1639757) entre otras.
+
 <!-- Slide 14 -->
 
 <!-- * (k1+1), k1 es una constante que hay que ajustar -->
@@ -111,29 +124,25 @@ Las métricas posibles incluyen [OKAPI BM25](https://dl.acm.org/citation.cfm?doi
 <!-- * Lave es el largo promedio de todos los documentos -->
 <!-- * Ojo con TFq vs TFd, donde q es para la frecuencia del término en la *query* versus el documento -->
 
-
 Puede ocurrir que dos palabras son iguales pero tienen distintos significados, lo que complica las comparaciones. Al respecto existen técnicas como
 
-*  *Latent semantic Indexing*
-*  *Latent dirichlet allocation*
-
+- _Latent semantic Indexing_
+- _Latent dirichlet allocation_
 
 #### Técnicas de procesamiento adicionales
 
 El análisis de texto presenta otro tipo de problemas, por ejemplo palabras mal escritas, calidad del texto, etcétera. Algunas técnicas auxiliares usadas en el procesamiento de texto son
 
-*  Normalización i.e. pasar todo a minúsculas o mayúsculas
-*  Tokenizatión: Dividir una oración en unidades, i.e. *tokens*. La tokenización depende de cada implementación.
-*  *Stemming*: Tomar la raíz o *stem* de las palabras que compartan una semántica i.e *auto* en *Automovilismo* y *Autopista*
- *  *Porter*: Stem de las primeras letras que se repiten.
- *  *Krovetz*: Stem, pero asociada a una palabra existente.
-*  Lemmatization: Una variante de *stemming* que incorpora el análisis morfológico del texto. Ver más información [aquí](https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html)
-
+- Normalización i.e. pasar todo a minúsculas o mayúsculas
+- Tokenizatión: Dividir una oración en unidades, i.e. _tokens_. La tokenización depende de cada implementación.
+- _Stemming_: Tomar la raíz o _stem_ de las palabras que compartan una semántica i.e _auto_ en _Automovilismo_ y _Autopista_
+- _Porter_: Stem de las primeras letras que se repiten.
+- _Krovetz_: Stem, pero asociada a una palabra existente.
+- Lemmatization: Una variante de _stemming_ que incorpora el análisis morfológico del texto. Ver más información [aquí](https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html)
 
 ## A continuación
 
-En la [parte 4]({{ site.baseurl }}{% post_url 2017-11-08-sysrec-4 %}) se verán
+En la [parte 4](11-08-sysrec-4 %}) se verán
 
-*  Sistemas recomendadores híbridos
-*  Métricas de calidad en sistemas recomendadores
-$$
+- Sistemas recomendadores híbridos
+- Métricas de calidad en sistemas recomendadores

@@ -5,13 +5,13 @@ Tags: recommender systems; recsys
 Slug: recsys-5
 Authors: Diego Quintana
 Summary: Quinta parte de sistemas recomendadores
-
+Status: published
 
 <!-- entry 5, clase al 15.11 -->
 
 # _Previously_
 
-En el [post anterior]({filename}/sysrec-4.md) se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, _support vector machines_), utilizando con un kernel polinomial. 
+En el [post anterior]({filename}/blog/sysrec-4.md) se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, _support vector machines_), utilizando con un kernel polinomial. 
 
 Pero antes, ¿Qué es una máquina de vectores de soporte?
 
@@ -25,15 +25,19 @@ Dadas dos clases **A** y **B**, una SVM es un clasificador $\mathcal{C}$ que enc
 
 Un _kernel_ resuelve un problema donde para algún conjunto de datos, no existe un plano de decisión $h$ o en otras palabras las clases no son separables. El kernel actúa como una transformación que en ciertas condiciones, permite operar sobre una representación de $\mathcal{C}$ donde sí existe la separación $h$.
 
-![kernel1]({}/data_2d_to_3d.png)
+![kernel1]({filename}/images/data_2d_to_3d.png)
 
 Un kernel se escribe matemáticamente como
 
-$$K: \mathbb{R}^M \times \mathbb{R}^M \rightarrow \mathbb{R}^N$$
+$$
+K: \mathbb{R}^M \times \mathbb{R}^M \rightarrow \mathbb{R}^N
+$$
 
 Tal que
 
-$$K(\vec{x}_{i},\vec{x}_{j}) = \langle { \phi(\vec{x}_{i}),\phi(\vec{x}_{j}) } \rangle$$
+$$
+K(\vec{x}_{i},\vec{x}_{j}) = \langle { \phi(\vec{x}_{i}),\phi(\vec{x}_{j}) } \rangle
+$$
 
 donde $\langle .,. \rangle$ es el producto punto, $M > N$ y $\phi$ es la transformación del espacio de características. La gracia de este _truco_ es que permite operar sobre espacios de mayor dimensionalidad (donde sí existe $h$) pero dentro del espacio de menor dimensionalidad (lo que podría ser muy costoso computacionalmente de lo contrario).
 
@@ -49,11 +53,15 @@ Una definición más completa sobre SVM puede leerse en [esta página](https://m
 
 Las SVM presentan problemas sobre datasets muy poco densos, problema que es abordado por las máquinas de factorización, las que incorporan la interacción entre distintas variables en el dataset. Para dos interacciones, [Rendle, 2010](https://www.ismll.uni-hildesheim.de/pub/pdfs/Rendle2010FM.pdf) define el modelo de una FM como
 
-$$\hat{y}(x) = w_{0} + \sum_{i=1}^{n} w_{i} x_{i} + \sum_{i=1}^{n} \sum_{j=i+1}^{n} \langle {v_{i},v_{j}} \rangle  x_{i} x_{j}$$
+$$
+\hat{y}(x) = w_{0} + \sum_{i=1}^{n} w_{i} x_{i} + \sum_{i=1}^{n} \sum_{j=i+1}^{n} \langle {v_{i},v_{j}} \rangle  x_{i} x_{j}
+$$
 
 Reconocemos en $\langle {v_{i},v_{j}} \rangle$ un _kernel_ polinomial de la forma
 
-$$\langle {v_{i},v_{j}} \rangle = \sum_{f=1}^{k} v_{i,f} \cdot v_{j,f}$$
+$$
+\langle {v_{i},v_{j}} \rangle = \sum_{f=1}^{k} v_{i,f} \cdot v_{j,f}
+$$
 
 En este caso el _kernel trick_ permite reducir la complejidad final lineal al orden de $\mathcal{O}(kn)$, sin aumentar la complejidad de la función objetivo. Para datasets menos densos como lo son aquellos usados para recomendación, las máquinas de factorización operan mucho mejor que otros algoritmos, aunque sus aplicaciones no se limitan sólo a SR.
 

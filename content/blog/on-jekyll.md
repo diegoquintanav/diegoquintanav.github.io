@@ -4,6 +4,9 @@ Category: Getting Started
 Tags: jekyll; gh-sites; tutorial
 Slug: on-jekyll
 Authors: Diego Quintana
+Summary: ruby's static site generator
+Status: published
+
 <!-- Summary:  -->
 <!-- Modified: 2010-12-05 19:30 -->
 
@@ -20,7 +23,6 @@ Okay, it took me about nothing to have my site showing a humble *Hello World* in
 You can create a site for yourself or for some repo you own. I'm dealing with the first case for now: A site for myself.
 
 Long story short, what I did was:
-
 
 1.  Have a [Github](https://github.com) account. Duh. Then create a repo named *[**your username**].github.io*. In my case, my username is *diegoquintanav*. You can change that later, it seems. Let's not care about that *for now*.
 2.  Add a file named ```index.html``` in the root folder of the repo, and write *Hello World* in it.

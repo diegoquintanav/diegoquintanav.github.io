@@ -5,6 +5,7 @@ Tags: recommender systems; recsys
 Slug: recsys-1
 Authors: Diego Quintana
 Summary: Primera parte de sistemas recomendadores
+Status: published
 <!-- Modified: 2010-12-05 19:30 -->
 
 # Acerca de
@@ -14,12 +15,12 @@ Me encuentro tomando el módulo de sistemas de recomendación en la PUC
 [aquí](https://educacionprofesional.ing.uc.cl/?diplomado=diplomado-big-data))
 con el profesor [Dennis Parra](http://dparra.sitios.ing.uc.cl/) y como tarea del módulo se hace útil documentar los ejercicios vistos. Cada entrada será un resumen de cada clase, dependiendo cada caso.
 
-## Contenidos
+## Acerca de esta serie
 
-- En la [parte 2]({{ site.baseurl }}{% post_url 2017-10-28-sysrec-2 %}) se revisan las distintas clasificaciones de sistemas recomendadores o SR, con énfasis en el filtrado colaborativo
-- En la [parte 3]({{ site.baseurl }}{% post_url 2017-11-05-sysrec-3 %}) continuamos con esta clasificación, y revisamos los SR basados en contenido y el análisis de texto.
-- Todos los SR tienen sus desventajas y debilidades. En la [parte 4]({{ site.baseurl }}{% post_url 2017-11-08-sysrec-4 %}) revisamos cómo es posible combinar distintos SR para sobreponerse a estas debilidades. También vemos cómo es posible evaluar un SR sobre otro a través de ciertas métricas usadas en clasificación.
-- Finalmente en la [parte 5]({{ site.baseurl }}{% post_url 2017-11-15-sysrec-5 %}) revisamos las máquinas de factorización, un tipo de implementación de máquinas de vectores de soporte que da excelentes resultados en aplicaciones de recomendación y es extensible a otras áreas.
+- En la [parte 2]({filename}/blog/sysrec-2.md) se revisan las distintas clasificaciones de sistemas recomendadores o SR, con énfasis en el filtrado colaborativo
+- En la [parte 3]({filename}/blog/sysrec-3.md) continuamos con esta clasificación, y revisamos los SR basados en contenido y el análisis de texto.
+- Todos los SR tienen sus desventajas y debilidades. En la [parte 4]({filename}/blog/sysrec-4.md) revisamos cómo es posible combinar distintos SR para sobreponerse a estas debilidades. También vemos cómo es posible evaluar un SR sobre otro a través de ciertas métricas usadas en clasificación.
+- Finalmente en la [parte 5]({filename}/blog/sysrec-5.md) revisamos las máquinas de factorización, un tipo de implementación de máquinas de vectores de soporte que da excelentes resultados en aplicaciones de recomendación y es extensible a otras áreas.
 
 ## Sistemas de recomendación
 
@@ -39,9 +40,7 @@ que quiere opinar sobre cosas, digamos:
 - [Picadas de comida](https://elpicadista.cl/)
 - [Actividades culturales en Santiago](http://estoy.cl/)
 
-Hasta cierto punto podemos confiar en la opinión de anónimos. Requerimos
-de cierto grado de validación sobre los gustos y la experiencia de esta
-gente. Con la cantidad de información disponible en internet,
+Hasta cierto punto podemos confiar en la opinión de anónimos. Igual necesitamos validar de alguna forma las opiniones en internet. Con la cantidad de información disponible en internet,
 [_Cualquiera_ puede opinar](http://maddox.xmission.com/).
 
 ## Modelando la confianza
@@ -122,4 +121,4 @@ Estas métricas son de uso frecuente en distintas áreas por lo que no deberían
 
 ## A continuación
 
-En la [parte 2]({{ site.baseurl }}{% post_url 2017-10-28-sysrec-2 %}) se verán otras cosas, entre ellas, **tipos de clasificadores.**
+En la [parte 2](10-28-sysrec-2 %}) se verán otras cosas, entre ellas, **tipos de clasificadores.**

@@ -5,6 +5,8 @@ Tags: recommender systems; recsys
 Slug: recsys-4
 Authors: Diego Quintana
 Summary: Cuarta parte de sistemas recomendadores
+Status: published
+
 <!-- Modified: 2010-12-05 19:30 -->
 
 <!-- entry 4, clase al 08.11 -->
@@ -17,7 +19,7 @@ Summary: Cuarta parte de sistemas recomendadores
 
 # _Previously_
 
-En la [parte 3]({filename}/sysrec-3.md) se comentaron algunos SR basados en contenido, quedando para esta parte comentar un poco sobre sistemas _híbridos_ y sobre métricas usadas en la evaluación de un SR
+En la [parte 3]({filename}/blog/sysrec-3.md) se comentaron algunos SR basados en contenido, quedando para esta parte comentar un poco sobre sistemas _híbridos_ y sobre métricas usadas en la evaluación de un SR.
 
 ## Sistemas de recomendación híbridos
 
@@ -25,13 +27,13 @@ Se trata de una familia de SR que combinan elementos de las clasificaciones vist
 
 Según Burke existen 7 formas distintas de _hibridizar sistemas_,
 
-1.  **Weighted** Los puntajes o scores de las recomendaciones provenientes de distintos SR son combinadas en una sola recomendación
-2.  **Switching** El SR es intercambiado dependiendo de la situación
-3.  **Mixed** Recomendaciones de distintos SR se presentan al mismo tiempo
-4.  **Feature combination** Las características de distintos SR se combinan en un nuevo algoritmo de recomendación.
-5.  **Cascade** Un SR refina las recomendaciones de otro SR
-6.  **Feature augmentation** La recomendación de un SR es usada como parámetros de entrada para otro SR
-7.  **Meta-level** El modelo aprendido por un SR es usado como información de entrada para otro SR
+1. **Weighted** Los puntajes o scores de las recomendaciones provenientes de distintos SR son combinadas en una sola recomendación
+2. **Switching** El SR es intercambiado dependiendo de la situación
+3. **Mixed** Recomendaciones de distintos SR se presentan al mismo tiempo
+4. **Feature combination** Las características de distintos SR se combinan en un nuevo algoritmo de recomendación.
+5. **Cascade** Un SR refina las recomendaciones de otro SR
+6. **Feature augmentation** La recomendación de un SR es usada como parámetros de entrada para otro SR
+7. **Meta-level** El modelo aprendido por un SR es usado como información de entrada para otro SR
 
 Estas siguen 3 diseños generales
 
@@ -39,22 +41,19 @@ Estas siguen 3 diseños generales
 
 Se refiere a la unión de dos o más SR en uno solo. Ejemplos de esto son aquellos que implementan _Feature augmentation, Feature combination_
 
-{: style="text-align:center"}
-![monolithic]( {{ "/assets/img/monolithic_hybrid.png" | absolute_url }} )
+![monolithic]({filename}/images/monolithic_hybrid.png)
 
 ### Paralelizado
 
 Se refiere a la ejecución de diversos SR en paralelo, cuyas recomendaciones son combinadas en la salida. Ejemplos de esto implementan _Weighted, Switching, Mixed_
 
-{: style="text-align:center"}
-![parallel]( {{ "/assets/img/parallel_hybrid.png" | absolute_url }} )
+![parallel]({filename}/images/parallel_hybrid.png)
 
 ### Pipeline
 
 Se refieren a los SR cuya entrada es la salida de otro SR, siguiendo una ejecución en serie. Ejemplos de esto implementam _Cascade, Meta-Level_
 
-{: style="text-align:center"}
-![pipeline]( {{ "/assets/img/pipeline_hybrid.png" | absolute_url }} )
+![pipeline]({filename}/images/pipeline_hybrid.png)
 
 ## Evaluación de un recomendador
 
@@ -62,14 +61,16 @@ Se refieren a los SR cuya entrada es la salida de otro SR, siguiendo una ejecuci
 
 En términos generales el problema de recomendación es un problema de clasificación, en el sentido que un SR intenta recomendar los elementos que pertenecen al grupo de intereses de un usuario cualquiera. En esta tarea de clasificación un SR puede fallar o acertar, y en base a estos dos escenarios es que se definen distintas métricas que permitan cuantificar la _calidad_ de un clasificador.
 
-La primera herramienta que uno debería considerar es la matriz de confusión, la que puede leerse con más detalle en [dataschool](http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/). En términos generales es una representación matricial de la cantidad de aciertos por clase en una tarea de clasificación. En este sentido se habla de
+La primera herramienta que uno debería considerar es la matriz de confusión, la que puede leerse con más detalle en [dataschool](http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/).
+
+Una matriz de confusión es una representación de la cantidad de aciertos por clase en una tarea _de clasificación_. En este sentido se habla de
 
 - Verdaderos positivos, TP
 - Verdaderos negativos, TN
 - Falsos positivos, FP
 - Falsos negativos, FN
 
-En el contexto de SR, sin embargo, se define un acierto en un conjunto de recomendaciones como _relevante_. La definición de relevancia puede variar dependiendo de cada caso, pudiendo ser
+En el contexto de SR, sin embargo, se define un _acierto_ en un conjunto de recomendaciones como _relevante_. La definición de relevancia puede variar dependiendo de cada caso, pudiendo ser
 
 - Un usuario hace click en un link de una lista de links recomendados
 - Un usuario compra un libro recomendado
@@ -77,8 +78,7 @@ En el contexto de SR, sin embargo, se define un acierto en un conjunto de recome
 
 Entonces estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un SR por sobre otro en un caso determinado. Si se visualizan estas clases en un diagrama de conjuntos, se tiene
 
-{: style="text-align:center"}
-![venn1]( {{ "/assets/img/venn1.png" | absolute_url }} )
+![venn1]({filename}/images/venn1.png)
 
 De aquí se tiene que la **Precisión** es la fracción de instancias _relevantes_ obtenidas en alguna tarea en específico, del resultado de recomendaciones.
 
@@ -88,31 +88,34 @@ O en el contexto de SR,
 
 $$\mbox{precision} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{recomendados}|}$$
 
-Para el caso del diagrama, la recomendación o el SR tiene una precisión de $2/5=0.4$$. La _precisión_ entonces mide qué tan posible es obtener los elementos relevantes _con la menor cantidad_ de recomendaciones.
+Para el caso del diagrama, la recomendación o el SR tiene una precisión de $2/5=0.4$. La _precisión_ entonces mide qué tan posible es obtener los elementos relevantes _con la menor cantidad_ de recomendaciones.
 
 **Recall** o _true positive rate_ (TPR) se refiere a la fracción de instancias relevantes obtenidas del total de instancias relevantes, o bien
 
-$$\mbox{TPR} = \mbox{recall} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FN}}$$
+$$
+\mbox{TPR} = \mbox{recall} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FN}}
+$$
 
 O en términos de recomendaciones
 
-$$\mbox{recall} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{relevantes}|}$$
+$$
+\mbox{recall} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{relevantes}|}$$
 
-Para el caso del diagrama, el _recall_ del SR es de $2/10=0.2$$
+Para el caso del diagrama, el _recall_ del SR es de $2/10=0.2$
 
 Ambos, precision y _recall_ tienen una relación inversa, tal que el _recall_ disminuye a medida que la precisión aumenta. En este sentido, para un clasificador es posible graficar su desempeño en términos de la curva _precision vs recall_ o curva PR.
 
 Esta curva puede transformarse a otro espacio más conocido, llamado [curva ROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic) o _receiving operating characteristic curve_, en el cual se grafica el _recall_ como TPR o _true positive rate_ versus **FPR** o _false positive rate_.
 
-{: style="text-align:center"}
 [![roc_video](http://img.youtube.com/vi/OAl6eAyP-yo/0.jpg)](http://www.youtube.com/watch?v=OAl6eAyP-yo "ROC Curve explained")
 
 Conviene tener en cuenta que **Ambas curvas no son equivalentes** y la curva PR describe mejor el desempeño de clasificadores en casos donde hay un desbalance importante de clases. Una comparación completa entre ambas curvas puede leerse [aquí](http://pages.cs.wisc.edu/~jdavis/davisgoadrichcamera2.pdf)
 
-$$\mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}$$
+$$
+\mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
+$$
 
-{: style="text-align:center"}
-![roc_vs_pr]( {{ "/assets/img/roc_vs_pr.png" | absolute_url }} )
+![roc_vs_pr]({filename}/images/roc_vs_pr.png)
 
 Finalmente, algunas notas sobre este tema
 
@@ -138,4 +141,4 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
 
 ## A continuación
 
-En la [parte 5 y final]({{ site.baseurl }}{% post_url 2017-11-15-sysrec-5 %}) se verán Máquinas de Factorización
+En la [parte 5 y final]({filename}/blog/sysrec-5) se verán las _Máquinas de Factorización_

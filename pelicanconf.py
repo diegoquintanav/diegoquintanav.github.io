@@ -6,8 +6,7 @@ AUTHOR = 'Diego Quintana'
 SITENAME = 'On the shoulders of giants'
 SITEURL = ''
 
-
-PATH = 'content/blog'
+PATH = 'content'
 
 TIMEZONE = 'Europe/Paris'
 
@@ -32,6 +31,11 @@ AUTHOR_FEED_RSS = None
 
 DEFAULT_PAGINATION = 5
 
+# publish everything as draft unless explictly specified otherwise
+DEFAULT_METADATA = {
+    'status': 'draft',
+}
+
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
 THEME = 'themes/pelican-alchemy/alchemy'
@@ -41,14 +45,22 @@ MARKUP = ('md', 'ipynb')
 PLUGIN_PATHS = ['./plugins']
 PLUGINS = ['ipynb.markup', 'pelican_plugins.render_math']
 
-# pelican-alchemy settings
+
+# --- pelican-alchemy settings --------------------------------------
 # https://github.com/nairobilug/pelican-alchemy/wiki/Settings
 
 SITESUBTITLE = "Diego Quintana's blog"
 HIDE_AUTHORS = True
+
 ICONS = (
     ('github', 'https://github.com/diegoquintanav'),
     ('linkedin', 'https://www.linkedin.com/in/diego-quintana-valenzuela/'),
     ('stack-overflow', 'https://stackoverflow.com/users/5819113/bluesmonk'),
     ('envelope', 'mailto:daquintanav@gmail.com')
 )
+
+STATIC_PATHS = ['extras', 'images']
+PYGMENTS_STYLE = 'monokai'
+RFG_FAVICONS = True
+
+DIRECT_TEMPLATES = ['index', 'tags', 'categories', 'authors', 'archives', 'sitemap']

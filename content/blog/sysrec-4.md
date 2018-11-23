@@ -17,7 +17,7 @@ Summary: Cuarta parte de sistemas recomendadores
 
 # _Previously_
 
-En la [parte 3]({{ site.baseurl }}{% post_url 2017-11-05-sysrec-3 %}) se comentaron algunos SR basados en contenido, quedando para esta parte comentar un poco sobre sistemas _híbridos_ y sobre métricas usadas en la evaluación de un SR
+En la [parte 3]({filename}/sysrec-3.md) se comentaron algunos SR basados en contenido, quedando para esta parte comentar un poco sobre sistemas _híbridos_ y sobre métricas usadas en la evaluación de un SR
 
 ## Sistemas de recomendación híbridos
 

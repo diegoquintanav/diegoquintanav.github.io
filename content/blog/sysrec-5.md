@@ -11,7 +11,9 @@ Summary: Quinta parte de sistemas recomendadores
 
 # _Previously_
 
-En el [post anterior]({{ site.baseurl }}{% post_url 2017-11-08-sysrec-4 %}) se hizo una revisión de los SR híbridos y se revisaron algunas métricas usadas en la evaluación de SR. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, _support vector machines_) con un kernel polinomial.
+En el [post anterior]({filename}/sysrec-4.md) se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, _support vector machines_), utilizando con un kernel polinomial. 
+
+Pero antes, ¿Qué es una máquina de vectores de soporte?
 
 ## Máquinas de vectores de soporte
 
@@ -21,8 +23,10 @@ Dadas dos clases **A** y **B**, una SVM es un clasificador $\mathcal{C}$ que enc
 
 ![svm1](https://ml.berkeley.edu/blog/assets/tutorials/2/image_2.png)
 
-Un _kernel_ resuelve un problema donde para algún conjunto de datos, no existe un plano de decisión $h$ o en otras palabras las clases no son separables. El kernel entonces es una transformación que en ciertas condiciones, permite operar sobre una representación de $\mathcal{C}$ donde sí existe $h$.
-![kernel1](http://www.eric-kim.net/eric-kim-net/posts/1/imgs/data_2d_to_3d.png)
+Un _kernel_ resuelve un problema donde para algún conjunto de datos, no existe un plano de decisión $h$ o en otras palabras las clases no son separables. El kernel actúa como una transformación que en ciertas condiciones, permite operar sobre una representación de $\mathcal{C}$ donde sí existe la separación $h$.
+
+![kernel1]({}/data_2d_to_3d.png)
+
 Un kernel se escribe matemáticamente como
 
 $$K: \mathbb{R}^M \times \mathbb{R}^M \rightarrow \mathbb{R}^N$$
@@ -51,10 +55,13 @@ Reconocemos en $\langle {v_{i},v_{j}} \rangle$ un _kernel_ polinomial de la form
 
 $$\langle {v_{i},v_{j}} \rangle = \sum_{f=1}^{k} v_{i,f} \cdot v_{j,f}$$
 
-El cual si consideramos más interacciones permite, gracias al _kernel trick_, una complejidad lineal del orden de $\mathcal{O}(kn)$ sin aumentar la complejidad de la función objetivo. Para datasets menos densos como lo son aquellos usados para recomendación, las máquinas de factorización operan mucho mejor que otros algoritmos, aunque sus aplicaciones no se limitan sólo a SR.
+En este caso el _kernel trick_ permite reducir la complejidad final lineal al orden de $\mathcal{O}(kn)$, sin aumentar la complejidad de la función objetivo. Para datasets menos densos como lo son aquellos usados para recomendación, las máquinas de factorización operan mucho mejor que otros algoritmos, aunque sus aplicaciones no se limitan sólo a SR.
 
-El autor Rendle creó [LibFM](http://www.libfm.org/), una librería para implementaciones de FM en C++ disponible en github. Existen otras implementaciones en Spark para aprovechar la parelización en [este repo](https://github.com/blebreton/spark-FM-parallelSGD).
+## Código
+
+- Steffen Rendle creó [LibFM](http://www.libfm.org/), una librería para implementaciones de FM en C++ disponible en github.
+- Existen otras implementaciones en _Spark_ para aprovechar la parelización en [este repositorio de Github](https://github.com/blebreton/spark-FM-parallelSGD)
 
 ## The end
 
-No quedan más partes, con esto cerramos esta serie!
+No quedan más partes, ¡Con esto cerramos esta serie!

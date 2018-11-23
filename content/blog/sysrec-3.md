@@ -9,7 +9,7 @@ Summary: Tercera parte de sistemas recomendadores
 
 # _previously_
 
-En la [parte 2]({{ site.baseurl }}{% post_url 2017-10-28-sysrec-2 %}) se vieron algunas clasificaciones de SR, con algo más de detalle en aquellos basados en memoria y basados en modelos. Otras clasificación que se mencionó es la de aquellos SR basados en contenido
+En la [parte 2]({filename}/sysrec-2.md) se vieron algunas clasificaciones de SR, con algo más de detalle en aquellos basados en memoria y basados en modelos. Otras clasificación que se mencionó es la de aquellos SR basados en contenido
 
 ## Sistemas recomendadores basados en contenido
 

@@ -10,7 +10,7 @@ Summary: Segunda parte de sistemas recomendadores
 # _Previously_
 
 
-En la [parte 1]({{ site.baseurl }}{% post_url 2017-10-28-sysrec-1 %}) se vieron varios aspectos elementales de los sistemas recomendadores. El concepto del error, la definición ~~matemática~~ de una recomendación, y la necesidad que cubren estos sistemas. Mencionamos [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&rep=rep1&type=pdf) que es mucho más riguroso incluso. La idea ahora es introducir algunos conceptos generales sobre los tipos de sistemas recomendadores.
+En la [parte 1]({filename}/sysrec-1.md) se vieron varios aspectos elementales de los sistemas recomendadores. El concepto del error, la definición ~~matemática~~ de una recomendación, y la necesidad que cubren estos sistemas. Mencionamos [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&rep=rep1&type=pdf) que es mucho más riguroso incluso. La idea ahora es introducir algunos conceptos generales sobre los tipos de sistemas recomendadores.
 
 En general es posible delimitar el uso de clasificadores según sus características. Esto suena muy vago al principio, aunque [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.702.4429&rep=rep1&type=pdf) presenta algunas directrices.
 
@@ -143,7 +143,9 @@ Como se indicó en los casos anteriores, los SR basados en contenido y en filtra
 
 En la [parte 3]({{ site.baseurl }}{% post_url 2017-11-05-sysrec-3 %}) se verán los sistemas de recomendación basados en contenido
 
-## Anexo: KNN y la dimensión de la dimensionalidad
+## Anexo: KNN y la maldición de la dimensionalidad
+
+(o en inglés, _curse of dimensionality_)
 
 ### K _Nearest neighbors_ (KNN)
 

@@ -5,7 +5,7 @@ Tags: recommender systems; recsys
 Slug: recsys-5
 Authors: Diego Quintana
 Summary: Quinta parte de sistemas recomendadores
-Status: published
+Status: draft
 
 <!-- entry 5, clase al 15.11 -->
 

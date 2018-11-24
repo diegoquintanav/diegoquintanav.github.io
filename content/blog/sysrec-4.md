@@ -5,7 +5,7 @@ Tags: recommender systems; recsys
 Slug: recsys-4
 Authors: Diego Quintana
 Summary: Cuarta parte de sistemas recomendadores
-Status: published
+Status: draft
 
 <!-- Modified: 2010-12-05 19:30 -->
 
@@ -141,4 +141,4 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
 
 ## A continuación
 
-En la [parte 5 y final]({filename}/blog/sysrec-5) se verán las _Máquinas de Factorización_
+En la [parte 5 y final]({filename}/blog/sysrec-5.md) se verán las _Máquinas de Factorización_

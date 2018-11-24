@@ -24,7 +24,7 @@ You can create a site for yourself or for some repo you own. I'm dealing with th
 
 Long story short, what I did was:
 
-1.  Have a [Github](https://github.com) account. Duh. Then create a repo named *[**your username**].github.io*. In my case, my username is *diegoquintanav*. You can change that later, it seems. Let's not care about that *for now*.
+1.  Have a [Github](https://github.com) account. _Duh_. Then create a repo named *[**your username**].github.io*. In my case, my username is *diegoquintanav*. You can change that later, it seems. Let's not care about that *for now*.
 2.  Add a file named ```index.html``` in the root folder of the repo, and write *Hello World* in it.
 3.  ???
 4.  Profit! go to *[**your username**].github.io* and you should be able to see the words too.
@@ -86,7 +86,11 @@ With a bit of help of some nice anons, I found out that
 3.  Now you can edit it. Copy the script node from the extras site on Jekyll and there you go. You should be able to render$ \LaTeX$ equations easily.
     *  Please beware that in comparison to the traditional way, *inline equations* and almost every equation is rendered using doble dollar signs i.e.
 
-{% highlight tex %}$ A LaTeX equation$ {% endhighlight %}
+```latex
+$$\text{A } \LaTeX \text{ equation.}$$
+```
+
+$$\text{A } \LaTeX \text{ equation.}$$
 
 Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using [kramdown](https://kramdown.gettalong.org/syntax.html#math-blocks) which is set by default.
 

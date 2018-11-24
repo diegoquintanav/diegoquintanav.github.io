@@ -50,6 +50,7 @@ PLUGINS = ['ipynb.markup', 'pelican_plugins.render_math']
 # https://github.com/nairobilug/pelican-alchemy/wiki/Settings
 
 SITESUBTITLE = "Diego Quintana's blog"
+SITEIMAGE = '/images/profile.jpg'
 HIDE_AUTHORS = True
 
 ICONS = (

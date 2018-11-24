@@ -6,7 +6,7 @@ Tags: recommender systems; recsys
 Slug: recsys-2
 Authors: Diego Quintana
 Summary: Segunda parte de sistemas recomendadores
-Status: published
+Status: draft
 
 # _Previously_
 

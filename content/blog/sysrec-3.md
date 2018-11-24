@@ -5,9 +5,8 @@ Tags: recommender systems; recsys
 Slug: recsys-3
 Authors: Diego Quintana
 Summary: Tercera parte de sistemas recomendadores
-Status: published
-
-<!-- Modified: 2010-12-05 19:30 -->
+Status: draft
+Modified: 2018-11-24 13:14 -0600
 
 # _previously_
 
@@ -40,7 +39,7 @@ Los componentes principales de este tipo de SR son
 1. Aprendizaje del perfil de usuario
 1. Filtrado de contenido
 
-![cbrs]({filename}/image/cbrs.png "cbrs_process")
+![cbrs]({filename}/images/cbrs.png "cbrs_process")
 
 Estos SR presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido, sin embargo puede ocurrir lo que se conoce como _filter bubble_, situación en la que las nuevas recomendaciones terminan siendo muy similares a lo ya consumido. Por ejemplo, si me gusta Harry Potter, puede ocurrir que el SR sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general.
 
@@ -57,7 +56,7 @@ En ese sentido, la forma más inmediata es la de analizar el texto en las descri
 La primera representación que se hace del texto es a través de lo que se conoce como _bag of words_, donde todas las palabras se consideran como instancias de cada palabra, en forma de repeticiones.
 Esto a su vez permite otras representaciones, una es VSM o _Vector space model_. Básicamente se trata de vectorizar términos en función de su aparición en una familia de documentos como por ejemplo
 
-![vsm1]({filename}/image/vsm1.png "vsm1")
+![vsm1]({filename}/images/vsm1.png "vsm1")
 
 Un documento entonces puede representarse como un vector donde cada elemento es la frecuencia de cada palabra del corpus en el documento,
 

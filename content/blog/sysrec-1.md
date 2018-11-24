@@ -5,8 +5,8 @@ Tags: recommender systems; recsys
 Slug: recsys-1
 Authors: Diego Quintana
 Summary: Primera parte de sistemas recomendadores
-Status: published
-<!-- Modified: 2010-12-05 19:30 -->
+Status: draft
+Modified: 2018-11-24 13:10 -0600
 
 # Acerca de
 
@@ -16,6 +16,8 @@ Me encuentro tomando el módulo de sistemas de recomendación en la PUC
 con el profesor [Dennis Parra](http://dparra.sitios.ing.uc.cl/) y como tarea del módulo se hace útil documentar los ejercicios vistos. Cada entrada será un resumen de cada clase, dependiendo cada caso.
 
 ## Acerca de esta serie
+
+La idea es de producir al menos un post por clase, tratando de encerrar
 
 - En la [parte 2]({filename}/blog/sysrec-2.md) se revisan las distintas clasificaciones de sistemas recomendadores o SR, con énfasis en el filtrado colaborativo
 - En la [parte 3]({filename}/blog/sysrec-3.md) continuamos con esta clasificación, y revisamos los SR basados en contenido y el análisis de texto.

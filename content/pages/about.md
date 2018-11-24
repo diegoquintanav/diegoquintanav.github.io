@@ -3,18 +3,8 @@ Status: published
 
 # Hi there! 👋
 
-I'm Diego. I'm an Electrical Engineer from the cold and green south of Chile. Currently I live in Santiago, and I wear the developer hat in the [**Center for Advanced Research on Education**](http://ciae.uchile.cl/) in the _Universidad de Chile_.
+I'm Diego. This is my blog. I'm interested in stuff like how technology can help people and societies take smarter decisions, and other stuff like   Software architectures, in particular for data intensive applications and Data Science for [_the social good_](https://towardsdatascience.com/using-data-science-for-social-good-c654a6580484)
 
-Things I'm interested in
-
-- How technology can help people and societies take smarter decisions,
-- Architecture of data intensive applications and Data Science for _the social good_
-
-Feel free to reach me if you feel like it. I speak German, English and Spanish. You can reach me on
-
-- My personal email [daquintanav@gmail.com](mailto:diego.quintana@ieee.org)
-- My [LinkedIn profile](https://www.linkedin.com/in/diego-quintana-valenzuela/)
-- My IEEE email [diego.quintana@ieee.org](mailto:diego.quintana@ieee.org)
 
 ## About the name of the blog
 

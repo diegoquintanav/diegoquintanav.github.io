@@ -43,6 +43,141 @@ In short, _context locals_ can be summarized as (as shown in [Flask for Fun and 
   request in process
 - [Every request pushes a new application context](https://github.com/pallets/flask/blob/1949c4a9abc174bf29620f6dd8ceab9ed3ace2eb/flask/ctx.py#L230)
 
+## Flask contexts vernacular
+
+For a given `app` object, there are some design aspects and specific objects 
+it's good to get familiar with when testing with Flask
+
+### `flask.app.test_client()`
+Provides a client that can perform requests to our application.
+
+### `flask.app.app_context()`
+The application context, it gives life to `current_app`. Starts and dies with
+a request.
+
+### `flask.app.test_request_context()`
+The request context, it gives life to `request`. If there's no application context
+at the moment, it pushes a new one. Starts and ends with a request.
+
+### `g`
+
+A proxy that lives within a pushed **application** context, used to store _non sensible_
+information about the current application. Its life is bound to that of the request.
+
+### `session`
+
+A proxy that lives within a pushed **request** context, used to store _sensible_
+information and encrypted with your `SECRET_KEY`.
+
+## Practical differences (in code)
+
+This [SO answer](https://stackoverflow.com/a/33382823/5819113) puts it simple, so I will be kinda adding my own comments to it.
+
+```python
+from flask import Flask, g
+app = Flask(__name__)
+
+with app.app_context():
+    print('in app context, before first request context')
+    print('setting g.foo to abc')
+    g.foo = 'abc'
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+
+    with app.test_request_context():
+        # this reuses g from the current context
+        print('in first request context')
+        print('g.foo should be abc, is: {0}'.format(g.foo))
+        print('setting g.foo to xyz')
+        # this is the same g, so it will be replaced
+        g.foo = 'xyz'
+        print('g.foo should be xyz, is: {0}'.format(g.foo))
+
+    print('in app context, after first request context')
+    print('g.foo should be abc, is: {0}'.format(g.foo)) 
+
+    with app.test_request_context():
+        print('in second request context')
+        print('g.foo should be abc, is: {0}'.format(g.foo))
+        print('setting g.foo to pqr')
+        g.foo = 'pqr'
+        print('g.foo should be pqr, is: {0}'.format(g.foo))
+
+    print('in app context, after second request context')
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+```
+
+And here's the output that it gives:
+
+```plain
+in app context, before first request context
+setting g.foo to abc
+g.foo should be abc, is: abc
+in first request context
+g.foo should be abc, is: abc
+setting g.foo to xyz
+g.foo should be xyz, is: xyz
+in app context, after first request context
+g.foo should be abc, is: xyz
+in second request context
+g.foo should be abc, is: xyz
+setting g.foo to pqr
+g.foo should be pqr, is: pqr
+in app context, after second request context
+g.foo should be abc, is: pqr
+```
+
+In this first example `g` is shared across contexts because it's the same
+context in _nested contexts_, and it's a _caveat_ mentioned in the answer (some emphasis is mine)
+
+> "Every request pushes a new application context". And [as the Flask docs say](http://flask.pocoo.org/docs/0.10/appcontext/), the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that _you should **never** explicitly create multiple request contexts nested inside one application context, because `flask.g` (and co) doesn't have any magic whereby it functions in the two different "levels" of context_, with different states existing independently at the application and request levels.
+>
+> The reality is that "application context" is potentially quite a misleading name, because `app.app_context()` **is** a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:
+
+``` python
+from flask import Flask, g
+app = Flask(__name__)
+
+with app.app_context():
+    print('in app context, before first request context')
+    print('setting g.foo to abc')
+    g.foo = 'abc'
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+
+with app.test_request_context():
+    print('in first request context')
+    print('g.foo should be None, is: {0}'.format(g.get('foo')))
+    print('setting g.foo to xyz')
+    g.foo = 'xyz'
+    print('g.foo should be xyz, is: {0}'.format(g.foo))
+
+with app.test_request_context():
+    print('in second request context')
+    print('g.foo should be None, is: {0}'.format(g.get('foo')))
+    print('setting g.foo to pqr')
+    g.foo = 'pqr'
+    print('g.foo should be pqr, is: {0}'.format(g.foo))
+```
+
+Which will give the expected results:
+
+```plain
+in app context, before first request context
+setting g.foo to abc
+g.foo should be abc, is: abc
+in first request context
+g.foo should be None, is: None
+setting g.foo to xyz
+g.foo should be xyz, is: xyz
+in second request context
+g.foo should be None, is: None
+setting g.foo to pqr
+g.foo should be pqr, is: pqr
+```
+
+In this second example, all three `with` blocks are pushing independent contexts. The difference is that
+last two are also pushing an application context _implicitly_, and the first one is not pushing a request context.
+
+
 ## So, how do I test my app?
 
 I will be using [`pytest`](https://docs.pytest.org/en/latest/) because it's good. Just google "`unittest versus pytest`" to find out why.
@@ -183,140 +318,5 @@ This is working for me. In short
 - If your test requires a living app, import the `app_context` fixture
 - If your requires a populated database, import `db`
 - If your code requires examining a part of the request, import `request_context`
-
-
-## Annex: Flask contexts vernacular
-
-For a given `app` object, there are some design aspects and specific objects 
-it's good to get familiar with when testing with Flask
-
-### `flask.app.test_client()`
-Provides a client that can perform requests to our application.
-
-### `flask.app.app_context()`
-The application context, it gives life to `current_app`. Starts and dies with
-a request.
-
-### `flask.app.test_request_context()`
-The request context, it gives life to `request`. If there's no application context
-at the moment, it pushes a new one. Starts and ends with a request.
-
-### `g`
-
-A proxy that lives within a pushed **application** context, used to store _non sensible_
-information about the current application. Its life is bound to that of the request.
-
-### `session`
-
-A proxy that lives within a pushed **request** context, used to store _sensible_
-information and encrypted with 
-
-## Annex: Practical differences in code
-
-This [SO answer](https://stackoverflow.com/a/33382823/5819113) puts it simple, so I will be kinda adding my own comments to it.
-
-```python
-from flask import Flask, g
-app = Flask(__name__)
-
-with app.app_context():
-    print('in app context, before first request context')
-    print('setting g.foo to abc')
-    g.foo = 'abc'
-    print('g.foo should be abc, is: {0}'.format(g.foo))
-
-    with app.test_request_context():
-        # this reuses g from the current context
-        print('in first request context')
-        print('g.foo should be abc, is: {0}'.format(g.foo))
-        print('setting g.foo to xyz')
-        # this is the same g, so it will be replaced
-        g.foo = 'xyz'
-        print('g.foo should be xyz, is: {0}'.format(g.foo))
-
-    print('in app context, after first request context')
-    print('g.foo should be abc, is: {0}'.format(g.foo)) 
-
-    with app.test_request_context():
-        print('in second request context')
-        print('g.foo should be abc, is: {0}'.format(g.foo))
-        print('setting g.foo to pqr')
-        g.foo = 'pqr'
-        print('g.foo should be pqr, is: {0}'.format(g.foo))
-
-    print('in app context, after second request context')
-    print('g.foo should be abc, is: {0}'.format(g.foo))
-```
-
-And here's the output that it gives:
-
-```plain
-in app context, before first request context
-setting g.foo to abc
-g.foo should be abc, is: abc
-in first request context
-g.foo should be abc, is: abc
-setting g.foo to xyz
-g.foo should be xyz, is: xyz
-in app context, after first request context
-g.foo should be abc, is: xyz
-in second request context
-g.foo should be abc, is: xyz
-setting g.foo to pqr
-g.foo should be pqr, is: pqr
-in app context, after second request context
-g.foo should be abc, is: pqr
-```
-
-In this first example `g` is shared across contexts because it's the same
-context in _nested contexts_, and it's a _caveat_ mentioned in the answer (some emphasis is mine)
-
-> "Every request pushes a new application context". And [as the Flask docs say](http://flask.pocoo.org/docs/0.10/appcontext/), the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that _you should **never** explicitly create multiple request contexts nested inside one application context, because `flask.g` (and co) doesn't have any magic whereby it functions in the two different "levels" of context_, with different states existing independently at the application and request levels.
->
-> The reality is that "application context" is potentially quite a misleading name, because `app.app_context()` **is** a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:
-
-``` python
-from flask import Flask, g
-app = Flask(__name__)
-
-with app.app_context():
-    print('in app context, before first request context')
-    print('setting g.foo to abc')
-    g.foo = 'abc'
-    print('g.foo should be abc, is: {0}'.format(g.foo))
-
-with app.test_request_context():
-    print('in first request context')
-    print('g.foo should be None, is: {0}'.format(g.get('foo')))
-    print('setting g.foo to xyz')
-    g.foo = 'xyz'
-    print('g.foo should be xyz, is: {0}'.format(g.foo))
-
-with app.test_request_context():
-    print('in second request context')
-    print('g.foo should be None, is: {0}'.format(g.get('foo')))
-    print('setting g.foo to pqr')
-    g.foo = 'pqr'
-    print('g.foo should be pqr, is: {0}'.format(g.foo))
-```
-
-Which will give the expected results:
-
-``` plain
-in app context, before first request context
-setting g.foo to abc
-g.foo should be abc, is: abc
-in first request context
-g.foo should be None, is: None
-setting g.foo to xyz
-g.foo should be xyz, is: xyz
-in second request context
-g.foo should be None, is: None
-setting g.foo to pqr
-g.foo should be pqr, is: pqr
-```
-
-In this second example, all three `with` blocks are pushing independent contexts. The difference is that
-last two are also pushing an application context _implicitly_, and the first one is not pushing a request context.
 
 That's all I have to say about it.

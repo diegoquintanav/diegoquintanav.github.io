@@ -1,4 +1,5 @@
 Title: Now
+Lang: EN
 Status: published
 Date: 2018-11-24 20:01:00 -0600
 <!-- Modified: 2018-11-05 19:15:00 -0600 -->
@@ -7,27 +8,37 @@ Date: 2018-11-24 20:01:00 -0600
 (_[This is a now page](https://nownownow.com/about), and it is inspired by [Derek Sivers](https://sivers.org/now3) and [many others](https://nownownow.com/)._)
  
 
-At first I was not sure what I was going to write here. The first thing I wrote, however, is that _I'm okay now_. I'm swimming at least three times per week, I party at least once per week. I learn stuff every day. I love and I'm being loved every day.
+At first I was not sure what I was going to write here. The first thing I wrote, 
+however, is that _I'm okay now_. I'm swimming at least three times per week, I get 
+to meet friends at least once per week. I learn stuff every day. I get to love 
+others and I'm being loved every day.
 
 # What I am working on
 
 I'm currently working as a software developer in the _Center for the Advanced Research on Education_ [or (CIAE)](http://ciae.uchile.cl/). I'm doing mostly backend development, but we are working in interesting projects! 
 
-- We are teaching Data Science and Advanced Analytics to people from the public sector. It's challenging but I'm having a lot of fun doing it.
-- We are finishing the development of a web application that gathers data and displays visualizations and custom metrics about the education sector at a block level. This application will be used across the country and we hope it will help decision makers face important problems more efficiently.
+- We are teaching Data Science and Advanced Analytics to people from the public 
+  sector. It's challenging but I'm having a lot of fun doing it.
+- We are finishing the development of a web application that gathers data and 
+  displays visualizations and custom metrics about the education sector at a block level. This application will be used across the country and we hope it will help decision makers face important problems more efficiently.
 - We are trying to build a consistent data pipeline.
 
 # What I am learning
 
-I'm not very well disciplined with my reading, but here is what I am reading and learning at the moment:
+I'm not very well disciplined with my reading, but here is what I am reading and 
+learning at the moment:
 
-- I started the _Data Engineering Path_ in [dataquest](http://dataquest.io/). I'm just getting started but I liked the technical depth of their contents!
-- I'm reading [this book from this site](http://www.masfoundations.org/) on _Multiagent Systems_. They can be used to design smart IoT architectures, or [coordinate renewable energy generation](http://flexiblepower.github.io/Publications-overview/), and even to simulate human behaviour to reach consensus [on how colours should be named!](http://www.pnas.org/content/109/18/6819.full).
-- I am also reading [Cesar Hidalgo's](https://chidalgo.com/) book about [Why information grows](https://www.basicbooks.com/titles/cesar-hidalgo/why-information-grows/9780465048991/). I attended to a presentation he did during the launch of [DataChile](https://es.datachile.io/) and it was really powerful.
+- I started the _Data Engineering Path_ in [dataquest](http://dataquest.io/). I'm 
+  just getting started but I liked the technical depth of their contents!
+- I'm reading [this book from this site](http://www.masfoundations.org/) on 
+  _Multiagent Systems_. They can be used to design smart IoT architectures, or [coordinate renewable energy generation](http://flexiblepower.github.io/Publications-overview/), and even to simulate human behaviour to reach consensus [on how colours should be named!](http://www.pnas.org/content/109/18/6819.full).
+- I am also reading [Cesar Hidalgo's](https://chidalgo.com/) book about
+  [why information grows](https://www.basicbooks.com/titles/cesar-hidalgo/why-information-grows/9780465048991/). 
+  I attended to a presentation he did during the launch of [DataChile](https://es.datachile.io/) and it was really powerful.
 
 # The future
 
-Next year will be fun. I will move to Barcelona with my girlfriend and I will start a [Master in Research in Informatics](https://www.fib.upc.edu/en/studies/masters/master-innovation-and-research-informatics/). I'm really excited about it!
+Next year will be fun. I will move to Barcelona with my girlfriend and I will start a [Master in Research in Informatics](https://www.fib.upc.edu/en/studies/masters/master-innovation-and-research-informatics/) in the _Universidad Politécnica de Catalunya_. I'm really excited about it!
 
 
 

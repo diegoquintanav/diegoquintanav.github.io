@@ -1,6 +1,7 @@
 Title: On getting started with Jekyll
-Date: 2017-10-26 18:01:00 -0600
-Category: Getting Started
+Lang: EN
+Date: 2017-10-20 18:01:00 -0600
+Category: getting started
 Tags: jekyll; gh-sites; tutorial
 Slug: on-jekyll
 Authors: Diego Quintana
@@ -10,7 +11,7 @@ Status: published
 <!-- Summary:  -->
 <!-- Modified: 2010-12-05 19:30 -->
 
-I've decided to start a blog, (again, for the $n_{th}$ time) and this time I am giving a try on [jekyll](https://jekyllrb.com/) and the [github pages](https://pages.github.com), since they seem to do quite a fine job.
+I've decided to start a blog, (again, for the _nth_ time) and this time I am giving a try on [jekyll](https://jekyllrb.com/) and the [github pages](https://pages.github.com), since they seem to do quite a fine job.
 
 Setting things up was easy. I'm not going to copy and paste the guides already present in both sites, since it won't add anything. Instead I will try to share a bit of the troubleshooting I had to do during the process.
 

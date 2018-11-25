@@ -1,6 +1,6 @@
 Title: Sistemas recomendadores, parte 3
 Date: 2017-10-29 18:01:00 -0600
-Category: Recommender Systems
+Category: recommender systems
 Tags: recommender systems; recsys
 Slug: recsys-3
 Authors: Diego Quintana
@@ -10,7 +10,7 @@ Modified: 2018-11-24 13:14 -0600
 
 # _previously_
 
-En la [parte 2]({filename}/blog/sysrec-2.md) se vieron algunas clasificaciones de SR, con algo más de detalle en aquellos basados en memoria y basados en modelos. Otras clasificación que se mencionó es la de aquellos SR basados en contenido
+En la [parte 2]({filename}/blog/sysrec-2.md) se vieron algunas clasificaciones de _SR_, con algo más de detalle en aquellos basados en memoria y basados en modelos. Otras clasificación que se mencionó es la de aquellos _SR_ basados en contenido
 
 ## Sistemas recomendadores basados en contenido
 
@@ -21,7 +21,7 @@ Existen elementos que son cuantificables de manera directa, i.e.
 3. Director
 4. Ratings
 
-Al respecto las recomendaciones sobre estos datos pueden abordarse con SR basados en filtrado colaborativo. Se vio sin embargo que estos SR sufren de algunos problemas debido a la naturaleza poco densa de los datos en el contexto de recomendación y del _new item problem_, entre otros.
+Al respecto las recomendaciones sobre estos datos pueden abordarse con _SR_ basados en filtrado colaborativo. Se vio sin embargo que estos _SR_ sufren de algunos problemas debido a la naturaleza poco densa de los datos en el contexto de recomendación y del _new item problem_, entre otros.
 
 Podemos decir también que hay otros elementos que no son cuanntificables directamente y dependen de otras cosas, por ejemplo el contexto
 
@@ -33,7 +33,7 @@ herramientas para esto, [NLTK](www.nltk.org) y [Spacy](https://spacy.io/)), infe
 
 <!-- slide 4/25 -->
 
-Los componentes principales de este tipo de SR son
+Los componentes principales de este tipo de _SR_ son
 
 1. Análisis de contenido
 1. Aprendizaje del perfil de usuario
@@ -41,11 +41,11 @@ Los componentes principales de este tipo de SR son
 
 ![cbrs]({filename}/images/cbrs.png "cbrs_process")
 
-Estos SR presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido, sin embargo puede ocurrir lo que se conoce como _filter bubble_, situación en la que las nuevas recomendaciones terminan siendo muy similares a lo ya consumido. Por ejemplo, si me gusta Harry Potter, puede ocurrir que el SR sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general.
+Estos _SR_ presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido, sin embargo puede ocurrir lo que se conoce como _filter bubble_, situación en la que las nuevas recomendaciones terminan siendo muy similares a lo ya consumido. Por ejemplo, si me gusta Harry Potter, puede ocurrir que el _SR_ sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general.
 
 ## Análisis de contenido
 
-El aspecto más importante de este tipo de SR es su dependencia de la representación del contenido.. De manera más general esto se conoce como _information retrieval_, y tiene que ver en cómo se extrae información de los datos.
+El aspecto más importante de este tipo de _SR_ es su dependencia de la representación del contenido.. De manera más general esto se conoce como _information retrieval_, y tiene que ver en cómo se extrae información de los datos.
 
 En ese sentido, la forma más inmediata es la de analizar el texto en las descripciones de los ítems que forman parte del dataset
 

@@ -316,7 +316,7 @@ def seed_db():
 This is working for me. In short
 
 - If your test requires a living app, import the `app_context` fixture
-- If your requires a populated database, import `db`
-- If your code requires examining a part of the request, import `request_context`
+- If your test requires a populated database, import `db`
+- If your test requires examining a part of the request, import `request_context`
 
 That's all I have to say about it.

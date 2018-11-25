@@ -1,6 +1,7 @@
 Title: Sistemas recomendadores, parte 5
+Lang: ES
 Date: 2017-11-15 18:01:00 -0600
-Category: Recommender Systems
+Category: recommender systems
 Tags: recommender systems; recsys
 Slug: recsys-5
 Authors: Diego Quintana
@@ -63,7 +64,7 @@ $$
 \langle {v_{i},v_{j}} \rangle = \sum_{f=1}^{k} v_{i,f} \cdot v_{j,f}
 $$
 
-En este caso el _kernel trick_ permite reducir la complejidad final lineal al orden de $\mathcal{O}(kn)$, sin aumentar la complejidad de la función objetivo. Para datasets menos densos como lo son aquellos usados para recomendación, las máquinas de factorización operan mucho mejor que otros algoritmos, aunque sus aplicaciones no se limitan sólo a SR.
+En este caso el _kernel trick_ permite reducir la complejidad final lineal al orden de $\mathcal{O}(kn)$, sin aumentar la complejidad de la función objetivo. Para datasets menos densos como lo son aquellos usados para recomendación, las máquinas de factorización operan mucho mejor que otros algoritmos, aunque sus aplicaciones no se limitan sólo a _SR_.
 
 ## Código
 

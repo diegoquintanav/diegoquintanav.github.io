@@ -214,10 +214,10 @@ factor se diluye entre todos los usuarios. Una forma de resolver es con la
 <ol>
 <li>La predicción del rating sobre un ítem <span class="math">\(i\)</span> mejora mientras más vecinos <span class="math">\(k\)</span> de un 
    <em>pool</em> de <span class="math">\(n\)</span> elementos de dimensión <span class="math">\(d\)</span> se consideren en el cálculo de similitud.</li>
-<li>La complejidad de calcular la distancia a un ejemplo es de \<span class="math">\(\mathcal{O}(d)\\)</span>\$</li>
-<li>La complejidad de calcular la distancia a \<span class="math">\(n\\)</span> ejemplos es de \<span class="math">\(\mathcal{O}(dn)\\)</span>\$</li>
-<li>Una vez calculadas las \<span class="math">\(n\\)</span> distancias, la complejidad de recorrer los \<span class="math">\(k\\)</span> 
-   vecinos más cercanos es de \<span class="math">\(\mathcal{O}(nk)\\)</span>\$</li>
+<li>La complejidad de calcular la distancia a un ejemplo es de <span class="math">\(\mathcal{O}(d)\)</span></li>
+<li>La complejidad de calcular la distancia a <span class="math">\(n\)</span> ejemplos es de <span class="math">\(\mathcal{O}(dn)\)</span></li>
+<li>Una vez calculadas las <span class="math">\(n\)</span> distancias, la complejidad de recorrer los <span class="math">\(k\)</span> 
+   vecinos más cercanos es de <span class="math">\(\mathcal{O}(nk)\)</span></li>
 <li>El tiempo total entonces es de <span class="math">\(\mathcal{O}(nd+nk)\)</span>, (o <span class="math">\(\mathcal{O}(ndk)\)</span> 
    <a href="https://stats.stackexchange.com/questions/219655/k-nn-computational-complexity">en función de cómo se recorren los elementos.</a>) lo cual vuelve a KNN un algoritmo costoso cuando <span class="math">\(n\)</span> es lo suficientemente grande.</li>
 </ol>

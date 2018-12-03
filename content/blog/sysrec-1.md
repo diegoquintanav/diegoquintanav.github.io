@@ -85,7 +85,7 @@ anteriores,
 - En el 2018 Facebook tiene alrededor de [2 billones de usuarios activos](https://www.statista.com/statistics/264810/number-of-monthly-active-facebook-users-worldwide/)
 
 
-## _Caveat Emptor_ o _por qué es bueno entender los sistemas de recomendación_
+## ¿Por qué es bueno entender los sistemas de recomendación?
 
 En general estos servicios son gratuitos. Nadie paga por usar Facebook.
 Conocida es la frase [_"If you are not paying, then **you** are the product"_](https://www.reddit.com/r/explainlikeimfive/comments/2m3f05/eli5_if_something_is_free_you_are_the_product/),
@@ -94,19 +94,16 @@ que se traduce como _"Si tú no estás pagando por el producto, es porque tú er
 En lo personal creo que esta frase dice muchas cosas.
 
 - Primero, es que un algoritmo de recomendación tiene el poder para dirigir _inadvertidamente_ a ciertos productos.
-- La información es un producto. Un algoritmo tiene de recomendación puede _manipular_ la realidad de manera [imperceptible](https://www.theguardian.com/technology/2014/jun/29/facebook-users-emotions-news-feeds).
-- Las consecuencias son de tintes morales y bueno, no es el punto revisarlas aquí.
-- Un algoritmo de recomendación puede --no intencionalmente-- atrofiar industrias creativas.
+- Un algoritmo de recomendación puede _manipular_ la realidad de manera [imperceptible](https://www.theguardian.com/technology/2014/jun/29/facebook-users-emotions-news-feeds). Las consecuencias son de tintes morales y bueno, no es el punto revisarlas aquí.
+- Un algoritmo de recomendación puede en algunos casos -incluso no intencionalmente- [atrofiar industrias creativas](https://www.dw.com/en/spotify-how-a-swedish-startup-transformed-the-music-industry/a-43230609).
 
 Pero no todo es malo. El filtrado colaborativo permite, entre otras cosas ayudar
  a usuarios a elegir un item (noticia, canción, película, libro) de un conjunto
  masivo de opciones.
 
 Finalmente, los sistemas de recomendación son una manifestación de
-inteligencia colectiva, lo que es bueno.
-
-Más gente involucrada en algo es mejor. Lo importante es entender cómo funcionan
- estos modelos y así, eventualmente, poder crear modelos propios.
+inteligencia colectiva, lo que es bueno: Más gente involucrada en algo es mejor. 
+Lo importante es entender cómo funcionan estos modelos y así, eventualmente, poder crear modelos propios.
 
 ## Definición formal del problema
 

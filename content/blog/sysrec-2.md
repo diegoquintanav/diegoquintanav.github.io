@@ -192,10 +192,10 @@ Se puede resumir como
 
 1. La predicción del rating sobre un ítem $i$ mejora mientras más vecinos $k$ de un 
    _pool_ de $n$ elementos de dimensión $d$ se consideren en el cálculo de similitud.
-2. La complejidad de calcular la distancia a un ejemplo es de \$\mathcal{O}(d)\$\$
-3. La complejidad de calcular la distancia a \$n\$ ejemplos es de \$\mathcal{O}(dn)\$\$
-4. Una vez calculadas las \$n\$ distancias, la complejidad de recorrer los \$k\$ 
-   vecinos más cercanos es de \$\mathcal{O}(nk)\$\$
+2. La complejidad de calcular la distancia a un ejemplo es de $\mathcal{O}(d)$
+3. La complejidad de calcular la distancia a $n$ ejemplos es de $\mathcal{O}(dn)$
+4. Una vez calculadas las $n$ distancias, la complejidad de recorrer los $k$ 
+   vecinos más cercanos es de $\mathcal{O}(nk)$
 5. El tiempo total entonces es de $\mathcal{O}(nd+nk)$, (o $\mathcal{O}(ndk)$ 
    [en función de cómo se recorren los elementos.](https://stats.stackexchange.com/questions/219655/k-nn-computational-complexity)) lo cual vuelve a KNN un algoritmo costoso cuando $n$ es lo suficientemente grande.
 

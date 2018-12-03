@@ -20,8 +20,8 @@ I'm currently working as a software developer in the _Center for the Advanced Re
 - We are teaching Data Science and Advanced Analytics to people from the public 
   sector. It's challenging but I'm having a lot of fun doing it.
 - We are finishing the development of a web application that gathers data and 
-  displays visualizations and custom metrics about the education sector at a block level. This application will be used across the country and we hope it will help decision makers face important problems more efficiently.
-- We are trying to build a consistent data pipeline.
+  displays visualizations and custom metrics about the education sector at a block level. It will be used across the country and we hope it will help decision makers face important problems more efficiently.
+- We are building a data pipeline that will allow us to grow for the future.
 
 # What I am learning
 

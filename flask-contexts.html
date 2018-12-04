@@ -361,7 +361,38 @@ response = c.get(&#39;/test/url&#39;)
 <ul>
 <li>If your test requires a living app, import the <code>app_context</code> fixture</li>
 <li>If your test requires a populated database, import <code>db</code></li>
-<li>If your test requires examining a part of the request, import <code>request_context</code></li>
+<li>If your test requires examining a part of the request, import the <code>request_context</code> fixture</li>
+<li>
+<p>If your test requires a logged in user, you can use the <code>client</code> fixture and <code>flask_login</code> as</p>
+<p>```python
+def login(client, email, password):
+    """A helper method that logs in users"""
+    return client.post(url_for('auth.login'),
+                    data={
+                        'email': email,
+                        'password': password},
+                    follow_redirects=True)</p>
+<p>def test_with_logged_in_user(client):
+    """Tests a view that requires authentication"""
+    from flask_login import current_user</p>
+<div class="highlight"><pre><span></span># client is a pytest fixture
+with client as c:
+    # login is a helper method that issues a GET request
+    login(c, &quot;user@test.com&quot;, &quot;test&quot;)
+    assert current_user.email == &quot;user@test.com&quot;
+    assert current_user.is_authenticated
+
+    response = c.get(
+        &#39;/restricted_view/&#39;,
+        follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b&#39;Stuff that should appear in your view&#39; in response.data
+</pre></div>
+
+
+<p>```</p>
+</li>
 </ul>
 <p>That's all I have to say about it.</p>
     </div>

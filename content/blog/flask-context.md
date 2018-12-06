@@ -1,7 +1,7 @@
 Title: Flask contexts (And how to use them)
 Date: 2018-11-24 13:14:00 -0600
-Category: programming
-Tags: flask; python
+Category: Web Development
+Tags: flask, python, pytest
 Slug: flask-contexts
 Authors: Diego Quintana
 Status: published
@@ -317,6 +317,36 @@ This is working for me. In short
 
 - If your test requires a living app, import the `app_context` fixture
 - If your test requires a populated database, import `db`
-- If your test requires examining a part of the request, import `request_context`
+- If your test requires examining a part of the request, import the `request_context` fixture
+- If your test requires a logged in user, you can use the `client` fixture and `flask_login` as
+
+```python
+def login(client, email, password):
+    """A helper method that logs in users"""
+    return client.post(url_for('auth.login'),
+                    data={
+                        'email': email,
+                        'password': password},
+                    follow_redirects=True)
+
+
+def test_with_logged_in_user(client):
+    """Tests a view that requires authentication"""
+    from flask_login import current_user
+
+    # client is a pytest fixture
+    with client as c:
+        # login is a helper method that issues a GET request
+        login(c, "user@test.com", "test")
+        assert current_user.email == "user@test.com"
+        assert current_user.is_authenticated
+
+        response = c.get(
+            '/restricted_view/',
+            follow_redirects=True)
+
+        assert response.status_code == 200
+        assert b'Stuff that should appear in your view' in response.data
+```
 
 That's all I have to say about it.

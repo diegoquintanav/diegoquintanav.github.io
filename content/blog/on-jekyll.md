@@ -1,7 +1,7 @@
 Title: On getting started with Jekyll
 Lang: EN
 Date: 2017-10-20 18:01:00 -0600
-Category: getting started
+Category: Getting Started
 Tags: jekyll; gh-sites; tutorial
 Slug: on-jekyll
 Authors: Diego Quintana

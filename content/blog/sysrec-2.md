@@ -1,8 +1,8 @@
 Title: Sistemas recomendadores, parte 2
 Date: 2017-10-28 20:01:00 -0600
 Modified: 2018-11-25 19:15:00 -0600
-Category: recommender systems
-Tags: recommender systems; recsys
+Category: Recommender Systems
+Tags: recsys
 Slug: recsys-2
 Authors: Diego Quintana
 Summary: Segunda parte de sistemas recomendadores
@@ -224,9 +224,9 @@ De la misma manera que en el caso de UB-CF, algunas métricas de similitud puede
 Los _SR_ basados en contenido y en filtrado colaborativo presentan sus propios problemas. Los sistemas híbridos apuntan a resolver estas limitaciones a través de
 combinaciones de otros _SR_
 
-<!-- ## A continuación
+## A continuación
 
-En la [parte 3]({filename}/blog/sysrec-3.md) se verán los sistemas de recomendación basados en contenido -->
+En la [parte 3]({filename}/blog/sysrec-3.md) se verán los sistemas de recomendación basados en contenido con mayor detalle.
 
 ## Anexo: KNN y la maldición de la dimensionalidad
 

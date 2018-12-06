@@ -1,8 +1,8 @@
 Title: Sistemas recomendadores, parte 1
 Date: 2017-10-26 18:01:00 -0600
-Category: recommender systems
+Category: Recommender Systems
 Lang: ES
-Tags: recommender systems; recsys
+Tags: recsys
 Slug: recsys-1
 Authors: Diego Quintana
 Summary: Primera parte de sistemas recomendadores

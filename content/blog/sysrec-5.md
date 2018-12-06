@@ -1,8 +1,8 @@
 Title: Sistemas recomendadores, parte 5
 Lang: ES
 Date: 2017-11-15 18:01:00 -0600
-Category: recommender systems
-Tags: recommender systems; recsys
+Category: Recommender Systems
+Tags: recsys
 Slug: recsys-5
 Authors: Diego Quintana
 Summary: Quinta parte de sistemas recomendadores

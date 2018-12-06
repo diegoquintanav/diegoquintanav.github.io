@@ -1,7 +1,7 @@
 Title: Sistemas recomendadores, parte 4
 Date: 2017-11-02 18:01:00 -0600
-Category: recommender systems
-Tags: recommender systems; recsys
+Category: Recommender Systems
+Tags: recsys
 Slug: recsys-4
 Authors: Diego Quintana
 Summary: Cuarta parte de sistemas recomendadores

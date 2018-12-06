@@ -61,7 +61,18 @@ ICONS = (
 )
 
 STATIC_PATHS = ['extras', 'images']
-PYGMENTS_STYLE = 'monokai'
+# PYGMENTS_STYLE = 'monokai'
+PYGMENTS_STYLE = 'borland'
 RFG_FAVICONS = True
 
 DIRECT_TEMPLATES = ['index', 'tags', 'categories', 'authors', 'archives', 'sitemap']
+
+# --- pelican plugins settings ---------------------
+
+# ipynb
+# if you create jupyter files in the content dir, snapshots are saved with the same
+# metadata. These need to be ignored.
+IGNORE_FILES = [".ipynb_checkpoints"]
+IPYNB_GENERATE_SUMMARY = True
+IPYNB_FIX_CSS = True
+IPYNB_EXPORT_TEMPLATE = './themes/nb_templates/custom.tpl'

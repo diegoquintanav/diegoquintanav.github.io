@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Sistemas recomendadores, parte 4 | On the shoulders of giants
+</title>
+  <link rel="canonical" href="/recsys-4.html">
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+
+  
+  <meta name="description" content="Cuarta parte de sistemas recomendadores">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+  <div class="col-sm-12">
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
+      <p class="text-muted">Diego Quintana's blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now.html">Now</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-envelope" href="mailto:daquintanav@gmail.com" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Sistemas recomendadores, parte 4
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2017-11-02T18:01:00-06:00">
+          <i class="fa fa-clock-o"></i>
+          jue 02 noviembre 2017
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/recommender-systems.html">Recommender Systems</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="/tag/recommender-systems.html">#recommender systems</a>,               <a href="/tag/recsys.html">#recsys</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <!-- Modified: 2010-12-05 19:30 -->
+
+<!-- entry 4, clase al 08.11 -->
+
+<!-- Hoy -->
+
+<!-- *  Evaluación -->
+
+<!-- *  Laboratorio -->
+
+<!-- *  usando *Bag of Words* -->
+
+<!-- *  LDA -->
+
+<!-- *  Usando un software llamado *gensim* -->
+
+<h1><em>Previously</em></h1>
+<p>En la <a href="/recsys-3.html">parte 3</a> se comentaron algunos SR basados en contenido, quedando para esta parte comentar un poco sobre sistemas <em>híbridos</em> y sobre métricas usadas en la evaluación de un SR.</p>
+<h2>Sistemas de recomendación híbridos</h2>
+<p>Se trata de una familia de SR que combinan elementos de las clasificaciones vistas antes, <em>content based</em> (CB) y <em>collaborative filtering based</em> (CF). Al respecto en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.8200&amp;rep=rep1&amp;type=pdf">Burke, 2007</a> y en <a href="http://blog.ag-nbi.de/wp-content/uploads/2015/10/adomavicius-recsys.pdf">Adomavicius, 2005</a> se hace una revisión extensa sobre el tema</p>
+<p>Según Burke existen 7 formas distintas de <em>hibridizar sistemas</em>,</p>
+<ol>
+<li><strong>Weighted</strong> Los puntajes o scores de las recomendaciones provenientes de distintos SR son combinadas en una sola recomendación</li>
+<li><strong>Switching</strong> El SR es intercambiado dependiendo de la situación</li>
+<li><strong>Mixed</strong> Recomendaciones de distintos SR se presentan al mismo tiempo</li>
+<li><strong>Feature combination</strong> Las características de distintos SR se combinan en un nuevo algoritmo de recomendación.</li>
+<li><strong>Cascade</strong> Un SR refina las recomendaciones de otro SR</li>
+<li><strong>Feature augmentation</strong> La recomendación de un SR es usada como parámetros de entrada para otro SR</li>
+<li><strong>Meta-level</strong> El modelo aprendido por un SR es usado como información de entrada para otro SR</li>
+</ol>
+<p>Estas siguen 3 diseños generales</p>
+<h3>Monolítico</h3>
+<p>Se refiere a la unión de dos o más SR en uno solo. Ejemplos de esto son aquellos que implementan <em>Feature augmentation, Feature combination</em></p>
+<p><img alt="monolithic" src="/images/monolithic_hybrid.png" /></p>
+<h3>Paralelizado</h3>
+<p>Se refiere a la ejecución de diversos SR en paralelo, cuyas recomendaciones son combinadas en la salida. Ejemplos de esto implementan <em>Weighted, Switching, Mixed</em></p>
+<p><img alt="parallel" src="/images/parallel_hybrid.png" /></p>
+<h3>Pipeline</h3>
+<p>Se refieren a los SR cuya entrada es la salida de otro SR, siguiendo una ejecución en serie. Ejemplos de esto implementam <em>Cascade, Meta-Level</em></p>
+<p><img alt="pipeline" src="/images/pipeline_hybrid.png" /></p>
+<h2>Evaluación de un recomendador</h2>
+<h3>Métricas en contexto de clasificación</h3>
+<p>En términos generales el problema de recomendación es un problema de clasificación, en el sentido que un SR intenta recomendar los elementos que pertenecen al grupo de intereses de un usuario cualquiera. En esta tarea de clasificación un SR puede fallar o acertar, y en base a estos dos escenarios es que se definen distintas métricas que permitan cuantificar la <em>calidad</em> de un clasificador.</p>
+<p>La primera herramienta que uno debería considerar es la matriz de confusión, la que puede leerse con más detalle en <a href="http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/">dataschool</a>.</p>
+<p>Una matriz de confusión es una representación de la cantidad de aciertos por clase en una tarea <em>de clasificación</em>. En este sentido se habla de</p>
+<ul>
+<li>Verdaderos positivos, TP</li>
+<li>Verdaderos negativos, TN</li>
+<li>Falsos positivos, FP</li>
+<li>Falsos negativos, FN</li>
+</ul>
+<p>En el contexto de SR, sin embargo, se define un <em>acierto</em> en un conjunto de recomendaciones como <em>relevante</em>. La definición de relevancia puede variar dependiendo de cada caso, pudiendo ser</p>
+<ul>
+<li>Un usuario hace click en un link de una lista de links recomendados</li>
+<li>Un usuario compra un libro recomendado</li>
+<li>Un usuario comparte un video sugerido</li>
+</ul>
+<p>Entonces estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un SR por sobre otro en un caso determinado. Si se visualizan estas clases en un diagrama de conjuntos, se tiene</p>
+<p><img alt="venn1" src="/images/venn1.png" /></p>
+<p>De aquí se tiene que la <strong>Precisión</strong> es la fracción de instancias <em>relevantes</em> obtenidas en alguna tarea en específico, del resultado de recomendaciones.</p>
+<div class="math">$$\mbox{precision} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FP}}$$</div>
+<p>O en el contexto de SR,</p>
+<div class="math">$$\mbox{precision} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{recomendados}|}$$</div>
+<p>Para el caso del diagrama, la recomendación o el SR tiene una precisión de <span class="math">\(2/5=0.4\)</span>. La <em>precisión</em> entonces mide qué tan posible es obtener los elementos relevantes <em>con la menor cantidad</em> de recomendaciones.</p>
+<p><strong>Recall</strong> o <em>true positive rate</em> (TPR) se refiere a la fracción de instancias relevantes obtenidas del total de instancias relevantes, o bien</p>
+<div class="math">$$
+\mbox{TPR} = \mbox{recall} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FN}}
+$$</div>
+<p>O en términos de recomendaciones</p>
+<div class="math">$$
+\mbox{recall} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{relevantes}|}$$</div>
+<p>Para el caso del diagrama, el <em>recall</em> del SR es de <span class="math">\(2/10=0.2\)</span></p>
+<p>Ambos, precision y <em>recall</em> tienen una relación inversa, tal que el <em>recall</em> disminuye a medida que la precisión aumenta. En este sentido, para un clasificador es posible graficar su desempeño en términos de la curva <em>precision vs recall</em> o curva PR.</p>
+<p>Esta curva puede transformarse a otro espacio más conocido, llamado <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">curva ROC</a> o <em>receiving operating characteristic curve</em>, en el cual se grafica el <em>recall</em> como TPR o <em>true positive rate</em> versus <strong>FPR</strong> o <em>false positive rate</em>.</p>
+<p><a href="http://www.youtube.com/watch?v=OAl6eAyP-yo" title="ROC Curve explained"><img alt="roc_video" src="http://img.youtube.com/vi/OAl6eAyP-yo/0.jpg" /></a></p>
+<p>Conviene tener en cuenta que <strong>Ambas curvas no son equivalentes</strong> y la curva PR describe mejor el desempeño de clasificadores en casos donde hay un desbalance importante de clases. Una comparación completa entre ambas curvas puede leerse <a href="http://pages.cs.wisc.edu/~jdavis/davisgoadrichcamera2.pdf">aquí</a></p>
+<div class="math">$$
+\mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
+$$</div>
+<p><img alt="roc_vs_pr" src="/images/roc_vs_pr.png" /></p>
+<p>Finalmente, algunas notas sobre este tema</p>
+<ul>
+<li>Considerando que hay tipos de SR distintos que generan resultados distintos, estas métricas resultan útiles para poder comparar los distintos modelos, por ejemplo a través de <em>A/B Testing</em> o tests de hipótesis.</li>
+<li>Dependiendo del caso, puedo darse la necesidad de usar algoritmos con mayor <em>recall</em> que precisión i.e. si quiero saber cuándo es el siguiente partido de chile, me importa más usar un SR que recomiende el <em>resultado correcto</em>, en vez de un SR que me recomiende <em>la mejor página con el resultado</em>. En este caso requiero mayor <em>recall</em> que precisión.</li>
+<li>Es bueno recordar que estas métricas evalúan <em>conjuntos de recomendaciones</em>, no las recomendaciones en sí.</li>
+</ul>
+<h3>Métricas en el contexto de recomendadores</h3>
+<p>En el contexto de recomendadores existen muchos otros indicadores que ayudan a evaluar un SR, tales como</p>
+<ul>
+<li>Mean reciprocal rank (MRR)</li>
+<li>Precision at N (P@N)</li>
+<li>Mean Average Precision (MAP)</li>
+<li>DCG y nDCG</li>
+<li>Coverage index</li>
+<li>Diversity index</li>
+<li>Mean Percentage Ranking</li>
+</ul>
+<!-- ## Diversity
+
+Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equipo, la diversidad es muy baja. Si en cambio le recomiendo noticias de fútbol, añado diversidad a mi conjunto de recomendaciones. Esto apunta a resolver el problema de *burbujas de información*, algo que se puede hacer de manera programática y controlada. -->
+
+<h2>A continuación</h2>
+<p>En la <a href="{filename}/blog/sysrec-5">parte 5 y final</a> se verán las <em>Máquinas de Factorización</em></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+</body>
+
+</html>

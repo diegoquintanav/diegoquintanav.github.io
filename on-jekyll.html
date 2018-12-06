@@ -31,18 +31,12 @@
   <header class="header">
     <div class="container">
 <div class="row">
-    <div class="col-sm-4">
-      <a href="/">
-        <img class="img-fluid rounded" src=/images/profile.jpg alt="On the shoulders of giants">
-      </a>
-    </div>
-  <div class="col-sm-8">
+  <div class="col-sm-12">
     <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
             <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="/pages/contact-EN.html">Contact</a></li>
-            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/now.html">Now</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -61,13 +55,13 @@
   <article class="article">
     <header>
       <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2017-10-20T18:01:00-06:00">
+        <li class="list-inline-item text-muted" title="2017-10-26T18:01:00-06:00">
           <i class="fa fa-clock-o"></i>
-          vie 20 octubre 2017
+          jue 26 octubre 2017
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="/category/getting-started.html">getting started</a>
+          <a href="/category/getting-started.html">Getting Started</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
@@ -79,7 +73,7 @@
 
 <!-- Modified: 2010-12-05 19:30 -->
 
-<p>I've decided to start a blog, (again, for the <em>nth</em> time) and this time I am giving a try on <a href="https://jekyllrb.com/">jekyll</a> and the <a href="https://pages.github.com">github pages</a>, since they seem to do quite a fine job.</p>
+<p>I've decided to start a blog, (again, for the <span class="math">\(n_{th}\)</span> time) and this time I am giving a try on <a href="https://jekyllrb.com/">jekyll</a> and the <a href="https://pages.github.com">github pages</a>, since they seem to do quite a fine job.</p>
 <p>Setting things up was easy. I'm not going to copy and paste the guides already present in both sites, since it won't add anything. Instead I will try to share a bit of the troubleshooting I had to do during the process.</p>
 <h1>First steps</h1>
 <p>Okay, it took me about nothing to have my site showing a humble <em>Hello World</em> in my <code>index.html</code> on my site.</p>
@@ -87,7 +81,7 @@
 <p>You can create a site for yourself or for some repo you own. I'm dealing with the first case for now: A site for myself.</p>
 <p>Long story short, what I did was:</p>
 <ol>
-<li>Have a <a href="https://github.com">Github</a> account. <em>Duh</em>. Then create a repo named <em>[<strong>your username</strong>].github.io</em>. In my case, my username is <em>diegoquintanav</em>. You can change that later, it seems. Let's not care about that <em>for now</em>.</li>
+<li>Have a <a href="https://github.com">Github</a> account. Duh. Then create a repo named <em>[<strong>your username</strong>].github.io</em>. In my case, my username is <em>diegoquintanav</em>. You can change that later, it seems. Let's not care about that <em>for now</em>.</li>
 <li>Add a file named <code>index.html</code> in the root folder of the repo, and write <em>Hello World</em> in it.</li>
 <li>???</li>
 <li>Profit! go to <em>[<strong>your username</strong>].github.io</em> and you should be able to see the words too.</li>
@@ -142,11 +136,7 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
 </ul>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><span class="sb">$$</span><span class="nv">\text</span><span class="nb">{A } </span><span class="nv">\LaTeX</span><span class="nb"> </span><span class="nv">\text</span><span class="nb">{ equation.}</span><span class="s">$$</span>
-</pre></div>
-
-
-<div class="math">$$\text{A } \LaTeX \text{ equation.}$$</div>
+<p>{% highlight tex %}<span class="math">\( A LaTeX equation\)</span> {% endhighlight %}</p>
 <p>Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using <a href="https://kramdown.gettalong.org/syntax.html#math-blocks">kramdown</a> which is set by default.</p>
 <h1>Next Steps</h1>
 <p>I think there are a lot of other things to play around, which I will document and comment in the future posts. Not yet. This is my <em>MVP</em> for now. Next iteration should include:</p>

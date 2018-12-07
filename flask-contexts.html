@@ -81,8 +81,8 @@
 </pre></div>
 
 
-<p>So, what is that went <em>wrong</em>? </p>
-<p>Someone already wrote an <a href="http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html">exhaustive revision</a> of what are the different approaches, but it actually never closes the issue of <em>how</em> to test an application properly. </p>
+<p>So, what is that went <em>wrong</em>?</p>
+<p>Someone already wrote an <a href="http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html">exhaustive revision</a> of what are the different approaches, but it actually never closes the issue of <em>how</em> to test an application properly.</p>
 <p>Others mention it, but it just <em>doesn't stick</em></p>
 <ul>
 <li><a href="http://alexmic.net/flask-sqlalchemy-pytest/">Delightful testing with pytest and Flask-SQLAlchemy - Alex Michael</a></li>
@@ -107,7 +107,7 @@
 <li><a href="https://github.com/pallets/flask/blob/1949c4a9abc174bf29620f6dd8ceab9ed3ace2eb/flask/ctx.py#L230">Every request pushes a new application context</a></li>
 </ul>
 <h2>Flask contexts vernacular</h2>
-<p>For a given <code>app</code> object, there are some design aspects and specific objects 
+<p>For a given <code>app</code> object, there are some design aspects and specific objects
 it's good to get familiar with when testing with Flask</p>
 <h3><code>flask.app.test_client()</code></h3>
 <p>Provides a client that can perform requests to our application.</p>
@@ -144,7 +144,7 @@ information and encrypted with your <code>SECRET_KEY</code>.</p>
         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, after first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span> 
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
     <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
@@ -279,7 +279,7 @@ response = c.get(&#39;/test/url&#39;)
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">()</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
 
-    <span class="c1"># bind the test life with the context through the </span>
+    <span class="c1"># bind the test life with the context through the</span>
     <span class="n">request</span><span class="o">.</span><span class="n">addfinalizer</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">pop</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">app</span>
 
@@ -309,7 +309,7 @@ response = c.get(&#39;/test/url&#39;)
 
 <span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ciae_app</span> <span class="kn">import</span> <span class="n">create_app</span>
+    <span class="kn">from</span> <span class="nn">yourapp</span> <span class="kn">import</span> <span class="n">create_app</span>
     <span class="k">return</span> <span class="n">create_app</span><span class="p">(</span><span class="s1">&#39;testing&#39;</span><span class="p">)</span>
 
 
@@ -335,7 +335,8 @@ response = c.get(&#39;/test/url&#39;)
 <span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
 
-    <span class="kn">from</span> <span class="nn">ciae_app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+    <span class="c1"># extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113</span>
+    <span class="kn">from</span> <span class="nn">yourapp.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
     <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
 
@@ -379,7 +380,7 @@ response = c.get(&#39;/test/url&#39;)
 
     <span class="c1"># client is a pytest fixture</span>
     <span class="k">with</span> <span class="n">client</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
-        <span class="c1"># login is a helper method that issues a GET request</span>
+        <span class="c1"># login is a helper method that issues a POST request</span>
         <span class="n">login</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">&quot;user@test.com&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">current_user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;user@test.com&quot;</span>
         <span class="k">assert</span> <span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span>

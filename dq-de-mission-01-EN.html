@@ -2627,7 +2627,7 @@ Name: TIMESTAMP, dtype: datetime64[ns, UTC]</pre>
 <li>It requires a bit more of effort</li>
 <li>It could happen that the column is not categorical at all (i.e. more different values for BASIN show up in the future) </li>
 </ul>
-<p>We will not use this approach since it beats the purpose of the problem, and for this case is overkill since each category does not have or need a full model by itself, since it would consist of only one attribute. We'll keep it simple.</p>
+<p>We will not use this approach since it beats the purpose of the problem, and for this case is overkill since each category does not have or need a full model by itself, and each model would consist of only one attribute. We'll keep it simple.</p>
 <p><a href="https://dba.stackexchange.com/a/15405">This Stackoverflow question</a> deals with normalization on <em>one-to-one</em> relationships:</p>
 <blockquote><p>If it fits within the rules of normalization, then 1:1 relationships can be normalized (by definition!) - In other words, there is nothing about 1:1 relationships that make it impossible for them to obey the normal forms.</p>
 <p>To answer your question about the practicality of 1:1 relationships, there are times when this is a perfectly useful construct, such as when you have subtypes with distinct predicates (columns).</p>

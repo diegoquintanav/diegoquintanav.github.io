@@ -1431,8 +1431,6 @@ dq_de_pgadmin_1 is up-to-date
 <pre>CONTAINER ID        IMAGE                                   COMMAND                  CREATED             STATUS              PORTS                           NAMES
 58b58e1f97f4        postgres:10                             &#34;docker-entrypoint.s…&#34;   10 days ago         Up 3 hours          0.0.0.0:54320-&gt;5432/tcp         dq_de_db_1
 c5b7c0ec8430        dpage/pgadmin4:latest                   &#34;/entrypoint.sh&#34;         10 days ago         Up 3 hours          443/tcp, 0.0.0.0:8080-&gt;80/tcp   dq_de_pgadmin_1
-9f18df162b11        rediscommander/redis-commander:latest   &#34;/usr/bin/dumb-init …&#34;   2 weeks ago         Up 3 hours          0.0.0.0:8081-&gt;8081/tcp          redis-commander
-e38a793b3b60        postgres:10                             &#34;docker-entrypoint.s…&#34;   2 weeks ago         Up 3 hours          0.0.0.0:51085-&gt;5432/tcp         demo_db_1
 </pre>
 </div>
 </div>
@@ -1478,7 +1476,7 @@ e38a793b3b60        postgres:10                             &#34;docker-entrypoi
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that we could also refer to our database by the port mapping done in the <code>docker-compose.yml</code> file. This means that we could reach our database in <code>0.0.0.0:54320</code>.</p>
+<p>Note that we could also refer to our database by the port mapping done in the <code>docker-compose.yml</code> file. This means that we could reach our database in <code>0.0.0.0:54320</code>. This is the good practice, since the IP address of the container is managed by docker and it could change in later deployments.</p>
 
 </div>
 </div>
@@ -1524,8 +1522,6 @@ e38a793b3b60        postgres:10                             &#34;docker-entrypoi
 <span class="n">DATA_VIEW_USER_PWD</span> <span class="o">=</span> <span class="s2">&quot;changeme&quot;</span>
 
 <span class="c1"># create user and detach password from command</span>
-<span class="c1"># also add an IF NOT EXIST clause as a hack from</span>
-<span class="c1"># https://stackoverflow.com/questions/8092086/create-postgresql-role-user-if-it-doesnt-exist</span>
 <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">CREATE USER data_prod_user WITH PASSWORD &#39;</span><span class="si">{DATA_PROD_USER_PWD}</span><span class="s2">&#39;;</span>
 <span class="s2">CREATE GROUP readonly WITH NOLOGIN;</span>
@@ -2621,13 +2617,13 @@ Name: TIMESTAMP, dtype: datetime64[ns, UTC]</pre>
 <p>Pros</p>
 <ul>
 <li>It's more efficient to store and query integer values</li>
-<li>We could create auxiliar tables that map the labels to their meanings, thus allowing for more atomic queries</li>
+<li>We could create auxiliary tables that map the labels to their meanings, thus allowing for more atomic queries</li>
 <li>This would allow for good normalizations practices that will help in scaling our database (and keeping it sane to maintain)</li>
 </ul>
 <p>Cons</p>
 <ul>
 <li>Integers lose any semantic meaning without a conversion table</li>
-<li>Adding semantic meaning from an auxiliar table requires a <code>JOIN</code> operation, which is costly</li>
+<li>Adding semantic meaning from an auxiliary table requires a <code>JOIN</code> operation, which is costly</li>
 <li>It requires a bit more of effort</li>
 <li>It could happen that the column is not categorical at all (i.e. more different values for BASIN show up in the future) </li>
 </ul>
@@ -2653,7 +2649,7 @@ Name: TIMESTAMP, dtype: datetime64[ns, UTC]</pre>
 <p>So you can see, sometimes the driver is performance, sometimes it is model purity, or just a desire to take full advantage of declarative schema rules.</p>
 </blockquote>
 <p>We could even push this further and say that the <code>BASIN</code> column is more of a <em>boolean</em> value since it has two values max. This allows us to rewrite the column in something like <code>IS_BASIN_EASTERN_PACIFIC</code>. We could say then that for those values where this is <code>False</code> then it means the Basin it's <code>North Atlantic</code>.</p>
-<p>But this is <em>never</em> a good approach since it uses this information implicitly (thus hidden, and we don't want hidden stuff!), plus this will break the second a new category shows up.</p>
+<p>But this is <em>never</em> a good approach since it uses this information implicitly (thus hidden, and we don't want hidden stuff!), plus this will break the second after a new category shows up.</p>
 
 </div>
 </div>

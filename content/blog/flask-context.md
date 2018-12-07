@@ -14,9 +14,10 @@ There's this thing going on with the [flask context](http://flask.pocoo.org/docs
 ```plain
 Flask.url_for() error: Attempted to generate a URL without the application context being pushed
 ```
-So, what is that went _wrong_? 
 
-Someone already wrote an [exhaustive revision](http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html) of what are the different approaches, but it actually never closes the issue of _how_ to test an application properly. 
+So, what is that went _wrong_?
+
+Someone already wrote an [exhaustive revision](http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html) of what are the different approaches, but it actually never closes the issue of _how_ to test an application properly.
 
 Others mention it, but it just _doesn't stick_
 
@@ -33,7 +34,6 @@ For the sake of completeness and for my own understanding of the issue, here's m
 - The idea behind having two detached contexts is so an application can exist
   outside of a request, and it's more of a design pattern (That a lot of people seems to _hate_) and it was different in previous versions of Flask [as discussed in this SO question (Which is also a great discussion about the internals of Flask).](https://stackoverflow.com/questions/15083967/when-should-flask-g-be-used)
 
-
 In short, _context locals_ can be summarized as (as shown in [Flask for Fun and Profit, Slide 27](https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=27))
 
 - A pushed app context points the current app in use to `current_app`, and it gives
@@ -45,17 +45,20 @@ In short, _context locals_ can be summarized as (as shown in [Flask for Fun and 
 
 ## Flask contexts vernacular
 
-For a given `app` object, there are some design aspects and specific objects 
+For a given `app` object, there are some design aspects and specific objects
 it's good to get familiar with when testing with Flask
 
 ### `flask.app.test_client()`
+
 Provides a client that can perform requests to our application.
 
 ### `flask.app.app_context()`
+
 The application context, it gives life to `current_app`. Starts and dies with
 a request.
 
 ### `flask.app.test_request_context()`
+
 The request context, it gives life to `request`. If there's no application context
 at the moment, it pushes a new one. Starts and ends with a request.
 
@@ -93,7 +96,7 @@ with app.app_context():
         print('g.foo should be xyz, is: {0}'.format(g.foo))
 
     print('in app context, after first request context')
-    print('g.foo should be abc, is: {0}'.format(g.foo)) 
+    print('g.foo should be abc, is: {0}'.format(g.foo))
 
     with app.test_request_context():
         print('in second request context')
@@ -133,7 +136,7 @@ context in _nested contexts_, and it's a _caveat_ mentioned in the answer (some 
 >
 > The reality is that "application context" is potentially quite a misleading name, because `app.app_context()` **is** a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:
 
-``` python
+```python
 from flask import Flask, g
 app = Flask(__name__)
 
@@ -177,7 +180,6 @@ g.foo should be pqr, is: pqr
 In this second example, all three `with` blocks are pushing independent contexts. The difference is that
 last two are also pushing an application context _implicitly_, and the first one is not pushing a request context.
 
-
 ## So, how do I test my app?
 
 I will be using [`pytest`](https://docs.pytest.org/en/latest/) because it's good. Just google "`unittest versus pytest`" to find out why.
@@ -200,9 +202,7 @@ This [SO answer](https://stackoverflow.com/a/17377101/5819113) summarizes the di
 >     with current_app.test_request_context():
 >         # test your request context code
 
-
 It's also important to note that
-
 
 > Both app and request contexts can also be pushed manually, which is useful when using the interpreter.
 >
@@ -214,17 +214,17 @@ So far there are _two_ approaches:
 1. push an application context at the beginning inside a fixture, and pop it at the end
 2. pass an application object from the fixture and produce contexts locally inside
    each test
-   
+
 Everything in the middle is prone to produce weird results and drive you crazy, so _try_ to be consistent!
 
 [Armin Ronacher](http://lucumr.pocoo.org/about/) suggests a pytest fixture pattern in [this presentation](https://youtu.be/1ByQhAM5c1I?t=2285) ([slides](https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52)), which relies in the first approach. The code is as follows:
 
-``` python
+```python
 import pytest
 
 @pytest.fixture(scope="module")
 def app(request):
-    
+
     # import app factory pattern
     from yourapp import create_app
     app = create_app()
@@ -232,8 +232,8 @@ def app(request):
     # pushes an application context manually
     ctx = app.app_context()
     ctx.push()
-    
-    # bind the test life with the context through the 
+
+    # bind the test life with the context through the
     request.addfinalizer(ctx.pop)
     return app
 
@@ -242,7 +242,7 @@ def test_client(request, app):
 
     client = app.test_client()
     client.__enter__()
-    
+
     request.addfinalizer(
         lambda: client.__exit__(None, None, None))
     return client
@@ -266,7 +266,7 @@ def runner(app):
 
 @pytest.fixture(scope='session')
 def app(request):
-    from ciae_app import create_app
+    from yourapp import create_app
     return create_app('testing')
 
 
@@ -292,7 +292,8 @@ def client(app_context):
 @pytest.fixture(scope="model")
 def db(app_context):
 
-    from ciae_app.extensions import db
+    # extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113
+    from yourapp.extensions import db
 
     db.create_all()
 
@@ -336,7 +337,7 @@ def test_with_logged_in_user(client):
 
     # client is a pytest fixture
     with client as c:
-        # login is a helper method that issues a GET request
+        # login is a helper method that issues a POST request
         login(c, "user@test.com", "test")
         assert current_user.email == "user@test.com"
         assert current_user.is_authenticated

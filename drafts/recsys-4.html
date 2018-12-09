@@ -8,21 +8,39 @@
 
   <title>  Sistemas recomendadores, parte 4 | On the shoulders of giants
 </title>
-  <link rel="canonical" href="/drafts/recsys-4.html">
+  <link rel="canonical" href="https://diegoquintanav.github.io/drafts/recsys-4.html">
 
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
 
-  
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
+        href="https://diegoquintanav.github.io/feeds/recommender-systems.rss.xml">  
   <meta name="description" content="Cuarta parte de sistemas recomendadores">
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      a.async = 1;
+      a.src = g;
+      m = s.getElementsByTagName(o)[0];
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-108898322-1', 'auto');
+    ga('send', 'pageview');
+  </script>
 
 
 </head>
@@ -32,17 +50,17 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="/">
-        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="https://diegoquintanav.github.io/">
+        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="/pages/contact-EN.html">Contact</a></li>
-            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/contact-EN.html">Contact</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -67,11 +85,11 @@
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="/category/recommender-systems.html">Recommender Systems</a>
+          <a href="https://diegoquintanav.github.io/category/recommender-systems.html">Recommender Systems</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
-              <a href="/tag/recsys.html">#recsys</a>          </li>
+              <a href="https://diegoquintanav.github.io/tag/recsys.html">#recsys</a>          </li>
       </ul>
     </header>
     <div class="content">
@@ -92,7 +110,7 @@
 <!-- *  Usando un software llamado *gensim* -->
 
 <h1><em>Previously</em></h1>
-<p>En la <a href="/recsys-3-ES.html">parte 3</a> se comentaron algunos <em>SR</em> basados en contenido, quedando para esta parte comentar un poco sobre sistemas <em>híbridos</em> y sobre métricas usadas en la evaluación de un <em>SR</em>.</p>
+<p>En la <a href="https://diegoquintanav.github.io/recsys-3-ES.html">parte 3</a> se comentaron algunos <em>SR</em> basados en contenido, quedando para esta parte comentar un poco sobre sistemas <em>híbridos</em> y sobre métricas usadas en la evaluación de un <em>SR</em>.</p>
 <h2>Sistemas de recomendación híbridos</h2>
 <p>Se trata de una familia de <em>SR</em> que combinan elementos de las clasificaciones vistas antes, <em>content based</em> (CB) y <em>collaborative filtering based</em> (CF). Al respecto en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.8200&amp;rep=rep1&amp;type=pdf">Burke, 2007</a> y en <a href="http://blog.ag-nbi.de/wp-content/uploads/2015/10/adomavicius-recsys.pdf">Adomavicius, 2005</a> se hace una revisión extensa sobre el tema</p>
 <p>Según Burke existen 7 formas distintas de <em>hibridizar sistemas</em>,</p>
@@ -108,13 +126,13 @@
 <p>Estas siguen 3 diseños generales</p>
 <h3>Monolítico</h3>
 <p>Se refiere a la unión de dos o más <em>SR</em> en uno solo. Ejemplos de esto son aquellos que implementan <em>Feature augmentation, Feature combination</em></p>
-<p><img alt="monolithic" src="/images/monolithic_hybrid.png" /></p>
+<p><img alt="monolithic" src="https://diegoquintanav.github.io/images/monolithic_hybrid.png" /></p>
 <h3>Paralelizado</h3>
 <p>Se refiere a la ejecución de diversos <em>SR</em> en paralelo, cuyas recomendaciones son combinadas en la salida. Ejemplos de esto implementan <em>Weighted, Switching, Mixed</em></p>
-<p><img alt="parallel" src="/images/parallel_hybrid.png" /></p>
+<p><img alt="parallel" src="https://diegoquintanav.github.io/images/parallel_hybrid.png" /></p>
 <h3>Pipeline</h3>
 <p>Se refieren a los <em>SR</em> cuya entrada es la salida de otro <em>SR</em>, siguiendo una ejecución en serie. Ejemplos de esto implementam <em>Cascade, Meta-Level</em></p>
-<p><img alt="pipeline" src="/images/pipeline_hybrid.png" /></p>
+<p><img alt="pipeline" src="https://diegoquintanav.github.io/images/pipeline_hybrid.png" /></p>
 <h2>Evaluación de un recomendador</h2>
 <h3>Métricas en contexto de clasificación</h3>
 <p>En términos generales el problema de recomendación es un problema de clasificación, en el sentido que un <em>SR</em> intenta recomendar los elementos que pertenecen al grupo de intereses de un usuario cualquiera. En esta tarea de clasificación un <em>SR</em> puede fallar o acertar, y en base a estos dos escenarios es que se definen distintas métricas que permitan cuantificar la <em>calidad</em> de un clasificador.</p>
@@ -133,7 +151,7 @@
 <li>Un usuario comparte un video sugerido</li>
 </ul>
 <p>Entonces estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un <em>SR</em> por sobre otro en un caso determinado. Si se visualizan estas clases en un diagrama de conjuntos, se tiene</p>
-<p><img alt="venn1" src="/images/venn1.png" /></p>
+<p><img alt="venn1" src="https://diegoquintanav.github.io/images/venn1.png" /></p>
 <p>De aquí se tiene que la <strong>Precisión</strong> es la fracción de instancias <em>relevantes</em> obtenidas en alguna tarea en específico, del resultado de recomendaciones.</p>
 <div class="math">$$\mbox{precision} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FP}}$$</div>
 <p>O en el contexto de <em>SR</em>,</p>
@@ -154,7 +172,7 @@ $$</div>
 <div class="math">$$
 \mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
 $$</div>
-<p><img alt="roc_vs_pr" src="/images/roc_vs_pr.png" /></p>
+<p><img alt="roc_vs_pr" src="https://diegoquintanav.github.io/images/roc_vs_pr.png" /></p>
 <p>Finalmente, algunas notas sobre este tema</p>
 <ul>
 <li>Considerando que hay tipos de <em>SR</em> distintos que generan resultados distintos, estas métricas resultan útiles para poder comparar los distintos modelos, por ejemplo a través de <em>A/B Testing</em> o tests de hipótesis.</li>
@@ -177,7 +195,7 @@ $$</div>
 Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equipo, la diversidad es muy baja. Si en cambio le recomiendo noticias de fútbol, añado diversidad a mi conjunto de recomendaciones. Esto apunta a resolver el problema de *burbujas de información*, algo que se puede hacer de manera programática y controlada. -->
 
 <h2>A continuación</h2>
-<p>En la <a href="/drafts/recsys-5-ES.html">parte 5 y final</a> se verán las <em>Máquinas de Factorización</em></p>
+<p>En la <a href="https://diegoquintanav.github.io/drafts/recsys-5-ES.html">parte 5 y final</a> se verán las <em>Máquinas de Factorización</em></p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -235,6 +253,24 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
 </script>
     </div>
   </article>
+  <hr>
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function() {
+      this.page.url = 'https://diegoquintanav.github.io/drafts/recsys-4.html';
+      this.page.identifier = 'recsys-4';
+    };
+    (function() {
+      var d = document;
+      var s = d.createElement('script');
+      s.src = '//bluesmonk.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript class="text-muted">
+    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+  </noscript>
     </div>
   </div>
 
@@ -242,9 +278,9 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Fri, 20 Oct 2017 18:01:00 -0600</lastBuildDate><item><title>On getting started with Jekyll</title><link>https://diegoquintanav.github.io/on-jekyll-EN.html</link><description>&lt;!-- Summary:  --&gt;
+
+&lt;!-- Modified: 2010-12-05 19:30 --&gt;
+
+&lt;p&gt;I've decided to start a blog, (again, for the &lt;em&gt;nth&lt;/em&gt; time) and this time I am giving a try on &lt;a href="https://jekyllrb.com/"&gt;jekyll&lt;/a&gt; and the &lt;a href="https://pages.github.com"&gt;github pages&lt;/a&gt;, since they seem to do quite a fine job.&lt;/p&gt;
+&lt;p&gt;Setting things up was easy. I'm not going to copy and paste the guides already present in both sites, since it won't add anything. Instead I will try to share a bit of the troubleshooting I had to do during the process.&lt;/p&gt;
+&lt;h1&gt;First steps&lt;/h1&gt;
+&lt;p&gt;Okay, it took me about nothing to have my site showing a humble &lt;em&gt;Hello World&lt;/em&gt; in my &lt;code&gt;index.html&lt;/code&gt; on my site.&lt;/p&gt;
+&lt;h2&gt;Creating your personal page&lt;/h2&gt;
+&lt;p&gt;You can create a site for yourself or for some repo you own. I'm dealing with the first case for now: A site for myself.&lt;/p&gt;
+&lt;p&gt;Long story short, what I did was:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Have a &lt;a href="https://github.com"&gt;Github&lt;/a&gt; account. &lt;em&gt;Duh&lt;/em&gt;. Then create a repo named &lt;em&gt;[&lt;strong&gt;your username&lt;/strong&gt;].github.io&lt;/em&gt;. In my case, my username is &lt;em&gt;diegoquintanav&lt;/em&gt;. You can change that later, it seems. Let's not care about that &lt;em&gt;for now&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Add a file named &lt;code&gt;index.html&lt;/code&gt; in the root folder of the repo, and write &lt;em&gt;Hello World&lt;/em&gt; in it.&lt;/li&gt;
+&lt;li&gt;???&lt;/li&gt;
+&lt;li&gt;Profit! go to &lt;em&gt;[&lt;strong&gt;your username&lt;/strong&gt;].github.io&lt;/em&gt; and you should be able to see the words too.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That was a piece of cake. Next thing you can do is to set up &lt;strong&gt;Jekyll&lt;/strong&gt;. This requires a bit more of work, but don't be scared.
+Before doing anything, I believe it's a good thing to understand &lt;em&gt;why&lt;/em&gt; should you use &lt;strong&gt;Jekyll&lt;/strong&gt; and not just plain HTML or &lt;strong&gt;Wordpress&lt;/strong&gt; for this matter. Since this is a personal issue and a matter of preference, I can only share my experience and talk about my needs.&lt;/p&gt;
+&lt;p&gt;I tried using Wordpress, which has a lot of resources to get up and running right out of the box. It is also free, which is nice. In my case, I wanted to have more control over the stuff I was writing, namely be able to deploy my stuff whenever I want and to be able to change stuff from the very core, so to speak. Plus, this should work as a first experience running a site. Github pages may be too &lt;em&gt;vanilla&lt;/em&gt; for the hardcore developer, but is a very balanced solution for enthusiasts like me.&lt;/p&gt;
+&lt;p&gt;Now there are two ways it seems, to get started. The first one implies creating the folder structure manually, and this process is more or less explained in &lt;a href="http://jmcglone.com/guides/github-pages/"&gt;this fine post&lt;/a&gt; which is also referenced by the &lt;strong&gt;Jekyll&lt;/strong&gt; site.&lt;/p&gt;
+&lt;p&gt;What I didn't like about the post, though, is that doing things manually usually imply forgetting about things. I prefer to stick with the solution using &lt;strong&gt;Bundle&lt;/strong&gt; and &lt;strong&gt;Jekyll&lt;/strong&gt; from the terminal, which is more or less described &lt;a href="https://jekyllrb.com/docs/installation/"&gt;here&lt;/a&gt; and &lt;a href="https://jekyllrb.com/docs/quickstart/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Issues&lt;/h2&gt;
+&lt;h3&gt;New posts are not being displayed&lt;/h3&gt;
+&lt;p&gt;If you deployed &lt;strong&gt;Jekyll&lt;/strong&gt; correctly, it should use the &lt;code&gt;minima&lt;/code&gt; template by default. You should be able to add more posts inside the folder &lt;code&gt;_posts&lt;/code&gt; and see them instantly on your &lt;code&gt;localhost&lt;/code&gt;. That didn't happen in my case. A short way to debug this issue that solved my problem required the &lt;code&gt;--verbose&lt;/code&gt; flag when firing up the service.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo bundle &lt;span class="nb"&gt;exec&lt;/span&gt; jekyll serve --verbose
+  Logging at level: debug
+Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
+  Logging at level: debug
+         Requiring: jekyll-feed
+         Requiring: kramdown
+            Source: /path/to/diegoquintanav.github.io
+       Destination: path/to/diegoquintanav.github.io/_site
+ Incremental build: disabled. Enable with --incremental
+      Generating...
+       EntryFilter: excluded /Gemfile
+       EntryFilter: excluded /Gemfile.lock
+           Reading: _posts/2017-10-27-on-jekyll.md
+           Reading: _posts/2017-10-26-welcome-to-jekyll.markdown
+          Skipping: _posts/2017-10-27-on-jekyll.md has a future date
+        Generating: JekyllFeed::Generator finished in &lt;span class="m"&gt;0&lt;/span&gt;.000744857 seconds.
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In line &lt;code&gt;15&lt;/code&gt; you can observe the &lt;code&gt;Skipping: _posts/2017-10-27-on-jekyll.md has a future date&lt;/code&gt;. Changing the date solved the problem. About the &lt;code&gt;sudo&lt;/code&gt; thing, consider it a malpractice. The ruby environment manager &lt;a href="https://github.com/rbenv/rbenv"&gt;&lt;code&gt;rbenv&lt;/code&gt;&lt;/a&gt; fought bravely against the &lt;a href="https://anaconda.org/"&gt;Anaconda's&lt;/a&gt; &lt;code&gt;gcc&lt;/code&gt; dependencies and I just could not manage to have a ruby instance outside of &lt;code&gt;root&lt;/code&gt;. &lt;em&gt;Sorry&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Other reasons may involve a bad filename formatting or the presence of colons &lt;code&gt;:&lt;/code&gt; in it. You can read more about this &lt;a href="https://stackoverflow.com/questions/30625044/jekyll-post-not-generated"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Using Latex equations&lt;/h3&gt;
+&lt;p&gt;This was not trivial for me. If you follow the &lt;a href="https://jekyllrb.com/docs/extras/"&gt;guidelines&lt;/a&gt; inside the documentation, you should end in the tutorial.&lt;/p&gt;
+&lt;p&gt;It should be something easy. Copying and pasting the CDN in the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; of the document. &lt;em&gt;But where is this file?&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This was not obvious to me.&lt;/p&gt;
+&lt;p&gt;After some &lt;em&gt;google-fu&lt;/em&gt;, nothing was explicit enough to me. &lt;a href="https://github.com/mmistakes/minimal-mistakes/issues/735"&gt;This post&lt;/a&gt; helped a bit, but after realizing that the docs were not good enough, I ended up in &lt;code&gt;#jekyll&lt;/code&gt; on &lt;a href="https://freenode.net/"&gt;freenode&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;With a bit of help of some nice anons, I found out that&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Themes are either &lt;em&gt;Gem-installed&lt;/em&gt; or locally installed. By default after deploying Jekyll, you should be using &lt;code&gt;Minima&lt;/code&gt; as a &lt;em&gt;Gem Theme&lt;/em&gt;. This means basically that the files that compose your theme live somewhere else. Run &lt;code&gt;bundle show minima&lt;/code&gt;, which  displays the path of the theme. Somewhere inside &lt;code&gt;var&lt;/code&gt; if you are using Ubuntu. If you &lt;code&gt;cd&lt;/code&gt; into that folder you should see some folders, namely &lt;code&gt;_layouts&lt;/code&gt;, which are the templates of the theme and &lt;code&gt;_includes&lt;/code&gt; which I'm not sure yet. Every theme has more or less the same folders with the &lt;em&gt;exact&lt;/em&gt; names, but the way pages are composed by means of templates should differ. Expect that.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Inside the &lt;code&gt;_layouts&lt;/code&gt; folder you should find &lt;code&gt;head.html&lt;/code&gt;. Copy that file inside your own project, in a folder called &lt;code&gt;_layouts&lt;/code&gt; if you don't have it yet. By doing this you are basically overriding the base files inside the &lt;em&gt;Gem theme&lt;/em&gt; with your own.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now you can edit it. Copy the script node from the extras site on Jekyll and there you go. You should be able to render&lt;span class="math"&gt;\( \LaTeX\)&lt;/span&gt; equations easily.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Please beware that in comparison to the traditional way, &lt;em&gt;inline equations&lt;/em&gt; and almost every equation is rendered using doble dollar signs i.e.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sb"&gt;$$&lt;/span&gt;&lt;span class="nv"&gt;\text&lt;/span&gt;&lt;span class="nb"&gt;{A } &lt;/span&gt;&lt;span class="nv"&gt;\LaTeX&lt;/span&gt;&lt;span class="nb"&gt; &lt;/span&gt;&lt;span class="nv"&gt;\text&lt;/span&gt;&lt;span class="nb"&gt;{ equation.}&lt;/span&gt;&lt;span class="s"&gt;$$&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="math"&gt;$$\text{A } \LaTeX \text{ equation.}$$&lt;/div&gt;
+&lt;p&gt;Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using &lt;a href="https://kramdown.gettalong.org/syntax.html#math-blocks"&gt;kramdown&lt;/a&gt; which is set by default.&lt;/p&gt;
+&lt;h1&gt;Next Steps&lt;/h1&gt;
+&lt;p&gt;I think there are a lot of other things to play around, which I will document and comment in the future posts. Not yet. This is my &lt;em&gt;MVP&lt;/em&gt; for now. Next iteration should include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Comments section. Might prove useful somewhere.&lt;/li&gt;
+&lt;li&gt;Add more sections, editing the &lt;code&gt;navbar&lt;/code&gt; or something equivalent. Add more endpoints.&lt;/li&gt;
+&lt;li&gt;Change the site's domain.&lt;/li&gt;
+&lt;li&gt;Add some google analytics sorcery or equivalent.&lt;/li&gt;
+&lt;li&gt;Theme editing and/or theme changing&lt;/li&gt;
+&lt;li&gt;Add embedded python REPL instances. I saw them somewhere on the internet. I want them.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Fri, 20 Oct 2017 18:01:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-10-20:on-jekyll-EN.html</guid><category>jekyll</category><category>gh-sites</category><category>tutorial</category></item></channel></rss>

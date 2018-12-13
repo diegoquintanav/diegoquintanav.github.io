@@ -4,6 +4,6 @@ Date: 2018-12-03 23:00
 Category: Data Science
 Tags: python, dataquest, data-engineering, postgres
 author: Diego Quintana
-Summary: My approach on Dataquest's first Data Engineering Mission using Docker and `psycopg2`
+Summary: Dataquest.io's first mission using Docker, postgres and `psycopg2`
 Status: published
 Lang: EN

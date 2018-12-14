@@ -93,10 +93,29 @@
       </ul>
     </header>
     <div class="content">
-      <h1><em>previously</em></h1>
+      <div class="toc">
+<ul>
+<li><a href="#previously">previously</a></li>
+<li><a href="#sistemas-recomendadores-basados-en-contenido">Sistemas recomendadores basados en contenido</a></li>
+<li><a href="#como-podemos-analizar-el-contenido">¿Cómo podemos analizar el contenido?</a><ul>
+<li><a href="#representacion-vectorial-de-texto">Representación vectorial de texto</a><ul>
+<li><a href="#regularizacion-de-texto">Regularización de texto</a></li>
+</ul>
+</li>
+<li><a href="#representacion-semantica-del-contenido-y-la-web-semantica">Representación semántica del contenido y la web semántica</a></li>
+<li><a href="#metricas-de-similitud">Métricas de similitud</a></li>
+<li><a href="#manejo-de-sinonimos">Manejo de sinónimos</a></li>
+<li><a href="#tecnicas-de-procesamiento-adicionales">Técnicas de procesamiento adicionales</a></li>
+<li><a href="#en-python">En python</a></li>
+<li><a href="#a-continuacion">A continuación</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="previously"><em>previously</em></h1>
 <p>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se vieron algunas clasificaciones de <em>SR</em>, y mencionamos aquellos basados en <em>memoria</em> y basados en <em>modelos</em>. </p>
 <p>Otra clasificación que se mencionó se refiere a <em>SR</em> basados en <strong>contenido</strong>, o <em>content-based</em>.</p>
-<h1>Sistemas recomendadores basados en contenido</h1>
+<h1 id="sistemas-recomendadores-basados-en-contenido">Sistemas recomendadores basados en contenido</h1>
 <p>Existen elementos que son cuantificables de manera directa, i.e.</p>
 <ol>
 <li>Popularidad</li>
@@ -120,11 +139,11 @@
 <p>Este tipo de <em>SR</em> presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido.</p>
 <p>Sin embargo, dado que las recomendaciones dependen del análisis de contenido de las recomendaciones previas, puede ocurrir lo que se conoce como una burbuja de información o <em>filter bubble</em>. Esta situación produce que las nuevas recomendaciones terminen siendo muy similares a lo ya consumido. </p>
 <p>Por ejemplo, si me gusta Harry Potter, puede ocurrir que el <em>SR</em> sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general, lo que dependiendo del caso, puede ser un resultado indeseado.</p>
-<h1>¿Cómo podemos analizar el contenido?</h1>
+<h1 id="como-podemos-analizar-el-contenido">¿Cómo podemos analizar el contenido?</h1>
 <p>El aspecto más importante de este tipo de <em>SR</em> es su dependencia de la ?<em>representación</em> del contenido. </p>
 <p>De manera más general en otras áreas esto se conoce como <em>information retrieval</em>, y tiene que ver en cómo se extrae y representa información de los datos.</p>
 <p>En ese sentido, la forma más simple es la de analizar el texto en las descripciones de los ítems que forman parte del dataset.</p>
-<h2>Representación vectorial de texto</h2>
+<h2 id="representacion-vectorial-de-texto">Representación vectorial de texto</h2>
 <p>La primera representación que se puede hacer de un texto es a través de lo que se conoce como <a href="https://machinelearningmastery.com/gentle-introduction-bag-words-model/"><em>bag of words</em></a>, donde las palabras se comparan con un diccionario o <em>corpus</em>, y se representan como el número de repeticiones que esa palabra aparece en el texto.</p>
 <p>Esto a su vez permite otras representaciones, una es VSM o <em>Vector space model</em>, el cual se trata de vectorizar términos en función de su aparición en una <strong>familia</strong> </p>
 <p>Un ejemplo se puede ver en la siguiente imagen, donde la palabra <em>likes</em> se representa como la frecuencia en la que la palabra aparece en tres documentos distintos:</p>
@@ -135,7 +154,7 @@ v = [f_{1},f_{2},...,f_{n}]
 $$</div>
 <p>donde <span class="math">\(f_{i}\)</span> es la frecuencia de cada palabra. Un vector de palabras o diccionario o <em>corpus</em>, para el caso del castellano por ejemplo, es de aproximadamente 60000 palabras. </p>
 <p>La ventaja de esta representación es que al tratarse de vectores, estos tienen propiedades geométricas que permiten establecer comparaciones entre ellos.</p>
-<h3>Regularización de texto</h3>
+<h3 id="regularizacion-de-texto">Regularización de texto</h3>
 <p>La frecuencia de las palabras por sí sola en un documento no ayuda necesariamente a establecer similitudes, por ejemplo es muy posible encontrar muchas veces en un documento las palabras <em>él, ella, qué, etcétera</em>, lo que no ayudan mucho. Dos documentos no son necesariamente iguales si tienen relativamente la misma cantidad de veces la palabra <em>qué</em>.</p>
 <p>Es por esto que se desarrollan métodos de regularización, el primero es normalizar la frecuencia de los términos, a través de lo que se conoce como TF o <em>term frequency</em>. En otras palabras, esto significa:</p>
 <div class="math">$$
@@ -161,10 +180,10 @@ $$</div>
 <li><span class="math">\(n_{p}\)</span> es la cantidad de documentos donde aparece la palabra</li>
 <li>El valor de <span class="math">\(\log(N/n_{p})\)</span> tiende a cero cuando la palabra aparece en muchos documentos (por ejemplo artículos, preposiciones, etc.)</li>
 </ul>
-<h2>Representación semántica del contenido y la web semántica</h2>
+<h2 id="representacion-semantica-del-contenido-y-la-web-semantica">Representación semántica del contenido y la web semántica</h2>
 <p>El texto representado como <em>bag of words</em> carece de sentido contextual. El contexto en sí mismo añade una nueva capa al análisis de texto, y entre las formas de incorporarlo se pueden usar <em>ontologías</em>.</p>
 <p>Al respecto, la idea de una <a href="https://en.wikipedia.org/wiki/Semantic_Web">web semántica</a> intenta modelar los contenidos de internet a través de estructuras ontológicas estandarizadas llamadas <a href="https://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a></p>
-<h2>Métricas de similitud</h2>
+<h2 id="metricas-de-similitud">Métricas de similitud</h2>
 <p>Como vimos anteriormente, la vectorización de documentos permite operaciones entre vectores, los cuales tienen un sentido geométrico y por lo tanto permiten establecer métricas de distancia entre ellos. </p>
 <p>Las más conocidas ya se han visto y corresponden a:</p>
 <ul>
@@ -173,13 +192,13 @@ $$</div>
 </ul>
 <p>Sin embargo, un <em>corpus</em> en general es de alta dimensionalidad, (60000 palabras para el castellano, por ejemplo) y aquí <strong>la maldición de la dimensionalidad</strong> (<em>curse of dimensionality</em>) se presenta nuevamente como un problema. </p>
 <p>Al respecto, podemos normalizar los vectores y obtener mejores resultados con la distancia coseno, y otras métricas diseñadas para este problema como por ejemplo <a href="https://dl.acm.org/citation.cfm?doid=1639714.1639757">OKAPI BM25</a></p>
-<h2>Manejo de sinónimos</h2>
+<h2 id="manejo-de-sinonimos">Manejo de sinónimos</h2>
 <p>Puede ocurrir que dos palabras son iguales pero tienen distintos significados, lo que complica las comparaciones. Al respecto existen técnicas como</p>
 <ul>
 <li><em>Latent semantic Indexing</em></li>
 <li><em>Latent dirichlet allocation</em></li>
 </ul>
-<h2>Técnicas de procesamiento adicionales</h2>
+<h2 id="tecnicas-de-procesamiento-adicionales">Técnicas de procesamiento adicionales</h2>
 <p>El análisis de texto presenta otro tipo de problemas, pudiendo encontrarse</p>
 <ul>
 <li>palabras mal escritas</li>
@@ -195,7 +214,7 @@ $$</div>
 <li><em>Krovetz</em>: <em>Stem</em>, pero asociada a una palabra existente.</li>
 <li><em>Lemmatization</em>: Una variante de <em>stemming</em> que incorpora el análisis morfológico del texto. Ver más información <a href="https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html">aquí</a></li>
 </ul>
-<h2>En python</h2>
+<h2 id="en-python">En python</h2>
 <p>En python existen dos librerías importantes para esto,</p>
 <ul>
 <li><a href="www.nltk.org">NLTK</a></li>
@@ -205,9 +224,8 @@ $$</div>
 la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suficientes) y utiliza <em>defaults</em> aptos para su uso en la industria.</p>
 <p>En inglés se dice que una librería es <em>opinionated</em> cuando impone ciertos patrones y procedimientos con base en la experiencia de los creadores de la herramienta. Un ejemplo de esto es <em>ruby on rails</em> o <em>django</em> para desarrollo web.</p>
 <p>Esto se podría traducir como un diseño <em>dogmático</em>, aunque esta traducción no me gusta del todo.</p>
-<h2>A continuación</h2>
-<p>En la parte 4 se verán
-<!-- En la <a href="https://diegoquintanav.github.io/drafts/recsys-4.html">parte 4</a> se verán --></p>
+<h2 id="a-continuacion">A continuación</h2>
+<p>Esto es todo por esta vez. En la <a href="https://diegoquintanav.github.io/recsys-4.html">parte 4</a> se verán</p>
 <ul>
 <li>Sistemas recomendadores híbridos</li>
 <li>Métricas de calidad en sistemas recomendadores</li>

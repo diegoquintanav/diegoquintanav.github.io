@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Sat, 24 Nov 2018 13:14:00 -0600</lastBuildDate><item><title>Flask contexts (And how to use them)</title><link>https://diegoquintanav.github.io/flask-contexts.html</link><description>&lt;h1&gt;Motivation&lt;/h1&gt;
+<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Sat, 24 Nov 2018 13:14:00 -0600</lastBuildDate><item><title>Flask contexts (And how to use them)</title><link>https://diegoquintanav.github.io/flask-contexts.html</link><description>&lt;h1 id="motivation"&gt;Motivation&lt;/h1&gt;
 &lt;p&gt;There's this thing going on with the &lt;a href="http://flask.pocoo.org/docs/1.0/appcontext/#creating-an-application-context"&gt;flask context&lt;/a&gt; and the &lt;a href="http://flask.pocoo.org/docs/1.0/reqcontext/"&gt;request context&lt;/a&gt;, that used to confuse me a lot. Before testing these two probably will never be used, but after reading &lt;a href="http://flask.pocoo.org/docs/1.0/testing/"&gt;the documentation&lt;/a&gt; and writing your first tests, it's probable that you run into something like&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Flask.url_for() error: Attempted to generate a URL without the application context being pushed
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;&lt;code&gt;plain
+Flask.url_for() error: Attempted to generate a URL without the application context being pushed&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;So, what is that went &lt;em&gt;wrong&lt;/em&gt;?&lt;/p&gt;
 &lt;p&gt;Someone already wrote an &lt;a href="http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html"&gt;exhaustive revision&lt;/a&gt; of what are the different approaches, but it actually never closes the issue of &lt;em&gt;how&lt;/em&gt; to test an application properly.&lt;/p&gt;
 &lt;p&gt;Others mention it, but it just &lt;em&gt;doesn't stick&lt;/em&gt;&lt;/p&gt;
@@ -15,7 +13,7 @@
 &lt;li&gt;&lt;a href="https://github.com/pallets/flask/tree/1.0.2/examples/tutorial/tests"&gt;flask/examples/tutorial/tests at 1.0.2 · pallets/flask · GitHub&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For the sake of completeness and for my own understanding of the issue, here's my view on the topic.&lt;/p&gt;
-&lt;h2&gt;Flask Contexts&lt;/h2&gt;
+&lt;h2 id="flask-contexts"&gt;Flask Contexts&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;In the lifecycle of a request, both an &lt;em&gt;Application context&lt;/em&gt; and a &lt;em&gt;Request Context&lt;/em&gt; are created at the beginning, and destroyed at the end (see &lt;a href="https://speakerdeck.com/mitsuhiko/advanced-flask-patterns-1?slide=7"&gt;Advanced Flask Patterns - Speaker Deck, Slide 7&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;The idea behind having two detached contexts is so an application can exist
@@ -30,62 +28,61 @@
   request in process&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/pallets/flask/blob/1949c4a9abc174bf29620f6dd8ceab9ed3ace2eb/flask/ctx.py#L230"&gt;Every request pushes a new application context&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Flask contexts vernacular&lt;/h2&gt;
+&lt;h2 id="flask-contexts-vernacular"&gt;Flask contexts vernacular&lt;/h2&gt;
 &lt;p&gt;For a given &lt;code&gt;app&lt;/code&gt; object, there are some design aspects and specific objects
 it's good to get familiar with when testing with Flask&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;flask.app.test_client()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="flaskapptest_client"&gt;&lt;code&gt;flask.app.test_client()&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;Provides a client that can perform requests to our application.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;flask.app.app_context()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="flaskappapp_context"&gt;&lt;code&gt;flask.app.app_context()&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The application context, it gives life to &lt;code&gt;current_app&lt;/code&gt;. Starts and dies with
 a request.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;flask.app.test_request_context()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="flaskapptest_request_context"&gt;&lt;code&gt;flask.app.test_request_context()&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The request context, it gives life to &lt;code&gt;request&lt;/code&gt;. If there's no application context
 at the moment, it pushes a new one. Starts and ends with a request.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;g&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="g"&gt;&lt;code&gt;g&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A proxy that lives within a pushed &lt;strong&gt;application&lt;/strong&gt; context, used to store &lt;em&gt;non sensible&lt;/em&gt;
 information about the current application. Its life is bound to that of the request.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;session&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="session"&gt;&lt;code&gt;session&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A proxy that lives within a pushed &lt;strong&gt;request&lt;/strong&gt; context, used to store &lt;em&gt;sensible&lt;/em&gt;
 information &lt;em&gt;through the client&lt;/em&gt;, and encrypted with your &lt;code&gt;SECRET_KEY&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Using &lt;code&gt;session&lt;/code&gt; to store private information like passwords and credentials is
 discouraged. See the caveats in &lt;a href="https://blog.miguelgrinberg.com/post/how-secure-is-the-flask-user-session"&gt;Miguel Grinberg's post about it&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Practical differences (in code)&lt;/h2&gt;
+&lt;h2 id="practical-differences-in-code"&gt;Practical differences (in code)&lt;/h2&gt;
 &lt;p&gt;This &lt;a href="https://stackoverflow.com/a/33382823/5819113"&gt;SO answer&lt;/a&gt; puts it simple, so I will be kinda adding my own comments to it.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;
-&lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;```python
+from flask import Flask, g
+app = Flask(&lt;strong&gt;name&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;with app.app_context():
+    print('in app context, before first request context')
+    print('setting g.foo to abc')
+    g.foo = 'abc'
+    print('g.foo should be abc, is: {0}'.format(g.foo))&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;with app.test_request_context():
+    # this reuses g from the current context
+    print('in first request context')
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+    print('setting g.foo to xyz')
+    # this is the same g, so it will be replaced
+    g.foo = 'xyz'
+    print('g.foo should be xyz, is: {0}'.format(g.foo))
 
-&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, before first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc&amp;#39;&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+print('in app context, after first request context')
+print('g.foo should be abc, is: {0}'.format(g.foo))
 
-    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-        &lt;span class="c1"&gt;# this reuses g from the current context&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to xyz&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="c1"&gt;# this is the same g, so it will be replaced&lt;/span&gt;
-        &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;xyz&amp;#39;&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be xyz, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+with app.test_request_context():
+    print('in second request context')
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+    print('setting g.foo to pqr')
+    g.foo = 'pqr'
+    print('g.foo should be pqr, is: {0}'.format(g.foo))
 
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, after first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in second request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to pqr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pqr&amp;#39;&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be pqr, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, after second request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+print('in app context, after second request context')
+print('g.foo should be abc, is: {0}'.format(g.foo))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;```&lt;/p&gt;
 &lt;p&gt;And here's the output that it gives:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;in app context, before first request context
+&lt;p&gt;&lt;code&gt;plain
+in app context, before first request context
 setting g.foo to abc
 g.foo should be abc, is: abc
 in first request context
@@ -99,43 +96,37 @@ g.foo should be abc, is: xyz
 setting g.foo to pqr
 g.foo should be pqr, is: pqr
 in app context, after second request context
-g.foo should be abc, is: pqr
-&lt;/pre&gt;&lt;/div&gt;
-
-
+g.foo should be abc, is: pqr&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;In this first example &lt;code&gt;g&lt;/code&gt; is shared across contexts because it's the same
 context in &lt;em&gt;nested contexts&lt;/em&gt;, and it's a &lt;em&gt;caveat&lt;/em&gt; mentioned in the answer (some emphasis is mine)&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"Every request pushes a new application context". And &lt;a href="http://flask.pocoo.org/docs/0.10/appcontext/"&gt;as the Flask docs say&lt;/a&gt;, the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that &lt;em&gt;you should &lt;strong&gt;never&lt;/strong&gt; explicitly create multiple request contexts nested inside one application context, because &lt;code&gt;flask.g&lt;/code&gt; (and co) doesn't have any magic whereby it functions in the two different "levels" of context&lt;/em&gt;, with different states existing independently at the application and request levels.&lt;/p&gt;
 &lt;p&gt;The reality is that "application context" is potentially quite a misleading name, because &lt;code&gt;app.app_context()&lt;/code&gt; &lt;strong&gt;is&lt;/strong&gt; a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;
-&lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, before first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc&amp;#39;&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be None, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to xyz&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;xyz&amp;#39;&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be xyz, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-
-&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in second request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be None, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to pqr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pqr&amp;#39;&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be pqr, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;```python
+from flask import Flask, g
+app = Flask(&lt;strong&gt;name&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;with app.app_context():
+    print('in app context, before first request context')
+    print('setting g.foo to abc')
+    g.foo = 'abc'
+    print('g.foo should be abc, is: {0}'.format(g.foo))&lt;/p&gt;
+&lt;p&gt;with app.test_request_context():
+    print('in first request context')
+    print('g.foo should be None, is: {0}'.format(g.get('foo')))
+    print('setting g.foo to xyz')
+    g.foo = 'xyz'
+    print('g.foo should be xyz, is: {0}'.format(g.foo))&lt;/p&gt;
+&lt;p&gt;with app.test_request_context():
+    print('in second request context')
+    print('g.foo should be None, is: {0}'.format(g.get('foo')))
+    print('setting g.foo to pqr')
+    g.foo = 'pqr'
+    print('g.foo should be pqr, is: {0}'.format(g.foo))
+```&lt;/p&gt;
 &lt;p&gt;Which will give the expected results:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;in app context, before first request context
+&lt;p&gt;&lt;code&gt;plain
+in app context, before first request context
 setting g.foo to abc
 g.foo should be abc, is: abc
 in first request context
@@ -145,44 +136,33 @@ g.foo should be xyz, is: xyz
 in second request context
 g.foo should be None, is: None
 setting g.foo to pqr
-g.foo should be pqr, is: pqr
-&lt;/pre&gt;&lt;/div&gt;
-
-
+g.foo should be pqr, is: pqr&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;In this second example, all three &lt;code&gt;with&lt;/code&gt; blocks are pushing independent contexts. The difference is that
 last two are also pushing an application context &lt;em&gt;implicitly&lt;/em&gt;, and the first one is not pushing a request context.&lt;/p&gt;
-&lt;h2&gt;So, how do I test my app?&lt;/h2&gt;
+&lt;h2 id="so-how-do-i-test-my-app"&gt;So, how do I test my app?&lt;/h2&gt;
 &lt;p&gt;I will be using &lt;a href="https://docs.pytest.org/en/latest/"&gt;&lt;code&gt;pytest&lt;/code&gt;&lt;/a&gt; because it's good. Just google "&lt;code&gt;unittest versus pytest&lt;/code&gt;" to find out why.&lt;/p&gt;
 &lt;p&gt;This &lt;a href="https://stackoverflow.com/a/17377101/5819113"&gt;SO answer&lt;/a&gt; summarizes the differences in the best way I've found so far.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;If you want to make a request to your application, use the &lt;a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_client"&gt;&lt;code&gt;test_client&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;c = app.test_client()
-response = c.get(&amp;#39;/test/url&amp;#39;)
+&lt;pre&gt;&lt;code&gt;c = app.test_client()
+response = c.get('/test/url')
 # test response
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If you want to test code which uses an application context (&lt;code&gt;current_app&lt;/code&gt;, &lt;code&gt;g&lt;/code&gt;, &lt;code&gt;url_for&lt;/code&gt;), push an &lt;a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.app_context"&gt;&lt;code&gt;app_context&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;with app.app_context():
+&lt;pre&gt;&lt;code&gt;with app.app_context():
     # test your app context code
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If you want test code which uses a request context (&lt;code&gt;request&lt;/code&gt;, &lt;code&gt;session&lt;/code&gt;), push a &lt;a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_request_context"&gt;&lt;code&gt;test_request_context&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;with current_app.test_request_context():
+&lt;pre&gt;&lt;code&gt;with current_app.test_request_context():
     # test your request context code
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;/code&gt;&lt;/pre&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;It's also important to note that&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Both app and request contexts can also be pushed manually, which is useful when using the interpreter.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; ctx = app.app_context()
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; ctx = app.app_context()
 &amp;gt;&amp;gt;&amp;gt; ctx.push()
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;/code&gt;&lt;/pre&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;So far there are &lt;em&gt;two&lt;/em&gt; approaches:&lt;/p&gt;
 &lt;ol&gt;
@@ -192,98 +172,80 @@ response = c.get(&amp;#39;/test/url&amp;#39;)
 &lt;/ol&gt;
 &lt;p&gt;Everything in the middle is prone to produce weird results and drive you crazy, so &lt;em&gt;try&lt;/em&gt; to be consistent!&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://lucumr.pocoo.org/about/"&gt;Armin Ronacher&lt;/a&gt; suggests a pytest fixture pattern in &lt;a href="https://youtu.be/1ByQhAM5c1I?t=2285"&gt;this presentation&lt;/a&gt; (&lt;a href="https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52"&gt;slides&lt;/a&gt;), which relies in the first approach. The code is as follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pytest&lt;/span&gt;
+&lt;p&gt;```python
+import pytest&lt;/p&gt;
+&lt;p&gt;@pytest.fixture(scope="module")
+def app(request):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# import app factory pattern
+from yourapp import create_app
+app = create_app()
 
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scope&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;app&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+# pushes an application context manually
+ctx = app.app_context()
+ctx.push()
 
-    &lt;span class="c1"&gt;# import app factory pattern&lt;/span&gt;
-    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;
-    &lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+# bind the test life with the context through the
+request.addfinalizer(ctx.pop)
+return app
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;@pytest.fixture()
+def test_client(request, app):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;client = app.test_client()
+client.__enter__()
 
-    &lt;span class="c1"&gt;# pushes an application context manually&lt;/span&gt;
-    &lt;span class="n"&gt;ctx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;push&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# bind the test life with the context through the&lt;/span&gt;
-    &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addfinalizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pop&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;
-
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_client&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-
-    &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__enter__&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addfinalizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__exit__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+request.addfinalizer(
+    lambda: client.__exit__(None, None, None))
+return client
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;```&lt;/p&gt;
 &lt;p&gt;Note that &lt;code&gt;request&lt;/code&gt; here refers to the &lt;a href="https://docs.pytest.org/en/latest/reference.html#request"&gt;&lt;code&gt;pytest&lt;/code&gt; fixture&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;But how do I test? really&lt;/h2&gt;
+&lt;h2 id="but-how-do-i-test-really"&gt;But how do I test? really&lt;/h2&gt;
 &lt;p&gt;After a lot of churning and with the help of &lt;code&gt;#pocoo&lt;/code&gt; in IRC, I came up with this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pytest&lt;/span&gt;
+&lt;p&gt;```python
+import pytest&lt;/p&gt;
+&lt;p&gt;@pytest.fixture
+def runner(app):
+    """A test runner for the app's Click commands."""
+    return app.test_cli_runner()&lt;/p&gt;
+&lt;p&gt;@pytest.fixture(scope='session')
+def app(request):
+    from yourapp import create_app
+    return create_app('testing')&lt;/p&gt;
+&lt;p&gt;@pytest.fixture(autouse=True)
+def app_context(app):
+    """Creates a flask app context"""
+    with app.app_context():
+        yield app&lt;/p&gt;
+&lt;p&gt;@pytest.fixture
+def request_context(app_context):
+    """Creates a flask request context"""
+    with app_context.test_request_context():
+        yield&lt;/p&gt;
+&lt;p&gt;@pytest.fixture
+def client(app_context):
+    return app_context.test_client(use_cookies=True)&lt;/p&gt;
+&lt;p&gt;@pytest.fixture(scope="model")
+def db(app_context):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113
+from yourapp.extensions import db
 
+db.create_all()
 
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;A test runner for the app&amp;#39;s Click commands.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_cli_runner&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+# seed the database
+seed_db()
 
+yield db
 
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scope&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;session&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;app&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;testing&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;autouse&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Creates a flask app context&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-        &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;
-
-
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;request_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Creates a flask request context&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-        &lt;span class="k"&gt;yield&lt;/span&gt;
-
-
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;client&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_client&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;use_cookies&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scope&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;db&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113&lt;/span&gt;
-    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.extensions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;
-
-    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# seed the database&lt;/span&gt;
-    &lt;span class="n"&gt;seed_db&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-    &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# teardown database&lt;/span&gt;
-    &lt;span class="c1"&gt;# https://stackoverflow.com/a/18365654/5819113&lt;/span&gt;
-    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;drop_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_engine&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dispose&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;seed_db&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="c1"&gt;# insert default users and roles&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Seeding the database or something&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+# teardown database
+# https://stackoverflow.com/a/18365654/5819113
+db.session.remove()
+db.drop_all()
+db.get_engine(app_context).dispose()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;def seed_db():
+    # insert default users and roles
+    print("Seeding the database or something")
+```&lt;/p&gt;
 &lt;p&gt;This is working for me. In short&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;If your test requires a living app, import the &lt;code&gt;app_context&lt;/code&gt; fixture&lt;/li&gt;
@@ -291,33 +253,30 @@ response = c.get(&amp;#39;/test/url&amp;#39;)
 &lt;li&gt;If your test requires examining a part of the request, import the &lt;code&gt;request_context&lt;/code&gt; fixture&lt;/li&gt;
 &lt;li&gt;If your test requires a logged in user, you can use the &lt;code&gt;client&lt;/code&gt; fixture and &lt;code&gt;flask_login&lt;/code&gt; as&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;A helper method that logs in users&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url_for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;auth.login&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-                    &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-                        &lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                        &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
-                    &lt;span class="n"&gt;follow_redirects&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;```python
+def login(client, email, password):
+    """A helper method that logs in users"""
+    return client.post(url_for('auth.login'),
+                    data={
+                        'email': email,
+                        'password': password},
+                    follow_redirects=True)&lt;/p&gt;
+&lt;p&gt;def test_with_logged_in_user(client):
+    """Tests a view that requires authentication"""
+    from flask_login import current_user&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# client is a pytest fixture
+with client as c:
+    # login is a helper method that issues a POST request
+    login(c, "user@test.com", "test")
+    assert current_user.email == "user@test.com"
+    assert current_user.is_authenticated
 
+    response = c.get(
+        '/restricted_view/',
+        follow_redirects=True)
 
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_with_logged_in_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Tests a view that requires authentication&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask_login&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;current_user&lt;/span&gt;
-
-    &lt;span class="c1"&gt;# client is a pytest fixture&lt;/span&gt;
-    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="c1"&gt;# login is a helper method that issues a POST request&lt;/span&gt;
-        &lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user@test.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;current_user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user@test.com&amp;quot;&lt;/span&gt;
-        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;current_user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;
-
-        &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-            &lt;span class="s1"&gt;&amp;#39;/restricted_view/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-            &lt;span class="n"&gt;follow_redirects&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;
-        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Stuff that should appear in your view&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+    assert response.status_code == 200
+    assert b'Stuff that should appear in your view' in response.data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;```&lt;/p&gt;
 &lt;p&gt;That's all I have to say about it.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Sat, 24 Nov 2018 13:14:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2018-11-24:flask-contexts.html</guid><category>flask</category><category>python</category><category>pytest</category></item></channel></rss>

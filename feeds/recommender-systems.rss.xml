@@ -1,8 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Mon, 03 Dec 2018 20:48:00 -0600</lastBuildDate><item><title>Sistemas recomendadores, parte 3</title><link>https://diegoquintanav.github.io/recsys-3-ES.html</link><description>&lt;h1&gt;&lt;em&gt;previously&lt;/em&gt;&lt;/h1&gt;
+<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Fri, 14 Dec 2018 09:03:00 -0600</lastBuildDate><item><title>Sistemas recomendadores, parte 4</title><link>https://diegoquintanav.github.io/recsys-4.html</link><description>&lt;!-- Modified: 2010-12-05 19:30 --&gt;
+
+&lt;!-- entry 4, clase al 08.11 --&gt;
+
+&lt;!-- Hoy --&gt;
+
+&lt;!-- *  Evaluación --&gt;
+
+&lt;!-- *  Laboratorio --&gt;
+
+&lt;!-- *  usando *Bag of Words* --&gt;
+
+&lt;!-- *  LDA --&gt;
+
+&lt;!-- *  Usando un software llamado *gensim* --&gt;
+
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#previously"&gt;Previously&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sistemas-de-recomendacion-hibridos"&gt;Sistemas de recomendación híbridos&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#monolitico"&gt;Monolítico&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#paralelizado"&gt;Paralelizado&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pipeline"&gt;Pipeline&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#evaluacion-de-un-recomendador"&gt;Evaluación de un recomendador&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#metricas-en-contexto-de-clasificacion"&gt;Métricas en contexto de clasificación&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#metricas-en-el-contexto-de-recomendadores"&gt;Métricas en el contexto de recomendadores&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="previously"&gt;&lt;em&gt;Previously&lt;/em&gt;&lt;/h1&gt;
+&lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-3-ES.html"&gt;parte 3&lt;/a&gt; se comentaron algunos &lt;em&gt;SR&lt;/em&gt; basados en contenido, quedando para esta parte comentar un poco sobre sistemas &lt;em&gt;híbridos&lt;/em&gt; y sobre métricas usadas en la evaluación de un &lt;em&gt;SR&lt;/em&gt;.&lt;/p&gt;
+&lt;h1 id="sistemas-de-recomendacion-hibridos"&gt;Sistemas de recomendación híbridos&lt;/h1&gt;
+&lt;p&gt;Se trata de una familia de &lt;em&gt;SR&lt;/em&gt; que combina elementos de las clasificaciones vistas antes, &lt;em&gt;content based&lt;/em&gt; (CB) y &lt;em&gt;collaborative filtering based&lt;/em&gt; (CF). Al respecto en &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.8200&amp;amp;rep=rep1&amp;amp;type=pdf"&gt;&lt;em&gt;Burke, 2007&lt;/em&gt;&lt;/a&gt; y en &lt;a href="http://blog.ag-nbi.de/wp-content/uploads/2015/10/adomavicius-recsys.pdf"&gt;&lt;em&gt;Adomavicius, 2005&lt;/em&gt;&lt;/a&gt; se hace una revisión extensa sobre el tema.&lt;/p&gt;
+&lt;p&gt;Según Burke existen 7 formas distintas de &lt;em&gt;hibridizar sistemas&lt;/em&gt;,&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Weighted&lt;/strong&gt; Los puntajes o scores de las recomendaciones provenientes de distintos &lt;em&gt;SR&lt;/em&gt; son combinadas en una sola recomendación&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Switching&lt;/strong&gt; El &lt;em&gt;SR&lt;/em&gt; es intercambiado dependiendo de la situación&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mixed&lt;/strong&gt; Recomendaciones de distintos &lt;em&gt;SR&lt;/em&gt; se presentan al mismo tiempo&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Feature combination&lt;/strong&gt; Las características de distintos &lt;em&gt;SR&lt;/em&gt; se combinan en un nuevo algoritmo de recomendación.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cascade&lt;/strong&gt; Un &lt;em&gt;SR&lt;/em&gt; refina las recomendaciones de otro &lt;em&gt;SR&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Feature augmentation&lt;/strong&gt; La recomendación de un &lt;em&gt;SR&lt;/em&gt; es usada como parámetros de entrada para otro &lt;em&gt;SR&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Meta-level&lt;/strong&gt; El modelo aprendido por un &lt;em&gt;SR&lt;/em&gt; es usado como información de entrada para otro &lt;em&gt;SR&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Estas siguen 3 diseños generales:&lt;/p&gt;
+&lt;h2 id="monolitico"&gt;Monolítico&lt;/h2&gt;
+&lt;p&gt;Se refiere a la unión de dos o más &lt;em&gt;SR&lt;/em&gt; en uno solo. Ejemplos de esto son aquellos que implementan &lt;em&gt;Feature augmentation y Feature combination&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="monolithic" src="https://diegoquintanav.github.io/images/monolithic_hybrid.png" /&gt;&lt;/p&gt;
+&lt;h2 id="paralelizado"&gt;Paralelizado&lt;/h2&gt;
+&lt;p&gt;Se refiere a la ejecución de diversos &lt;em&gt;SR&lt;/em&gt; en paralelo, cuyas recomendaciones son combinadas en la salida. Algoritmos hibridos tipo &lt;em&gt;Weighted, Switching, Mixed&lt;/em&gt; lo implementan.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="parallel" src="https://diegoquintanav.github.io/images/parallel_hybrid.png" /&gt;&lt;/p&gt;
+&lt;h2 id="pipeline"&gt;Pipeline&lt;/h2&gt;
+&lt;p&gt;Se refieren a los &lt;em&gt;SR&lt;/em&gt; cuya entrada es la salida de otro &lt;em&gt;SR&lt;/em&gt;, siguiendo una ejecución en serie. Ejemplos de implementaciones son &lt;em&gt;Cascade, Meta-Level&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="pipeline" src="https://diegoquintanav.github.io/images/pipeline_hybrid.png" /&gt;&lt;/p&gt;
+&lt;h1 id="evaluacion-de-un-recomendador"&gt;Evaluación de un recomendador&lt;/h1&gt;
+&lt;h2 id="metricas-en-contexto-de-clasificacion"&gt;Métricas en contexto de clasificación&lt;/h2&gt;
+&lt;p&gt;El problema de recomendación puede verse como un problema de clasificación, en el sentido que un &lt;em&gt;SR&lt;/em&gt; intenta clasificar elementos como recomendables o no recomendables, dado un usuario cualquiera. En esta tarea de clasificación un &lt;em&gt;SR&lt;/em&gt; puede fallar o acertar, lo que da lugar a dos a distintas métricas que permitan cuantificar la &lt;em&gt;calidad&lt;/em&gt; de un clasificador.&lt;/p&gt;
+&lt;p&gt;La primera herramienta que uno debería considerar es la matriz de confusión, la que puede leerse con más detalle en &lt;a href="http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/"&gt;dataschool&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Una matriz de confusión es una representación de la cantidad de aciertos por clase en una tarea &lt;em&gt;de clasificación&lt;/em&gt;. En este sentido se habla de&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Verdaderos positivos, TP&lt;/li&gt;
+&lt;li&gt;Verdaderos negativos, TN&lt;/li&gt;
+&lt;li&gt;Falsos positivos, FP&lt;/li&gt;
+&lt;li&gt;Falsos negativos, FN&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;En el contexto de &lt;em&gt;SR&lt;/em&gt;, sin embargo, se define un &lt;em&gt;acierto&lt;/em&gt; en un conjunto de recomendaciones como &lt;em&gt;relevante&lt;/em&gt;. La definición de relevancia puede variar dependiendo de cada caso, pudiendo ser&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Un usuario hace click en un link de una lista de links recomendados&lt;/li&gt;
+&lt;li&gt;Un usuario compra un libro recomendado&lt;/li&gt;
+&lt;li&gt;Un usuario comparte un video sugerido&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un &lt;em&gt;SR&lt;/em&gt;. Si se visualizan estas clases en un diagrama de conjuntos, se tiene&lt;/p&gt;
+&lt;p&gt;&lt;img alt="venn1" src="https://diegoquintanav.github.io/images/venn1.png" /&gt;&lt;/p&gt;
+&lt;p&gt;De aquí se tiene que la &lt;strong&gt;Precisión&lt;/strong&gt; es la fracción de instancias &lt;em&gt;relevantes&lt;/em&gt; obtenidas en alguna tarea en específico, del resultado de recomendaciones.&lt;/p&gt;
+&lt;div class="math"&gt;$$\mbox{precision} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FP}}$$&lt;/div&gt;
+&lt;p&gt;O en el contexto de &lt;em&gt;SR&lt;/em&gt;,&lt;/p&gt;
+&lt;div class="math"&gt;$$\mbox{precision} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{recomendados}|}$$&lt;/div&gt;
+&lt;p&gt;Para el caso del diagrama, la recomendación o el &lt;em&gt;SR&lt;/em&gt; tiene una precisión de &lt;span class="math"&gt;\(2/5=0.4\)&lt;/span&gt;. La &lt;em&gt;precisión&lt;/em&gt; entonces mide qué tan posible es obtener los elementos relevantes &lt;em&gt;con la menor cantidad&lt;/em&gt; de recomendaciones.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Recall&lt;/strong&gt; o &lt;em&gt;true positive rate&lt;/em&gt; (TPR) se refiere a la fracción de instancias relevantes obtenidas del total de instancias relevantes, o bien&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\mbox{TPR} = \mbox{recall} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FN}}
+$$&lt;/div&gt;
+&lt;p&gt;O en términos de recomendaciones&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\mbox{recall} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{relevantes}|}$$&lt;/div&gt;
+&lt;p&gt;Para el caso del diagrama, el &lt;em&gt;recall&lt;/em&gt; del &lt;em&gt;SR&lt;/em&gt; es de &lt;span class="math"&gt;\(2/10=0.2\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Ambos, precision y &lt;em&gt;recall&lt;/em&gt; tienen una relación inversa, tal que el &lt;em&gt;recall&lt;/em&gt; disminuye a medida que la precisión aumenta. En este sentido, para un clasificador es posible graficar su desempeño en términos de la curva &lt;em&gt;precision vs recall&lt;/em&gt; o curva PR.&lt;/p&gt;
+&lt;p&gt;Esta curva puede transformarse a otro espacio más conocido, llamado &lt;a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic"&gt;curva ROC&lt;/a&gt; o &lt;em&gt;receiving operating characteristic curve&lt;/em&gt;, en el cual se grafica el &lt;em&gt;recall&lt;/em&gt; como TPR o &lt;em&gt;true positive rate&lt;/em&gt; versus &lt;strong&gt;FPR&lt;/strong&gt; o &lt;em&gt;false positive rate&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.youtube.com/watch?v=OAl6eAyP-yo" title="ROC Curve explained"&gt;&lt;img alt="roc_video" src="http://img.youtube.com/vi/OAl6eAyP-yo/0.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Conviene tener en cuenta que &lt;strong&gt;ambas curvas no son equivalentes&lt;/strong&gt; y la curva PR describe mejor el desempeño de clasificadores en casos donde hay un desbalance importante de clases. Una comparación completa entre ambas curvas puede leerse &lt;a href="http://pages.cs.wisc.edu/~jdavis/davisgoadrichcamera2.pdf"&gt;aquí&lt;/a&gt;&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
+$$&lt;/div&gt;
+&lt;p&gt;&lt;img alt="roc_vs_pr" src="https://diegoquintanav.github.io/images/roc_vs_pr.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Finalmente, algunas notas sobre este tema&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Considerando que hay tipos de &lt;em&gt;SR&lt;/em&gt; distintos que generan resultados distintos, estas métricas resultan útiles para poder comparar los distintos modelos, por ejemplo a través de &lt;em&gt;A/B Testing&lt;/em&gt; o tests de hipótesis.&lt;/li&gt;
+&lt;li&gt;Dependiendo del caso, puedo darse la necesidad de usar algoritmos con mayor &lt;em&gt;recall&lt;/em&gt; que precisión i.e. si quiero saber cuándo es el siguiente partido de chile, me importa más usar un &lt;em&gt;SR&lt;/em&gt; que recomiende el &lt;em&gt;resultado correcto&lt;/em&gt;, en vez de un &lt;em&gt;SR&lt;/em&gt; que me recomiende &lt;em&gt;la mejor página con el resultado&lt;/em&gt;. En este caso requiero mayor &lt;em&gt;recall&lt;/em&gt; que &lt;em&gt;precisión&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Es bueno recordar que estas métricas evalúan &lt;em&gt;conjuntos de recomendaciones&lt;/em&gt;, no las recomendaciones en sí.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="metricas-en-el-contexto-de-recomendadores"&gt;Métricas en el contexto de recomendadores&lt;/h2&gt;
+&lt;p&gt;En el contexto de recomendadores existen muchos otros indicadores que ayudan a evaluar un &lt;em&gt;SR&lt;/em&gt;, y por mencionar algunos&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mean reciprocal rank (MRR)&lt;/li&gt;
+&lt;li&gt;Precision at N (P@N)&lt;/li&gt;
+&lt;li&gt;Mean Average Precision (MAP)&lt;/li&gt;
+&lt;li&gt;DCG y nDCG&lt;/li&gt;
+&lt;li&gt;Coverage index&lt;/li&gt;
+&lt;li&gt;Diversity index&lt;/li&gt;
+&lt;li&gt;Mean Percentage Ranking&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- TODO: sugerir links --&gt;
+
+&lt;!-- # Diversity
+
+Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equipo, la diversidad es muy baja. Si en cambio le recomiendo noticias de fútbol, añado diversidad a mi conjunto de recomendaciones. Esto apunta a resolver el problema de *burbujas de información*, algo que se puede hacer de manera programática y controlada. --&gt;
+
+&lt;h1 id="a-continuacion"&gt;A continuación&lt;/h1&gt;
+&lt;p&gt;Esto es todo por ahora. En la &lt;a href="https://diegoquintanav.github.io/drafts/recsys-5-ES.html"&gt;parte 5 y final&lt;/a&gt; se verán las &lt;em&gt;Máquinas de Factorización&lt;/em&gt;.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Fri, 14 Dec 2018 09:03:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-11-02:recsys-4.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 3</title><link>https://diegoquintanav.github.io/recsys-3-ES.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#previously"&gt;previously&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sistemas-recomendadores-basados-en-contenido"&gt;Sistemas recomendadores basados en contenido&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#como-podemos-analizar-el-contenido"&gt;¿Cómo podemos analizar el contenido?&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#representacion-vectorial-de-texto"&gt;Representación vectorial de texto&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#regularizacion-de-texto"&gt;Regularización de texto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#representacion-semantica-del-contenido-y-la-web-semantica"&gt;Representación semántica del contenido y la web semántica&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#metricas-de-similitud"&gt;Métricas de similitud&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#manejo-de-sinonimos"&gt;Manejo de sinónimos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#tecnicas-de-procesamiento-adicionales"&gt;Técnicas de procesamiento adicionales&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#en-python"&gt;En python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="previously"&gt;&lt;em&gt;previously&lt;/em&gt;&lt;/h1&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-2-ES.html"&gt;parte 2&lt;/a&gt; se vieron algunas clasificaciones de &lt;em&gt;SR&lt;/em&gt;, y mencionamos aquellos basados en &lt;em&gt;memoria&lt;/em&gt; y basados en &lt;em&gt;modelos&lt;/em&gt;. &lt;/p&gt;
 &lt;p&gt;Otra clasificación que se mencionó se refiere a &lt;em&gt;SR&lt;/em&gt; basados en &lt;strong&gt;contenido&lt;/strong&gt;, o &lt;em&gt;content-based&lt;/em&gt;.&lt;/p&gt;
-&lt;h1&gt;Sistemas recomendadores basados en contenido&lt;/h1&gt;
+&lt;h1 id="sistemas-recomendadores-basados-en-contenido"&gt;Sistemas recomendadores basados en contenido&lt;/h1&gt;
 &lt;p&gt;Existen elementos que son cuantificables de manera directa, i.e.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Popularidad&lt;/li&gt;
@@ -26,11 +221,11 @@
 &lt;p&gt;Este tipo de &lt;em&gt;SR&lt;/em&gt; presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido.&lt;/p&gt;
 &lt;p&gt;Sin embargo, dado que las recomendaciones dependen del análisis de contenido de las recomendaciones previas, puede ocurrir lo que se conoce como una burbuja de información o &lt;em&gt;filter bubble&lt;/em&gt;. Esta situación produce que las nuevas recomendaciones terminen siendo muy similares a lo ya consumido. &lt;/p&gt;
 &lt;p&gt;Por ejemplo, si me gusta Harry Potter, puede ocurrir que el &lt;em&gt;SR&lt;/em&gt; sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general, lo que dependiendo del caso, puede ser un resultado indeseado.&lt;/p&gt;
-&lt;h1&gt;¿Cómo podemos analizar el contenido?&lt;/h1&gt;
+&lt;h1 id="como-podemos-analizar-el-contenido"&gt;¿Cómo podemos analizar el contenido?&lt;/h1&gt;
 &lt;p&gt;El aspecto más importante de este tipo de &lt;em&gt;SR&lt;/em&gt; es su dependencia de la ?&lt;em&gt;representación&lt;/em&gt; del contenido. &lt;/p&gt;
 &lt;p&gt;De manera más general en otras áreas esto se conoce como &lt;em&gt;information retrieval&lt;/em&gt;, y tiene que ver en cómo se extrae y representa información de los datos.&lt;/p&gt;
 &lt;p&gt;En ese sentido, la forma más simple es la de analizar el texto en las descripciones de los ítems que forman parte del dataset.&lt;/p&gt;
-&lt;h2&gt;Representación vectorial de texto&lt;/h2&gt;
+&lt;h2 id="representacion-vectorial-de-texto"&gt;Representación vectorial de texto&lt;/h2&gt;
 &lt;p&gt;La primera representación que se puede hacer de un texto es a través de lo que se conoce como &lt;a href="https://machinelearningmastery.com/gentle-introduction-bag-words-model/"&gt;&lt;em&gt;bag of words&lt;/em&gt;&lt;/a&gt;, donde las palabras se comparan con un diccionario o &lt;em&gt;corpus&lt;/em&gt;, y se representan como el número de repeticiones que esa palabra aparece en el texto.&lt;/p&gt;
 &lt;p&gt;Esto a su vez permite otras representaciones, una es VSM o &lt;em&gt;Vector space model&lt;/em&gt;, el cual se trata de vectorizar términos en función de su aparición en una &lt;strong&gt;familia&lt;/strong&gt; &lt;/p&gt;
 &lt;p&gt;Un ejemplo se puede ver en la siguiente imagen, donde la palabra &lt;em&gt;likes&lt;/em&gt; se representa como la frecuencia en la que la palabra aparece en tres documentos distintos:&lt;/p&gt;
@@ -41,7 +236,7 @@ v = [f_{1},f_{2},...,f_{n}]
 $$&lt;/div&gt;
 &lt;p&gt;donde &lt;span class="math"&gt;\(f_{i}\)&lt;/span&gt; es la frecuencia de cada palabra. Un vector de palabras o diccionario o &lt;em&gt;corpus&lt;/em&gt;, para el caso del castellano por ejemplo, es de aproximadamente 60000 palabras. &lt;/p&gt;
 &lt;p&gt;La ventaja de esta representación es que al tratarse de vectores, estos tienen propiedades geométricas que permiten establecer comparaciones entre ellos.&lt;/p&gt;
-&lt;h3&gt;Regularización de texto&lt;/h3&gt;
+&lt;h3 id="regularizacion-de-texto"&gt;Regularización de texto&lt;/h3&gt;
 &lt;p&gt;La frecuencia de las palabras por sí sola en un documento no ayuda necesariamente a establecer similitudes, por ejemplo es muy posible encontrar muchas veces en un documento las palabras &lt;em&gt;él, ella, qué, etcétera&lt;/em&gt;, lo que no ayudan mucho. Dos documentos no son necesariamente iguales si tienen relativamente la misma cantidad de veces la palabra &lt;em&gt;qué&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Es por esto que se desarrollan métodos de regularización, el primero es normalizar la frecuencia de los términos, a través de lo que se conoce como TF o &lt;em&gt;term frequency&lt;/em&gt;. En otras palabras, esto significa:&lt;/p&gt;
 &lt;div class="math"&gt;$$
@@ -67,10 +262,10 @@ $$&lt;/div&gt;
 &lt;li&gt;&lt;span class="math"&gt;\(n_{p}\)&lt;/span&gt; es la cantidad de documentos donde aparece la palabra&lt;/li&gt;
 &lt;li&gt;El valor de &lt;span class="math"&gt;\(\log(N/n_{p})\)&lt;/span&gt; tiende a cero cuando la palabra aparece en muchos documentos (por ejemplo artículos, preposiciones, etc.)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Representación semántica del contenido y la web semántica&lt;/h2&gt;
+&lt;h2 id="representacion-semantica-del-contenido-y-la-web-semantica"&gt;Representación semántica del contenido y la web semántica&lt;/h2&gt;
 &lt;p&gt;El texto representado como &lt;em&gt;bag of words&lt;/em&gt; carece de sentido contextual. El contexto en sí mismo añade una nueva capa al análisis de texto, y entre las formas de incorporarlo se pueden usar &lt;em&gt;ontologías&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Al respecto, la idea de una &lt;a href="https://en.wikipedia.org/wiki/Semantic_Web"&gt;web semántica&lt;/a&gt; intenta modelar los contenidos de internet a través de estructuras ontológicas estandarizadas llamadas &lt;a href="https://en.wikipedia.org/wiki/Resource_Description_Framework"&gt;RDF&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;Métricas de similitud&lt;/h2&gt;
+&lt;h2 id="metricas-de-similitud"&gt;Métricas de similitud&lt;/h2&gt;
 &lt;p&gt;Como vimos anteriormente, la vectorización de documentos permite operaciones entre vectores, los cuales tienen un sentido geométrico y por lo tanto permiten establecer métricas de distancia entre ellos. &lt;/p&gt;
 &lt;p&gt;Las más conocidas ya se han visto y corresponden a:&lt;/p&gt;
 &lt;ul&gt;
@@ -79,13 +274,13 @@ $$&lt;/div&gt;
 &lt;/ul&gt;
 &lt;p&gt;Sin embargo, un &lt;em&gt;corpus&lt;/em&gt; en general es de alta dimensionalidad, (60000 palabras para el castellano, por ejemplo) y aquí &lt;strong&gt;la maldición de la dimensionalidad&lt;/strong&gt; (&lt;em&gt;curse of dimensionality&lt;/em&gt;) se presenta nuevamente como un problema. &lt;/p&gt;
 &lt;p&gt;Al respecto, podemos normalizar los vectores y obtener mejores resultados con la distancia coseno, y otras métricas diseñadas para este problema como por ejemplo &lt;a href="https://dl.acm.org/citation.cfm?doid=1639714.1639757"&gt;OKAPI BM25&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;Manejo de sinónimos&lt;/h2&gt;
+&lt;h2 id="manejo-de-sinonimos"&gt;Manejo de sinónimos&lt;/h2&gt;
 &lt;p&gt;Puede ocurrir que dos palabras son iguales pero tienen distintos significados, lo que complica las comparaciones. Al respecto existen técnicas como&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;em&gt;Latent semantic Indexing&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Latent dirichlet allocation&lt;/em&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Técnicas de procesamiento adicionales&lt;/h2&gt;
+&lt;h2 id="tecnicas-de-procesamiento-adicionales"&gt;Técnicas de procesamiento adicionales&lt;/h2&gt;
 &lt;p&gt;El análisis de texto presenta otro tipo de problemas, pudiendo encontrarse&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;palabras mal escritas&lt;/li&gt;
@@ -101,7 +296,7 @@ $$&lt;/div&gt;
 &lt;li&gt;&lt;em&gt;Krovetz&lt;/em&gt;: &lt;em&gt;Stem&lt;/em&gt;, pero asociada a una palabra existente.&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Lemmatization&lt;/em&gt;: Una variante de &lt;em&gt;stemming&lt;/em&gt; que incorpora el análisis morfológico del texto. Ver más información &lt;a href="https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html"&gt;aquí&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;En python&lt;/h2&gt;
+&lt;h2 id="en-python"&gt;En python&lt;/h2&gt;
 &lt;p&gt;En python existen dos librerías importantes para esto,&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="www.nltk.org"&gt;NLTK&lt;/a&gt;&lt;/li&gt;
@@ -111,9 +306,8 @@ $$&lt;/div&gt;
 la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suficientes) y utiliza &lt;em&gt;defaults&lt;/em&gt; aptos para su uso en la industria.&lt;/p&gt;
 &lt;p&gt;En inglés se dice que una librería es &lt;em&gt;opinionated&lt;/em&gt; cuando impone ciertos patrones y procedimientos con base en la experiencia de los creadores de la herramienta. Un ejemplo de esto es &lt;em&gt;ruby on rails&lt;/em&gt; o &lt;em&gt;django&lt;/em&gt; para desarrollo web.&lt;/p&gt;
 &lt;p&gt;Esto se podría traducir como un diseño &lt;em&gt;dogmático&lt;/em&gt;, aunque esta traducción no me gusta del todo.&lt;/p&gt;
-&lt;h2&gt;A continuación&lt;/h2&gt;
-&lt;p&gt;En la parte 4 se verán
-&lt;!-- En la &lt;a href="https://diegoquintanav.github.io/drafts/recsys-4.html"&gt;parte 4&lt;/a&gt; se verán --&gt;&lt;/p&gt;
+&lt;h2 id="a-continuacion"&gt;A continuación&lt;/h2&gt;
+&lt;p&gt;Esto es todo por esta vez. En la &lt;a href="https://diegoquintanav.github.io/recsys-4.html"&gt;parte 4&lt;/a&gt; se verán&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Sistemas recomendadores híbridos&lt;/li&gt;
 &lt;li&gt;Métricas de calidad en sistemas recomendadores&lt;/li&gt;
@@ -172,7 +366,45 @@ la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suf
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Mon, 03 Dec 2018 20:48:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-11-01:recsys-3-ES.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 2</title><link>https://diegoquintanav.github.io/recsys-2-ES.html</link><description>&lt;h1&gt;&lt;em&gt;Previously&lt;/em&gt;&lt;/h1&gt;
+&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Mon, 03 Dec 2018 20:48:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-11-01:recsys-3-ES.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 2</title><link>https://diegoquintanav.github.io/recsys-2-ES.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#previously"&gt;Previously&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#tipos-de-recomendadores"&gt;Tipos de recomendadores&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#segun-el-agente-que-controla-el-sr"&gt;Según el agente que controla el SR&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#segun-la-forma-que-los-modelos-aprenden"&gt;Según la forma que los modelos aprenden&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#metricas-de-similitud"&gt;Métricas de similitud&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#similitud-coseno"&gt;Similitud coseno&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#correlacion-de-pearson"&gt;Correlación de Pearson&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#similitud-coseno-ajustada"&gt;Similitud coseno ajustada&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#otra-propuesta-de-clasificacion"&gt;Otra propuesta de clasificación&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#basados-en-reglas-rule-based"&gt;Basados en reglas (Rule based)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#basados-en-contenido-content-based"&gt;Basados en contenido (Content based)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#filtrado-colaborativo-user-based"&gt;Filtrado colaborativo (User based)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#clasificacion-de-recomendadores-basados-en-filtrado-colaborativo"&gt;Clasificación de recomendadores basados en filtrado colaborativo&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#user-based-collaborative-filtering-ub-cf"&gt;User Based Collaborative Filtering (UB-CF)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#item-based-collaborative-filtering-ib-cf"&gt;Item Based collaborative filtering (IB-CF)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sistemas-hibridos"&gt;Sistemas híbridos&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#anexo-knn-y-la-maldicion-de-la-dimensionalidad"&gt;Anexo: KNN y la maldición de la dimensionalidad&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#k-nearest-neighbors-knn"&gt;K Nearest neighbors (KNN)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#la-maldicion-de-la-dimensionalidad-o-curse-of-dimensionality"&gt;La maldición de la dimensionalidad (o Curse of dimensionality)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="previously"&gt;&lt;em&gt;Previously&lt;/em&gt;&lt;/h1&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-1-ES.html"&gt;parte 1&lt;/a&gt; se vieron varios aspectos elementales
 de los sistemas recomendadores. El concepto del error, Un modelo inicial de una
 recomendación, y la necesidad que cubren estos sistemas. 
@@ -181,8 +413,8 @@ con deficiones más rigurosas. La idea ahora es introducir algunos conceptos gen
 sobre los tipos de sistemas recomendadores.&lt;/p&gt;
 &lt;p&gt;Podemos agrupar clasificadores según sus características. &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.702.4429&amp;amp;rep=rep1&amp;amp;type=pdf"&gt;Este paper&lt;/a&gt; presenta algunas directrices, las que serán reflejadas aquí de manera 
 menos rigurosa.&lt;/p&gt;
-&lt;h1&gt;Tipos de recomendadores&lt;/h1&gt;
-&lt;h2&gt;Según el agente que &lt;em&gt;controla&lt;/em&gt; el &lt;em&gt;SR&lt;/em&gt;&lt;/h2&gt;
+&lt;h1 id="tipos-de-recomendadores"&gt;Tipos de recomendadores&lt;/h1&gt;
+&lt;h2 id="segun-el-agente-que-controla-el-sr"&gt;Según el agente que &lt;em&gt;controla&lt;/em&gt; el &lt;em&gt;SR&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;El agente se refiere aquí a quién &lt;em&gt;entrena&lt;/em&gt; al recomendador. Al respecto se indican&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Sistemas customizados&lt;/li&gt;
@@ -190,7 +422,7 @@ menos rigurosa.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;p&gt;El primero es aquel en que &lt;em&gt;el usuario&lt;/em&gt; modifica su perfil manualmente en base a sus preferencias, mientras que en el segundo es la implementación del &lt;em&gt;SR&lt;/em&gt; la 
 que crea y actualiza el perfil para cada usuario, con control explícito mínimo del usuario, e incluso nulo en algunas ocasiones.&lt;/p&gt;
-&lt;h2&gt;Según la forma que los modelos aprenden&lt;/h2&gt;
+&lt;h2 id="segun-la-forma-que-los-modelos-aprenden"&gt;Según la forma que los modelos aprenden&lt;/h2&gt;
 &lt;p&gt;Esta clasificación es más primitiva, y da lugar a&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Sistemas &lt;em&gt;basados en memoria&lt;/em&gt;&lt;/li&gt;
@@ -217,21 +449,21 @@ no tiene información de ratings, por lo que no puede recomendar nada. El proble
 implica entonces el cómo se completa inicialmente esta información. Esto también es válido para nuevos usuarios que no han definido sus preferencias o presentan pocos ratings.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Por el otro lado, los &lt;strong&gt;&lt;em&gt;SR&lt;/em&gt; basados en modelos&lt;/strong&gt; tratan de completar esta matriz con probabilidades de que un usuario valore positivamente un ítem que no había encontrado antes. Para esto se apoyan en algoritmos de aprendizaje automático o &lt;em&gt;machine learning&lt;/em&gt;.&lt;/p&gt;
-&lt;h3&gt;Métricas de similitud&lt;/h3&gt;
-&lt;h4&gt;Similitud coseno&lt;/h4&gt;
+&lt;h3 id="metricas-de-similitud"&gt;Métricas de similitud&lt;/h3&gt;
+&lt;h4 id="similitud-coseno"&gt;Similitud coseno&lt;/h4&gt;
 &lt;p&gt;Si se consideran dos vectores de dimensionalidad &lt;span class="math"&gt;\(m\)&lt;/span&gt;, se define la similitud entre ambos a través del cálculo del &lt;em&gt;coseno&lt;/em&gt; del ángulo entre ambos vectores. Formalmente, Si consideramos la matriz &lt;span class="math"&gt;\(M\)&lt;/span&gt; de &lt;span class="math"&gt;\(m\)&lt;/span&gt; usuarios y &lt;span class="math"&gt;\(n\)&lt;/span&gt; items, la similitud entre dos elementos está dada por&lt;/p&gt;
 &lt;div class="math"&gt;$$sim(i,j) = \cos (\vec{i},\vec{j}) = \frac{\vec{i} \cdot \vec{j}}{ { \lVert \vec{i} \rVert }_{2} \ast { \lVert \vec{j} \rVert }_{2} }$$&lt;/div&gt;
-&lt;h4&gt;Correlación de Pearson&lt;/h4&gt;
+&lt;h4 id="correlacion-de-pearson"&gt;Correlación de Pearson&lt;/h4&gt;
 &lt;p&gt;Una métrica de similitud se obtiene a través de la correlación de Pearson. Esta permite aislar los casos donde ocurra &lt;em&gt;co-validación&lt;/em&gt; i.e. aquellos casos en que el usuario ha validado ítems &lt;span class="math"&gt;\(i\)&lt;/span&gt; y &lt;span class="math"&gt;\(j\)&lt;/span&gt; (ver imagen, obtenida del paper).&lt;/p&gt;
 &lt;div class="math"&gt;$$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})(r_{u,j}-\bar{r}_{j}) }{ \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})^2} \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{j})^2} }$$&lt;/div&gt;
 &lt;p&gt;Donde &lt;span class="math"&gt;\(r_{u,j}\)&lt;/span&gt; es el rating del usuario &lt;span class="math"&gt;\(u\)&lt;/span&gt; sobre el ítem &lt;span class="math"&gt;\(j\)&lt;/span&gt; y &lt;span class="math"&gt;\(\bar{r}_{j}\)&lt;/span&gt; es el &lt;em&gt;rating&lt;/em&gt; promedio sobre el otro ítem.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="IB-CF1" src="https://diegoquintanav.github.io/images/CF-IB_1.png" title="IB-CF" /&gt;&lt;/p&gt;
-&lt;h4&gt;Similitud coseno ajustada&lt;/h4&gt;
+&lt;h4 id="similitud-coseno-ajustada"&gt;Similitud coseno ajustada&lt;/h4&gt;
 &lt;p&gt;Se obtiene incorporando el promedio &lt;span class="math"&gt;\(\bar{r}_{u}\)&lt;/span&gt; de votos de cada usuario en el cálculo de similitud, es decir&lt;/p&gt;
 &lt;div class="math"&gt;$$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})(r_{u,j}-\bar{r}_{u}) }{ \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})^2} \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})^2} }$$&lt;/div&gt;
 &lt;p&gt;De los tres métodos indicados, es esta noción de similitud la que obtiene mejores resultados&lt;/p&gt;
 &lt;p&gt;&lt;img alt="IB-CF2" src="https://diegoquintanav.github.io/images/similarities.png" title="Similarities comparison" /&gt;&lt;/p&gt;
-&lt;h2&gt;Otra propuesta de clasificación&lt;/h2&gt;
+&lt;h2 id="otra-propuesta-de-clasificacion"&gt;Otra propuesta de clasificación&lt;/h2&gt;
 &lt;p&gt;También es posible dividir los &lt;em&gt;SR&lt;/em&gt; en cuatro grandes grupos, con base en&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;El tipo de datos de entrada que utilizan&lt;/li&gt;
@@ -239,7 +471,7 @@ implica entonces el cómo se completa inicialmente esta información. Esto tambi
 &lt;li&gt;Los métodos algorítmicos usados para producir recomendaciones&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Estos son&lt;/p&gt;
-&lt;h3&gt;Basados en reglas (&lt;em&gt;Rule based&lt;/em&gt;)&lt;/h3&gt;
+&lt;h3 id="basados-en-reglas-rule-based"&gt;Basados en reglas (&lt;em&gt;Rule based&lt;/em&gt;)&lt;/h3&gt;
 &lt;p&gt;Las reglas son definidas manual y explícitamente en función de los objetivos del 
 &lt;em&gt;SR&lt;/em&gt;, por lo que tienden a ser más rígidos y a depender más de conocimiento 
 experto. Esto ocurre mucho en sitios de &lt;em&gt;e-commerce&lt;/em&gt;, donde los &lt;em&gt;SR&lt;/em&gt; reflejan en 
@@ -247,7 +479,7 @@ gran medida los intereses de la compañía.&lt;/p&gt;
 &lt;p&gt;La gran desventaja de estos &lt;em&gt;SR&lt;/em&gt; es que dependen de reglas explícitas, y que 
 alimentan los perfiles en base a la ingesta manual de intereses del usuario. Todo 
 esto incluye un sesgo que entorpece el dinamismo del &lt;em&gt;SR&lt;/em&gt; ante nuevos escenarios.&lt;/p&gt;
-&lt;h3&gt;Basados en contenido (&lt;em&gt;Content based&lt;/em&gt;)&lt;/h3&gt;
+&lt;h3 id="basados-en-contenido-content-based"&gt;Basados en contenido (&lt;em&gt;Content based&lt;/em&gt;)&lt;/h3&gt;
 &lt;p&gt;La principal característica de este &lt;em&gt;SR&lt;/em&gt; es que sus recomendaciones se basan en los 
 ítems que el usuario ha demostrado interés explícito anteriormente (ejemplo &lt;em&gt;"Add 
 to my wishlist&lt;/em&gt;"). &lt;/p&gt;
@@ -260,7 +492,7 @@ usuario para poder recomendar nuevos ítems, lo que produce una burbuja. &lt;/p&
 &lt;li&gt;&lt;em&gt;¿Cómo decido qué nuevos productos presentarle primero?&lt;/em&gt; &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;En estos casos los ítems más novedosos son la mejor elección.&lt;/p&gt;
-&lt;h3&gt;Filtrado colaborativo (&lt;em&gt;User based&lt;/em&gt;)&lt;/h3&gt;
+&lt;h3 id="filtrado-colaborativo-user-based"&gt;Filtrado colaborativo (&lt;em&gt;User based&lt;/em&gt;)&lt;/h3&gt;
 &lt;p&gt;Apuntan a resolver los problemas presentes en los dos &lt;em&gt;SR&lt;/em&gt; anteriores, utilizando 
 los datos como clicks y ratings de otros usuarios en la &lt;em&gt;vecindad&lt;/em&gt; del usuario 
 usando el &lt;em&gt;SR&lt;/em&gt;.&lt;/p&gt;
@@ -286,7 +518,7 @@ el &lt;em&gt;SR&lt;/em&gt; no puede recomendárselo a nadie.&lt;/p&gt;
 &lt;p&gt;Finalmente, uno de los pincipales problemas que presentan estos algoritmos es que 
 no son escalables. Por ejemplo, para el algoritmo KNN, la formación de &lt;em&gt;clusters&lt;/em&gt; obtiene un modelo utilizando todo el conjunto de datos a la vez, lo cual presenta
 problemas si pensamos que la generación de nuevos ratings y productos puede ocurrir con mucha frecuencia, incluso a diario.&lt;/p&gt;
-&lt;h4&gt;Clasificación de recomendadores basados en filtrado colaborativo&lt;/h4&gt;
+&lt;h4 id="clasificacion-de-recomendadores-basados-en-filtrado-colaborativo"&gt;Clasificación de recomendadores basados en filtrado colaborativo&lt;/h4&gt;
 &lt;p&gt;El filtrado colaborativo puede dividirse en dos grandes grupos, dependiendo sobre cuál es la entidad usada para establecer patrones o &lt;em&gt;clusters&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;filtrado colaborativo basado en usuarios (UB-CF)&lt;/li&gt;
@@ -306,7 +538,7 @@ factor se diluye entre todos los usuarios. Una forma de resolver es con la
 &lt;li&gt;&lt;a href="https://arxiv.org/abs/cs/0702144"&gt;Slope One&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;FunkSVD, &lt;a href="http://sifter.org/simon/journal/20061211.html"&gt;ganador del premio Netflix&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h5&gt;User Based Collaborative Filtering (UB-CF)&lt;/h5&gt;
+&lt;h5 id="user-based-collaborative-filtering-ub-cf"&gt;User Based Collaborative Filtering (UB-CF)&lt;/h5&gt;
 &lt;p&gt;Se puede resumir como&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;La predicción del rating sobre un ítem &lt;span class="math"&gt;\(i\)&lt;/span&gt; mejora mientras más vecinos &lt;span class="math"&gt;\(k\)&lt;/span&gt; de un 
@@ -319,7 +551,7 @@ factor se diluye entre todos los usuarios. Una forma de resolver es con la
    &lt;a href="https://stats.stackexchange.com/questions/219655/k-nn-computational-complexity"&gt;en función de cómo se recorren los elementos.&lt;/a&gt;) lo cual vuelve a KNN un algoritmo costoso cuando &lt;span class="math"&gt;\(n\)&lt;/span&gt; es lo suficientemente grande.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Un &lt;em&gt;SR&lt;/em&gt; alternativo al &lt;em&gt;User Based&lt;/em&gt; (UB-CF) es la del filtrado colaborativo basado en &lt;em&gt;ítems&lt;/em&gt;, o &lt;em&gt;Item based collaborative filtering (IB-CF)&lt;/em&gt;&lt;/p&gt;
-&lt;h5&gt;Item Based collaborative filtering (IB-CF)&lt;/h5&gt;
+&lt;h5 id="item-based-collaborative-filtering-ib-cf"&gt;Item Based collaborative filtering (IB-CF)&lt;/h5&gt;
 &lt;p&gt;Nacen de la necesidad de generar recomendaciones más rápidas sobre datasets masivos,
 para los cuales los algoritmos de tipo UB-CF no escalan bien. &lt;/p&gt;
 &lt;p&gt;Estas técnicas analizan primero la matriz de usuarios e ítems &lt;span class="math"&gt;\(M\)&lt;/span&gt; para identificar 
@@ -332,14 +564,14 @@ calificado positivamente. Dado que las relaciones entre ítems es &lt;em&gt;rela
 estática (a diferencia de los gustos de los usuarios, que son más dinámicos), estas 
 recomendaciones tienden a ser más estables en el tiempo.&lt;/p&gt;
 &lt;p&gt;De la misma manera que en el caso de UB-CF, algunas métricas de similitud pueden ser la &lt;em&gt;correlación entre ítems&lt;/em&gt;, o &lt;em&gt;similitud coseno&lt;/em&gt;. &lt;a href="http://files.grouplens.org/papers/www10_sarwar.pdf"&gt;Este paper&lt;/a&gt; hace una revisión de los métodos indicados, y concluye que este tipo de &lt;em&gt;SR&lt;/em&gt; poseen un rendimiento superior, además de proveer mejores recomendaciones que su compañero UB-CF.&lt;/p&gt;
-&lt;h3&gt;Sistemas híbridos&lt;/h3&gt;
+&lt;h3 id="sistemas-hibridos"&gt;Sistemas híbridos&lt;/h3&gt;
 &lt;p&gt;Los &lt;em&gt;SR&lt;/em&gt; basados en contenido y en filtrado colaborativo presentan sus propios problemas. Los sistemas híbridos apuntan a resolver estas limitaciones a través de
 combinaciones de otros &lt;em&gt;SR&lt;/em&gt;&lt;/p&gt;
-&lt;h2&gt;A continuación&lt;/h2&gt;
+&lt;h2 id="a-continuacion"&gt;A continuación&lt;/h2&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-3-ES.html"&gt;parte 3&lt;/a&gt; se verán los sistemas de recomendación basados en contenido con mayor detalle.&lt;/p&gt;
-&lt;h2&gt;Anexo: KNN y la maldición de la dimensionalidad&lt;/h2&gt;
+&lt;h2 id="anexo-knn-y-la-maldicion-de-la-dimensionalidad"&gt;Anexo: KNN y la maldición de la dimensionalidad&lt;/h2&gt;
 &lt;p&gt;(o en inglés, &lt;em&gt;curse of dimensionality&lt;/em&gt;)&lt;/p&gt;
-&lt;h3&gt;K &lt;em&gt;Nearest neighbors&lt;/em&gt; (KNN)&lt;/h3&gt;
+&lt;h3 id="k-nearest-neighbors-knn"&gt;K &lt;em&gt;Nearest neighbors&lt;/em&gt; (KNN)&lt;/h3&gt;
 &lt;p&gt;Este algoritmo crea modelos de grupos o &lt;em&gt;clusters&lt;/em&gt; de usuarios o ítem que guardan 
 relación entre sí de acuerdo a una métrica preestablecida. La idea de KNN en el 
 contexto de recomendación es, en términos simples:&lt;/p&gt;
@@ -360,7 +592,7 @@ usuario sobre un item a predecir, es la suma ponderada de los &lt;em&gt;ratings&
 - &lt;span class="math"&gt;\(\bar{r}_u\)&lt;/span&gt; es el promedio de votos del usuario &lt;span class="math"&gt;\(u\)&lt;/span&gt;
 - &lt;span class="math"&gt;\((r_{j,i}-\bar{r}_j)\)&lt;/span&gt; es el voto de cada usuario o vecino sobre el ítem &lt;span class="math"&gt;\(i\)&lt;/span&gt; menos el promedio de sus votos
 - &lt;span class="math"&gt;\(w(u,j)\)&lt;/span&gt; es una función que asigna un peso a cada una de estas valoraciones.&lt;/p&gt;
-&lt;h2&gt;La maldición de la dimensionalidad (o &lt;em&gt;Curse of dimensionality&lt;/em&gt;)&lt;/h2&gt;
+&lt;h2 id="la-maldicion-de-la-dimensionalidad-o-curse-of-dimensionality"&gt;La maldición de la dimensionalidad (o &lt;em&gt;Curse of dimensionality&lt;/em&gt;)&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="curse-of-dimenzionality" src="https://diegoquintanav.github.io/images/curse-of-dimensionality.png" title="omgsocursed" /&gt;&lt;/p&gt;
 &lt;p&gt;(Kudos al &lt;a href="https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html"&gt;maravilloso ser humano que hizo la imagen.&lt;/a&gt;)&lt;/p&gt;
 &lt;p&gt;Básicamente se trata de lo siguiente: Mientras más características tengan los 
@@ -444,12 +676,25 @@ un dolor de estómago antes de poder decidir.&lt;/p&gt;
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Sun, 25 Nov 2018 19:15:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-10-28:recsys-2-ES.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 1</title><link>https://diegoquintanav.github.io/recsys-1-ES.html</link><description>&lt;h1&gt;Por qué esta serie&lt;/h1&gt;
+&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Sun, 25 Nov 2018 19:15:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-10-28:recsys-2-ES.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 1</title><link>https://diegoquintanav.github.io/recsys-1-ES.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#por-que-esta-serie"&gt;Por qué esta serie&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#indice"&gt;Índice&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sistemas-de-recomendacion"&gt;Sistemas de recomendación&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#modelando-la-confianza"&gt;Modelando la confianza&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#por-que-es-bueno-entender-los-sistemas-de-recomendacion"&gt;¿Por qué es bueno entender los sistemas de recomendación?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#definicion-formal-del-problema"&gt;Definición formal del problema&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#metricas-de-prediccion"&gt;Métricas de predicción&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conclusiones"&gt;Conclusiones&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="por-que-esta-serie"&gt;Por qué esta serie&lt;/h1&gt;
 &lt;p&gt;Me encuentro tomando el módulo de sistemas de recomendación en la PUC
 (&lt;a href="https://educacionprofesional.ing.uc.cl/?diplomado=diplomado-big-data"&gt;programa&lt;/a&gt;)
 con el profesor &lt;a href="http://dparra.sitios.ing.uc.cl/"&gt;Dennis Parra&lt;/a&gt; y como tarea del
  módulo se solicitó crear un post por clase, a modo de resumen.&lt;/p&gt;
-&lt;h2&gt;Índice&lt;/h2&gt;
+&lt;h1 id="indice"&gt;Índice&lt;/h1&gt;
 &lt;p&gt;La serie consiste de cinco posts, los que se resumen de la siguiente manera&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-2-ES.html"&gt;parte 2&lt;/a&gt; se revisan las distintas
@@ -464,7 +709,7 @@ con el profesor &lt;a href="http://dparra.sitios.ing.uc.cl/"&gt;Dennis Parra&lt;
   de factorización, un tipo de implementación de máquinas de vectores de
   soporte que da excelentes resultados en aplicaciones de recomendación y es extensible a otras áreas.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Sistemas de recomendación&lt;/h2&gt;
+&lt;h1 id="sistemas-de-recomendacion"&gt;Sistemas de recomendación&lt;/h1&gt;
 &lt;p&gt;Las recomendaciones son una parte importante de nuestra sociedad.
 Seguimos recomendaciones de nuestros padres, amigos y compañeros. Las
 seguimos porque de alguna forma, confiamos en ellos, su experiencia y
@@ -484,7 +729,7 @@ gente que tiene un interés especial sobre algún tema.&lt;/p&gt;
 resulta práctico leer todas las reseñas en internet. Debe existir algún tipo de
 &lt;em&gt;cuantificar&lt;/em&gt; las recomendaciones, y alguna estrategia para &lt;em&gt;validarlas&lt;/em&gt;. 
 No todas las recomendaciones son &lt;em&gt;buenas&lt;/em&gt; desde el punto de vista de cada uno.&lt;/p&gt;
-&lt;h2&gt;Modelando la confianza&lt;/h2&gt;
+&lt;h1 id="modelando-la-confianza"&gt;Modelando la confianza&lt;/h1&gt;
 &lt;p&gt;La forma más elemental de validar algo en internet a través de votaciones, &lt;em&gt;ratings&lt;/em&gt;
 o &lt;em&gt;likes&lt;/em&gt;. Esto nos permite tratar las opiniones de la gente como números, y permite
 además extraer promedios, varianzas, &lt;em&gt;y todas esas cosas&lt;/em&gt;.&lt;/p&gt;
@@ -508,7 +753,7 @@ anteriores,&lt;/p&gt;
  de ellas, al menos un 20% no había sido reproducida ni siquiera una vez. &lt;a href="https://open.spotify.com/album/0ke5cFySqu1XkaVM4RWUZk"&gt;Quizás algo commo esto&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;En el 2018 Facebook tiene alrededor de &lt;a href="https://www.statista.com/statistics/264810/number-of-monthly-active-facebook-users-worldwide/"&gt;2 billones de usuarios activos&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;¿Por qué es bueno entender los sistemas de recomendación?&lt;/h2&gt;
+&lt;h1 id="por-que-es-bueno-entender-los-sistemas-de-recomendacion"&gt;¿Por qué es bueno entender los sistemas de recomendación?&lt;/h1&gt;
 &lt;p&gt;En general estos servicios son gratuitos. Nadie paga por usar Facebook.
 Conocida es la frase &lt;a href="https://www.reddit.com/r/explainlikeimfive/comments/2m3f05/eli5_if_something_is_free_you_are_the_product/"&gt;&lt;em&gt;"If you are not paying, then &lt;strong&gt;you&lt;/strong&gt; are the product"&lt;/em&gt;&lt;/a&gt;,
 que se traduce como &lt;em&gt;"Si tú no estás pagando por el producto, es porque tú eres el producto"&lt;/em&gt;&lt;/p&gt;
@@ -524,7 +769,7 @@ que se traduce como &lt;em&gt;"Si tú no estás pagando por el producto, es porq
 &lt;p&gt;Finalmente, los sistemas de recomendación son una manifestación de
 inteligencia colectiva, lo que es bueno: Más gente involucrada en algo es mejor. 
 Lo importante es entender cómo funcionan estos modelos y así, eventualmente, poder crear modelos propios.&lt;/p&gt;
-&lt;h2&gt;Definición formal del problema&lt;/h2&gt;
+&lt;h1 id="definicion-formal-del-problema"&gt;Definición formal del problema&lt;/h1&gt;
 &lt;p&gt;Siguiendo la formalización presentada en &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&amp;amp;rep=rep1&amp;amp;type=pdf"&gt;este paper&lt;/a&gt;,
 para un conjunto de usuarios &lt;span class="math"&gt;\(U\)&lt;/span&gt; y un conjunto de items &lt;span class="math"&gt;\(I\)&lt;/span&gt;, se desea obtener un
  conjunto recomendado de items &lt;span class="math"&gt;\(R\)&lt;/span&gt;, tal que&lt;/p&gt;
@@ -539,7 +784,7 @@ para un conjunto de usuarios &lt;span class="math"&gt;\(U\)&lt;/span&gt; y un co
 &lt;li&gt;&lt;em&gt;Elegir el ítem o el conjunto de ítems tal que maximicen &lt;span class="math"&gt;\(R\)&lt;/span&gt; i.e.&lt;/em&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;div class="math"&gt;$$\forall u \in U, i = \mbox{argmax } R(i,u) \mbox{, }  i \in I$$&lt;/div&gt;
-&lt;h2&gt;Métricas de predicción&lt;/h2&gt;
+&lt;h1 id="metricas-de-prediccion"&gt;Métricas de predicción&lt;/h1&gt;
 &lt;p&gt;Podemos cuantificar el error entre el valor esperado &lt;span class="math"&gt;\(\hat{r}\)&lt;/span&gt; y la predicción &lt;span class="math"&gt;\(r\)&lt;/span&gt;, de las cuales se destacan&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;RMSE, o &lt;em&gt;root mean square error&lt;/em&gt; como&lt;/li&gt;
@@ -555,7 +800,7 @@ para un conjunto de usuarios &lt;span class="math"&gt;\(U\)&lt;/span&gt; y un co
 &lt;div class="math"&gt;$$\frac{\sum_{i=1}^{n}|\hat{r}_{ui}-r_{ui}|}{n}$$&lt;/div&gt;
 &lt;p&gt;Estas métricas basadas en el error son de uso frecuente en distintas áreas como
  la estadística y &lt;em&gt;machine learning&lt;/em&gt;.&lt;/p&gt;
-&lt;h2&gt;Conclusiones&lt;/h2&gt;
+&lt;h1 id="conclusiones"&gt;Conclusiones&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;Los métodos de recomendación buscan lidiar con la sobrecarga de información,
 y reducen el espacio de búsqueda en grupos muy grandes de ítems.&lt;/li&gt;
@@ -563,7 +808,7 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.&lt;/li&gt;
 &lt;li&gt;Una forma de evaluar un sistema recomendador es a través del error en las
   predicciones realizadas&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;A continuación&lt;/h2&gt;
+&lt;h1 id="a-continuacion"&gt;A continuación&lt;/h1&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-2-ES.html"&gt;parte 2&lt;/a&gt; se verán otras cosas, entre ellas, &lt;strong&gt;tipos de clasificadores.&lt;/strong&gt;&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

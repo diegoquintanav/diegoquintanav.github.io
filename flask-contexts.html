@@ -93,12 +93,10 @@
       </ul>
     </header>
     <div class="content">
-      <h1>Motivation</h1>
+      <h1 id="motivation">Motivation</h1>
 <p>There's this thing going on with the <a href="http://flask.pocoo.org/docs/1.0/appcontext/#creating-an-application-context">flask context</a> and the <a href="http://flask.pocoo.org/docs/1.0/reqcontext/">request context</a>, that used to confuse me a lot. Before testing these two probably will never be used, but after reading <a href="http://flask.pocoo.org/docs/1.0/testing/">the documentation</a> and writing your first tests, it's probable that you run into something like</p>
-<div class="highlight"><pre><span></span>Flask.url_for() error: Attempted to generate a URL without the application context being pushed
-</pre></div>
-
-
+<p><code>plain
+Flask.url_for() error: Attempted to generate a URL without the application context being pushed</code></p>
 <p>So, what is that went <em>wrong</em>?</p>
 <p>Someone already wrote an <a href="http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html">exhaustive revision</a> of what are the different approaches, but it actually never closes the issue of <em>how</em> to test an application properly.</p>
 <p>Others mention it, but it just <em>doesn't stick</em></p>
@@ -109,7 +107,7 @@
 <li><a href="https://github.com/pallets/flask/tree/1.0.2/examples/tutorial/tests">flask/examples/tutorial/tests at 1.0.2 · pallets/flask · GitHub</a></li>
 </ul>
 <p>For the sake of completeness and for my own understanding of the issue, here's my view on the topic.</p>
-<h2>Flask Contexts</h2>
+<h2 id="flask-contexts">Flask Contexts</h2>
 <ul>
 <li>In the lifecycle of a request, both an <em>Application context</em> and a <em>Request Context</em> are created at the beginning, and destroyed at the end (see <a href="https://speakerdeck.com/mitsuhiko/advanced-flask-patterns-1?slide=7">Advanced Flask Patterns - Speaker Deck, Slide 7</a>)</li>
 <li>The idea behind having two detached contexts is so an application can exist
@@ -124,62 +122,61 @@
   request in process</li>
 <li><a href="https://github.com/pallets/flask/blob/1949c4a9abc174bf29620f6dd8ceab9ed3ace2eb/flask/ctx.py#L230">Every request pushes a new application context</a></li>
 </ul>
-<h2>Flask contexts vernacular</h2>
+<h2 id="flask-contexts-vernacular">Flask contexts vernacular</h2>
 <p>For a given <code>app</code> object, there are some design aspects and specific objects
 it's good to get familiar with when testing with Flask</p>
-<h3><code>flask.app.test_client()</code></h3>
+<h3 id="flaskapptest_client"><code>flask.app.test_client()</code></h3>
 <p>Provides a client that can perform requests to our application.</p>
-<h3><code>flask.app.app_context()</code></h3>
+<h3 id="flaskappapp_context"><code>flask.app.app_context()</code></h3>
 <p>The application context, it gives life to <code>current_app</code>. Starts and dies with
 a request.</p>
-<h3><code>flask.app.test_request_context()</code></h3>
+<h3 id="flaskapptest_request_context"><code>flask.app.test_request_context()</code></h3>
 <p>The request context, it gives life to <code>request</code>. If there's no application context
 at the moment, it pushes a new one. Starts and ends with a request.</p>
-<h3><code>g</code></h3>
+<h3 id="g"><code>g</code></h3>
 <p>A proxy that lives within a pushed <strong>application</strong> context, used to store <em>non sensible</em>
 information about the current application. Its life is bound to that of the request.</p>
-<h3><code>session</code></h3>
+<h3 id="session"><code>session</code></h3>
 <p>A proxy that lives within a pushed <strong>request</strong> context, used to store <em>sensible</em>
 information <em>through the client</em>, and encrypted with your <code>SECRET_KEY</code>.</p>
 <p>Using <code>session</code> to store private information like passwords and credentials is
 discouraged. See the caveats in <a href="https://blog.miguelgrinberg.com/post/how-secure-is-the-flask-user-session">Miguel Grinberg's post about it</a>.</p>
-<h2>Practical differences (in code)</h2>
+<h2 id="practical-differences-in-code">Practical differences (in code)</h2>
 <p>This <a href="https://stackoverflow.com/a/33382823/5819113">SO answer</a> puts it simple, so I will be kinda adding my own comments to it.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<p>```python
+from flask import Flask, g
+app = Flask(<strong>name</strong>)</p>
+<p>with app.app_context():
+    print('in app context, before first request context')
+    print('setting g.foo to abc')
+    g.foo = 'abc'
+    print('g.foo should be abc, is: {0}'.format(g.foo))</p>
+<pre><code>with app.test_request_context():
+    # this reuses g from the current context
+    print('in first request context')
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+    print('setting g.foo to xyz')
+    # this is the same g, so it will be replaced
+    g.foo = 'xyz'
+    print('g.foo should be xyz, is: {0}'.format(g.foo))
 
-<span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, before first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to abc&#39;</span><span class="p">)</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+print('in app context, after first request context')
+print('g.foo should be abc, is: {0}'.format(g.foo))
 
-    <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-        <span class="c1"># this reuses g from the current context</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in first request context&#39;</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to xyz&#39;</span><span class="p">)</span>
-        <span class="c1"># this is the same g, so it will be replaced</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;xyz&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+with app.test_request_context():
+    print('in second request context')
+    print('g.foo should be abc, is: {0}'.format(g.foo))
+    print('setting g.foo to pqr')
+    g.foo = 'pqr'
+    print('g.foo should be pqr, is: {0}'.format(g.foo))
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, after first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-
-    <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;pqr&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, after second request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-</pre></div>
-
-
+print('in app context, after second request context')
+print('g.foo should be abc, is: {0}'.format(g.foo))
+</code></pre>
+<p>```</p>
 <p>And here's the output that it gives:</p>
-<div class="highlight"><pre><span></span>in app context, before first request context
+<p><code>plain
+in app context, before first request context
 setting g.foo to abc
 g.foo should be abc, is: abc
 in first request context
@@ -193,43 +190,37 @@ g.foo should be abc, is: xyz
 setting g.foo to pqr
 g.foo should be pqr, is: pqr
 in app context, after second request context
-g.foo should be abc, is: pqr
-</pre></div>
-
-
+g.foo should be abc, is: pqr</code></p>
 <p>In this first example <code>g</code> is shared across contexts because it's the same
 context in <em>nested contexts</em>, and it's a <em>caveat</em> mentioned in the answer (some emphasis is mine)</p>
 <blockquote>
 <p>"Every request pushes a new application context". And <a href="http://flask.pocoo.org/docs/0.10/appcontext/">as the Flask docs say</a>, the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that <em>you should <strong>never</strong> explicitly create multiple request contexts nested inside one application context, because <code>flask.g</code> (and co) doesn't have any magic whereby it functions in the two different "levels" of context</em>, with different states existing independently at the application and request levels.</p>
 <p>The reality is that "application context" is potentially quite a misleading name, because <code>app.app_context()</code> <strong>is</strong> a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:</p>
 </blockquote>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
-<span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, before first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to abc&#39;</span><span class="p">)</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-
-<span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be None, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)))</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to xyz&#39;</span><span class="p">)</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;xyz&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-
-<span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be None, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)))</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
-    <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;pqr&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-</pre></div>
-
-
+<p>```python
+from flask import Flask, g
+app = Flask(<strong>name</strong>)</p>
+<p>with app.app_context():
+    print('in app context, before first request context')
+    print('setting g.foo to abc')
+    g.foo = 'abc'
+    print('g.foo should be abc, is: {0}'.format(g.foo))</p>
+<p>with app.test_request_context():
+    print('in first request context')
+    print('g.foo should be None, is: {0}'.format(g.get('foo')))
+    print('setting g.foo to xyz')
+    g.foo = 'xyz'
+    print('g.foo should be xyz, is: {0}'.format(g.foo))</p>
+<p>with app.test_request_context():
+    print('in second request context')
+    print('g.foo should be None, is: {0}'.format(g.get('foo')))
+    print('setting g.foo to pqr')
+    g.foo = 'pqr'
+    print('g.foo should be pqr, is: {0}'.format(g.foo))
+```</p>
 <p>Which will give the expected results:</p>
-<div class="highlight"><pre><span></span>in app context, before first request context
+<p><code>plain
+in app context, before first request context
 setting g.foo to abc
 g.foo should be abc, is: abc
 in first request context
@@ -239,44 +230,33 @@ g.foo should be xyz, is: xyz
 in second request context
 g.foo should be None, is: None
 setting g.foo to pqr
-g.foo should be pqr, is: pqr
-</pre></div>
-
-
+g.foo should be pqr, is: pqr</code></p>
 <p>In this second example, all three <code>with</code> blocks are pushing independent contexts. The difference is that
 last two are also pushing an application context <em>implicitly</em>, and the first one is not pushing a request context.</p>
-<h2>So, how do I test my app?</h2>
+<h2 id="so-how-do-i-test-my-app">So, how do I test my app?</h2>
 <p>I will be using <a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> because it's good. Just google "<code>unittest versus pytest</code>" to find out why.</p>
 <p>This <a href="https://stackoverflow.com/a/17377101/5819113">SO answer</a> summarizes the differences in the best way I've found so far.</p>
 <blockquote>
 <p>If you want to make a request to your application, use the <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_client"><code>test_client</code></a>.</p>
-<div class="highlight"><pre><span></span>c = app.test_client()
-response = c.get(&#39;/test/url&#39;)
+<pre><code>c = app.test_client()
+response = c.get('/test/url')
 # test response
-</pre></div>
-
-
+</code></pre>
 <p>If you want to test code which uses an application context (<code>current_app</code>, <code>g</code>, <code>url_for</code>), push an <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.app_context"><code>app_context</code></a>.</p>
-<div class="highlight"><pre><span></span>with app.app_context():
+<pre><code>with app.app_context():
     # test your app context code
-</pre></div>
-
-
+</code></pre>
 <p>If you want test code which uses a request context (<code>request</code>, <code>session</code>), push a <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_request_context"><code>test_request_context</code></a>.</p>
-<div class="highlight"><pre><span></span>with current_app.test_request_context():
+<pre><code>with current_app.test_request_context():
     # test your request context code
-</pre></div>
-
-
+</code></pre>
 </blockquote>
 <p>It's also important to note that</p>
 <blockquote>
 <p>Both app and request contexts can also be pushed manually, which is useful when using the interpreter.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; ctx = app.app_context()
+<pre><code>&gt;&gt;&gt; ctx = app.app_context()
 &gt;&gt;&gt; ctx.push()
-</pre></div>
-
-
+</code></pre>
 </blockquote>
 <p>So far there are <em>two</em> approaches:</p>
 <ol>
@@ -286,98 +266,80 @@ response = c.get(&#39;/test/url&#39;)
 </ol>
 <p>Everything in the middle is prone to produce weird results and drive you crazy, so <em>try</em> to be consistent!</p>
 <p><a href="http://lucumr.pocoo.org/about/">Armin Ronacher</a> suggests a pytest fixture pattern in <a href="https://youtu.be/1ByQhAM5c1I?t=2285">this presentation</a> (<a href="https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52">slides</a>), which relies in the first approach. The code is as follows:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<p>```python
+import pytest</p>
+<p>@pytest.fixture(scope="module")
+def app(request):</p>
+<pre><code># import app factory pattern
+from yourapp import create_app
+app = create_app()
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+# pushes an application context manually
+ctx = app.app_context()
+ctx.push()
 
-    <span class="c1"># import app factory pattern</span>
-    <span class="kn">from</span> <span class="nn">yourapp</span> <span class="kn">import</span> <span class="n">create_app</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+# bind the test life with the context through the
+request.addfinalizer(ctx.pop)
+return app
+</code></pre>
+<p>@pytest.fixture()
+def test_client(request, app):</p>
+<pre><code>client = app.test_client()
+client.__enter__()
 
-    <span class="c1"># pushes an application context manually</span>
-    <span class="n">ctx</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">()</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
-
-    <span class="c1"># bind the test life with the context through the</span>
-    <span class="n">request</span><span class="o">.</span><span class="n">addfinalizer</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">pop</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">app</span>
-
-<span class="nd">@pytest.fixture</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">test_client</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
-
-    <span class="n">client</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span>
-    <span class="n">client</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
-
-    <span class="n">request</span><span class="o">.</span><span class="n">addfinalizer</span><span class="p">(</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">client</span>
-</pre></div>
-
-
+request.addfinalizer(
+    lambda: client.__exit__(None, None, None))
+return client
+</code></pre>
+<p>```</p>
 <p>Note that <code>request</code> here refers to the <a href="https://docs.pytest.org/en/latest/reference.html#request"><code>pytest</code> fixture</a></p>
-<h2>But how do I test? really</h2>
+<h2 id="but-how-do-i-test-really">But how do I test? really</h2>
 <p>After a lot of churning and with the help of <code>#pocoo</code> in IRC, I came up with this:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<p>```python
+import pytest</p>
+<p>@pytest.fixture
+def runner(app):
+    """A test runner for the app's Click commands."""
+    return app.test_cli_runner()</p>
+<p>@pytest.fixture(scope='session')
+def app(request):
+    from yourapp import create_app
+    return create_app('testing')</p>
+<p>@pytest.fixture(autouse=True)
+def app_context(app):
+    """Creates a flask app context"""
+    with app.app_context():
+        yield app</p>
+<p>@pytest.fixture
+def request_context(app_context):
+    """Creates a flask request context"""
+    with app_context.test_request_context():
+        yield</p>
+<p>@pytest.fixture
+def client(app_context):
+    return app_context.test_client(use_cookies=True)</p>
+<p>@pytest.fixture(scope="model")
+def db(app_context):</p>
+<pre><code># extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113
+from yourapp.extensions import db
 
+db.create_all()
 
-<span class="nd">@pytest.fixture</span>
-<span class="k">def</span> <span class="nf">runner</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A test runner for the app&#39;s Click commands.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">test_cli_runner</span><span class="p">()</span>
+# seed the database
+seed_db()
 
+yield db
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">yourapp</span> <span class="kn">import</span> <span class="n">create_app</span>
-    <span class="k">return</span> <span class="n">create_app</span><span class="p">(</span><span class="s1">&#39;testing&#39;</span><span class="p">)</span>
-
-
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">app_context</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a flask app context&quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
-        <span class="k">yield</span> <span class="n">app</span>
-
-
-<span class="nd">@pytest.fixture</span>
-<span class="k">def</span> <span class="nf">request_context</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a flask request context&quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">app_context</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-        <span class="k">yield</span>
-
-
-<span class="nd">@pytest.fixture</span>
-<span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">app_context</span><span class="o">.</span><span class="n">test_client</span><span class="p">(</span><span class="n">use_cookies</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
-
-    <span class="c1"># extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113</span>
-    <span class="kn">from</span> <span class="nn">yourapp.extensions</span> <span class="kn">import</span> <span class="n">db</span>
-
-    <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
-
-    <span class="c1"># seed the database</span>
-    <span class="n">seed_db</span><span class="p">()</span>
-
-    <span class="k">yield</span> <span class="n">db</span>
-
-    <span class="c1"># teardown database</span>
-    <span class="c1"># https://stackoverflow.com/a/18365654/5819113</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">drop_all</span><span class="p">()</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">get_engine</span><span class="p">(</span><span class="n">app_context</span><span class="p">)</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">seed_db</span><span class="p">():</span>
-    <span class="c1"># insert default users and roles</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Seeding the database or something&quot;</span><span class="p">)</span>
-</pre></div>
-
-
+# teardown database
+# https://stackoverflow.com/a/18365654/5819113
+db.session.remove()
+db.drop_all()
+db.get_engine(app_context).dispose()
+</code></pre>
+<p>def seed_db():
+    # insert default users and roles
+    print("Seeding the database or something")
+```</p>
 <p>This is working for me. In short</p>
 <ul>
 <li>If your test requires a living app, import the <code>app_context</code> fixture</li>
@@ -385,35 +347,32 @@ response = c.get(&#39;/test/url&#39;)
 <li>If your test requires examining a part of the request, import the <code>request_context</code> fixture</li>
 <li>If your test requires a logged in user, you can use the <code>client</code> fixture and <code>flask_login</code> as</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A helper method that logs in users&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">),</span>
-                    <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                        <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
-                        <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">},</span>
-                    <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<p>```python
+def login(client, email, password):
+    """A helper method that logs in users"""
+    return client.post(url_for('auth.login'),
+                    data={
+                        'email': email,
+                        'password': password},
+                    follow_redirects=True)</p>
+<p>def test_with_logged_in_user(client):
+    """Tests a view that requires authentication"""
+    from flask_login import current_user</p>
+<pre><code># client is a pytest fixture
+with client as c:
+    # login is a helper method that issues a POST request
+    login(c, "user@test.com", "test")
+    assert current_user.email == "user@test.com"
+    assert current_user.is_authenticated
 
+    response = c.get(
+        '/restricted_view/',
+        follow_redirects=True)
 
-<span class="k">def</span> <span class="nf">test_with_logged_in_user</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Tests a view that requires authentication&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">current_user</span>
-
-    <span class="c1"># client is a pytest fixture</span>
-    <span class="k">with</span> <span class="n">client</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
-        <span class="c1"># login is a helper method that issues a POST request</span>
-        <span class="n">login</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">&quot;user@test.com&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">current_user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;user@test.com&quot;</span>
-        <span class="k">assert</span> <span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span>
-
-        <span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">&#39;/restricted_view/&#39;</span><span class="p">,</span>
-            <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
-        <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;Stuff that should appear in your view&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
-</pre></div>
-
-
+    assert response.status_code == 200
+    assert b'Stuff that should appear in your view' in response.data
+</code></pre>
+<p>```</p>
 <p>That's all I have to say about it.</p>
     </div>
   </article>

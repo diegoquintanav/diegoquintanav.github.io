@@ -95,10 +95,10 @@
     <div class="content">
       <!-- entry 5, clase al 15.11 -->
 
-<h1><em>Previously</em></h1>
-<p>En el <a href="https://diegoquintanav.github.io/drafts/recsys-4.html">post anterior</a> se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, <em>support vector machines</em>), utilizando con un kernel polinomial. </p>
+<h1 id="previously"><em>Previously</em></h1>
+<p>En el <a href="https://diegoquintanav.github.io/recsys-4.html">post anterior</a> se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, <em>support vector machines</em>), utilizando con un kernel polinomial. </p>
 <p>Pero antes, ¿Qué es una máquina de vectores de soporte?</p>
-<h2>Máquinas de vectores de soporte</h2>
+<h2 id="maquinas-de-vectores-de-soporte">Máquinas de vectores de soporte</h2>
 <p>Es uno de los clasificadores clásicos usados en machine learning. Dado que no es la idea profundizar en este algoritmo, se podría resumir en lo siguiente</p>
 <p>Dadas dos clases <strong>A</strong> y <strong>B</strong>, una SVM es un clasificador <span class="math">\(\mathcal{C}\)</span> que encuentra un plano de decisión <span class="math">\(h\)</span>, tal que la distancia de tal plano a dos vectores llamados de soporte sea máxima. Estos vectores de soporte son obtenidos a través de un proceso de optimización, y los planos de decisión pueden extenderse a otras superficies más complejas a través de lo que se conoce como <em>the kernel trick</em> (Explicado muy bien <a href="http://www.eric-kim.net/eric-kim-net/posts/1/kernel_trick.html">aquí</a>).</p>
 <p><img alt="svm1" src="https://ml.berkeley.edu/blog/assets/tutorials/2/image_2.png" /></p>
@@ -120,7 +120,7 @@ $$</div>
 <li>Sigmoidal</li>
 </ul>
 <p>Una definición más completa sobre SVM puede leerse en <a href="https://ml.berkeley.edu/blog/2016/12/24/tutorial-2/">esta página</a>.</p>
-<h2>Máquinas de factorización</h2>
+<h2 id="maquinas-de-factorizacion">Máquinas de factorización</h2>
 <p>Las SVM presentan problemas sobre datasets muy poco densos, problema que es abordado por las máquinas de factorización, las que incorporan la interacción entre distintas variables en el dataset. Para dos interacciones, <a href="https://www.ismll.uni-hildesheim.de/pub/pdfs/Rendle2010FM.pdf">Rendle, 2010</a> define el modelo de una FM como</p>
 <div class="math">$$
 \hat{y}(x) = w_{0} + \sum_{i=1}^{n} w_{i} x_{i} + \sum_{i=1}^{n} \sum_{j=i+1}^{n} \langle {v_{i},v_{j}} \rangle  x_{i} x_{j}
@@ -130,12 +130,12 @@ $$</div>
 \langle {v_{i},v_{j}} \rangle = \sum_{f=1}^{k} v_{i,f} \cdot v_{j,f}
 $$</div>
 <p>En este caso el <em>kernel trick</em> permite reducir la complejidad final lineal al orden de <span class="math">\(\mathcal{O}(kn)\)</span>, sin aumentar la complejidad de la función objetivo. Para datasets menos densos como lo son aquellos usados para recomendación, las máquinas de factorización operan mucho mejor que otros algoritmos, aunque sus aplicaciones no se limitan sólo a <em>SR</em>.</p>
-<h2>Código</h2>
+<h2 id="codigo">Código</h2>
 <ul>
 <li>Steffen Rendle creó <a href="http://www.libfm.org/">LibFM</a>, una librería para implementaciones de FM en C++ disponible en github.</li>
 <li>Existen otras implementaciones en <em>Spark</em> para aprovechar la parelización en <a href="https://github.com/blebreton/spark-FM-parallelSGD">este repositorio de Github</a></li>
 </ul>
-<h2>The end</h2>
+<h2 id="the-end">The end</h2>
 <p>No quedan más partes, ¡Con esto cerramos esta serie!</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

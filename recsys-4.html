@@ -8,7 +8,7 @@
 
   <title>  Sistemas recomendadores, parte 4 | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/drafts/recsys-4.html">
+  <link rel="canonical" href="https://diegoquintanav.github.io/recsys-4.html">
 
     <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
@@ -109,10 +109,27 @@
 
 <!-- *  Usando un software llamado *gensim* -->
 
-<h1><em>Previously</em></h1>
+<div class="toc">
+<ul>
+<li><a href="#previously">Previously</a></li>
+<li><a href="#sistemas-de-recomendacion-hibridos">Sistemas de recomendación híbridos</a><ul>
+<li><a href="#monolitico">Monolítico</a></li>
+<li><a href="#paralelizado">Paralelizado</a></li>
+<li><a href="#pipeline">Pipeline</a></li>
+</ul>
+</li>
+<li><a href="#evaluacion-de-un-recomendador">Evaluación de un recomendador</a><ul>
+<li><a href="#metricas-en-contexto-de-clasificacion">Métricas en contexto de clasificación</a></li>
+<li><a href="#metricas-en-el-contexto-de-recomendadores">Métricas en el contexto de recomendadores</a></li>
+</ul>
+</li>
+<li><a href="#a-continuacion">A continuación</a></li>
+</ul>
+</div>
+<h1 id="previously"><em>Previously</em></h1>
 <p>En la <a href="https://diegoquintanav.github.io/recsys-3-ES.html">parte 3</a> se comentaron algunos <em>SR</em> basados en contenido, quedando para esta parte comentar un poco sobre sistemas <em>híbridos</em> y sobre métricas usadas en la evaluación de un <em>SR</em>.</p>
-<h2>Sistemas de recomendación híbridos</h2>
-<p>Se trata de una familia de <em>SR</em> que combinan elementos de las clasificaciones vistas antes, <em>content based</em> (CB) y <em>collaborative filtering based</em> (CF). Al respecto en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.8200&amp;rep=rep1&amp;type=pdf">Burke, 2007</a> y en <a href="http://blog.ag-nbi.de/wp-content/uploads/2015/10/adomavicius-recsys.pdf">Adomavicius, 2005</a> se hace una revisión extensa sobre el tema</p>
+<h1 id="sistemas-de-recomendacion-hibridos">Sistemas de recomendación híbridos</h1>
+<p>Se trata de una familia de <em>SR</em> que combina elementos de las clasificaciones vistas antes, <em>content based</em> (CB) y <em>collaborative filtering based</em> (CF). Al respecto en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.8200&amp;rep=rep1&amp;type=pdf"><em>Burke, 2007</em></a> y en <a href="http://blog.ag-nbi.de/wp-content/uploads/2015/10/adomavicius-recsys.pdf"><em>Adomavicius, 2005</em></a> se hace una revisión extensa sobre el tema.</p>
 <p>Según Burke existen 7 formas distintas de <em>hibridizar sistemas</em>,</p>
 <ol>
 <li><strong>Weighted</strong> Los puntajes o scores de las recomendaciones provenientes de distintos <em>SR</em> son combinadas en una sola recomendación</li>
@@ -123,19 +140,19 @@
 <li><strong>Feature augmentation</strong> La recomendación de un <em>SR</em> es usada como parámetros de entrada para otro <em>SR</em></li>
 <li><strong>Meta-level</strong> El modelo aprendido por un <em>SR</em> es usado como información de entrada para otro <em>SR</em></li>
 </ol>
-<p>Estas siguen 3 diseños generales</p>
-<h3>Monolítico</h3>
-<p>Se refiere a la unión de dos o más <em>SR</em> en uno solo. Ejemplos de esto son aquellos que implementan <em>Feature augmentation, Feature combination</em></p>
+<p>Estas siguen 3 diseños generales:</p>
+<h2 id="monolitico">Monolítico</h2>
+<p>Se refiere a la unión de dos o más <em>SR</em> en uno solo. Ejemplos de esto son aquellos que implementan <em>Feature augmentation y Feature combination</em></p>
 <p><img alt="monolithic" src="https://diegoquintanav.github.io/images/monolithic_hybrid.png" /></p>
-<h3>Paralelizado</h3>
-<p>Se refiere a la ejecución de diversos <em>SR</em> en paralelo, cuyas recomendaciones son combinadas en la salida. Ejemplos de esto implementan <em>Weighted, Switching, Mixed</em></p>
+<h2 id="paralelizado">Paralelizado</h2>
+<p>Se refiere a la ejecución de diversos <em>SR</em> en paralelo, cuyas recomendaciones son combinadas en la salida. Algoritmos hibridos tipo <em>Weighted, Switching, Mixed</em> lo implementan.</p>
 <p><img alt="parallel" src="https://diegoquintanav.github.io/images/parallel_hybrid.png" /></p>
-<h3>Pipeline</h3>
-<p>Se refieren a los <em>SR</em> cuya entrada es la salida de otro <em>SR</em>, siguiendo una ejecución en serie. Ejemplos de esto implementam <em>Cascade, Meta-Level</em></p>
+<h2 id="pipeline">Pipeline</h2>
+<p>Se refieren a los <em>SR</em> cuya entrada es la salida de otro <em>SR</em>, siguiendo una ejecución en serie. Ejemplos de implementaciones son <em>Cascade, Meta-Level</em></p>
 <p><img alt="pipeline" src="https://diegoquintanav.github.io/images/pipeline_hybrid.png" /></p>
-<h2>Evaluación de un recomendador</h2>
-<h3>Métricas en contexto de clasificación</h3>
-<p>En términos generales el problema de recomendación es un problema de clasificación, en el sentido que un <em>SR</em> intenta recomendar los elementos que pertenecen al grupo de intereses de un usuario cualquiera. En esta tarea de clasificación un <em>SR</em> puede fallar o acertar, y en base a estos dos escenarios es que se definen distintas métricas que permitan cuantificar la <em>calidad</em> de un clasificador.</p>
+<h1 id="evaluacion-de-un-recomendador">Evaluación de un recomendador</h1>
+<h2 id="metricas-en-contexto-de-clasificacion">Métricas en contexto de clasificación</h2>
+<p>El problema de recomendación puede verse como un problema de clasificación, en el sentido que un <em>SR</em> intenta clasificar elementos como recomendables o no recomendables, dado un usuario cualquiera. En esta tarea de clasificación un <em>SR</em> puede fallar o acertar, lo que da lugar a dos a distintas métricas que permitan cuantificar la <em>calidad</em> de un clasificador.</p>
 <p>La primera herramienta que uno debería considerar es la matriz de confusión, la que puede leerse con más detalle en <a href="http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/">dataschool</a>.</p>
 <p>Una matriz de confusión es una representación de la cantidad de aciertos por clase en una tarea <em>de clasificación</em>. En este sentido se habla de</p>
 <ul>
@@ -150,7 +167,7 @@
 <li>Un usuario compra un libro recomendado</li>
 <li>Un usuario comparte un video sugerido</li>
 </ul>
-<p>Entonces estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un <em>SR</em> por sobre otro en un caso determinado. Si se visualizan estas clases en un diagrama de conjuntos, se tiene</p>
+<p>Estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un <em>SR</em>. Si se visualizan estas clases en un diagrama de conjuntos, se tiene</p>
 <p><img alt="venn1" src="https://diegoquintanav.github.io/images/venn1.png" /></p>
 <p>De aquí se tiene que la <strong>Precisión</strong> es la fracción de instancias <em>relevantes</em> obtenidas en alguna tarea en específico, del resultado de recomendaciones.</p>
 <div class="math">$$\mbox{precision} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FP}}$$</div>
@@ -168,7 +185,7 @@ $$</div>
 <p>Ambos, precision y <em>recall</em> tienen una relación inversa, tal que el <em>recall</em> disminuye a medida que la precisión aumenta. En este sentido, para un clasificador es posible graficar su desempeño en términos de la curva <em>precision vs recall</em> o curva PR.</p>
 <p>Esta curva puede transformarse a otro espacio más conocido, llamado <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">curva ROC</a> o <em>receiving operating characteristic curve</em>, en el cual se grafica el <em>recall</em> como TPR o <em>true positive rate</em> versus <strong>FPR</strong> o <em>false positive rate</em>.</p>
 <p><a href="http://www.youtube.com/watch?v=OAl6eAyP-yo" title="ROC Curve explained"><img alt="roc_video" src="http://img.youtube.com/vi/OAl6eAyP-yo/0.jpg" /></a></p>
-<p>Conviene tener en cuenta que <strong>Ambas curvas no son equivalentes</strong> y la curva PR describe mejor el desempeño de clasificadores en casos donde hay un desbalance importante de clases. Una comparación completa entre ambas curvas puede leerse <a href="http://pages.cs.wisc.edu/~jdavis/davisgoadrichcamera2.pdf">aquí</a></p>
+<p>Conviene tener en cuenta que <strong>ambas curvas no son equivalentes</strong> y la curva PR describe mejor el desempeño de clasificadores en casos donde hay un desbalance importante de clases. Una comparación completa entre ambas curvas puede leerse <a href="http://pages.cs.wisc.edu/~jdavis/davisgoadrichcamera2.pdf">aquí</a></p>
 <div class="math">$$
 \mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
 $$</div>
@@ -176,11 +193,11 @@ $$</div>
 <p>Finalmente, algunas notas sobre este tema</p>
 <ul>
 <li>Considerando que hay tipos de <em>SR</em> distintos que generan resultados distintos, estas métricas resultan útiles para poder comparar los distintos modelos, por ejemplo a través de <em>A/B Testing</em> o tests de hipótesis.</li>
-<li>Dependiendo del caso, puedo darse la necesidad de usar algoritmos con mayor <em>recall</em> que precisión i.e. si quiero saber cuándo es el siguiente partido de chile, me importa más usar un <em>SR</em> que recomiende el <em>resultado correcto</em>, en vez de un <em>SR</em> que me recomiende <em>la mejor página con el resultado</em>. En este caso requiero mayor <em>recall</em> que precisión.</li>
+<li>Dependiendo del caso, puedo darse la necesidad de usar algoritmos con mayor <em>recall</em> que precisión i.e. si quiero saber cuándo es el siguiente partido de chile, me importa más usar un <em>SR</em> que recomiende el <em>resultado correcto</em>, en vez de un <em>SR</em> que me recomiende <em>la mejor página con el resultado</em>. En este caso requiero mayor <em>recall</em> que <em>precisión</em>.</li>
 <li>Es bueno recordar que estas métricas evalúan <em>conjuntos de recomendaciones</em>, no las recomendaciones en sí.</li>
 </ul>
-<h3>Métricas en el contexto de recomendadores</h3>
-<p>En el contexto de recomendadores existen muchos otros indicadores que ayudan a evaluar un <em>SR</em>, tales como</p>
+<h2 id="metricas-en-el-contexto-de-recomendadores">Métricas en el contexto de recomendadores</h2>
+<p>En el contexto de recomendadores existen muchos otros indicadores que ayudan a evaluar un <em>SR</em>, y por mencionar algunos</p>
 <ul>
 <li>Mean reciprocal rank (MRR)</li>
 <li>Precision at N (P@N)</li>
@@ -190,12 +207,14 @@ $$</div>
 <li>Diversity index</li>
 <li>Mean Percentage Ranking</li>
 </ul>
-<!-- ## Diversity
+<!-- TODO: sugerir links -->
+
+<!-- # Diversity
 
 Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equipo, la diversidad es muy baja. Si en cambio le recomiendo noticias de fútbol, añado diversidad a mi conjunto de recomendaciones. Esto apunta a resolver el problema de *burbujas de información*, algo que se puede hacer de manera programática y controlada. -->
 
-<h2>A continuación</h2>
-<p>En la <a href="https://diegoquintanav.github.io/drafts/recsys-5-ES.html">parte 5 y final</a> se verán las <em>Máquinas de Factorización</em></p>
+<h1 id="a-continuacion">A continuación</h1>
+<p>Esto es todo por ahora. En la <a href="https://diegoquintanav.github.io/drafts/recsys-5-ES.html">parte 5 y final</a> se verán las <em>Máquinas de Factorización</em>.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -257,7 +276,7 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
   <div id="disqus_thread"></div>
   <script>
     var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/drafts/recsys-4.html';
+      this.page.url = 'https://diegoquintanav.github.io/recsys-4.html';
       this.page.identifier = 'recsys-4';
     };
     (function() {

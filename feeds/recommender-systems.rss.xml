@@ -120,7 +120,9 @@ $$&lt;/div&gt;
 Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equipo, la diversidad es muy baja. Si en cambio le recomiendo noticias de fútbol, añado diversidad a mi conjunto de recomendaciones. Esto apunta a resolver el problema de *burbujas de información*, algo que se puede hacer de manera programática y controlada. --&gt;
 
 &lt;h1 id="a-continuacion"&gt;A continuación&lt;/h1&gt;
-&lt;p&gt;Esto es todo por ahora. En la &lt;a href="https://diegoquintanav.github.io/drafts/recsys-5-ES.html"&gt;parte 5 y final&lt;/a&gt; se verán las &lt;em&gt;Máquinas de Factorización&lt;/em&gt;.&lt;/p&gt;
+&lt;!-- Esto es todo por ahora. En la [parte 5 y final]({filename}/blog/sysrec-5.md) se verán las _Máquinas de Factorización_. --&gt;
+
+&lt;p&gt;Esto es todo por ahora. En la parte 5 y final se verán las &lt;em&gt;Máquinas de Factorización&lt;/em&gt;.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

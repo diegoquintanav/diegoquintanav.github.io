@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Fri, 14 Dec 2018 09:03:00 -0600</lastBuildDate><item><title>Sistemas recomendadores, parte 4</title><link>https://diegoquintanav.github.io/recsys-4.html</link><description>&lt;!-- Modified: 2010-12-05 19:30 --&gt;
+<rss version="2.0"><channel><title>On the shoulders of giants</title><link>https://diegoquintanav.github.io/</link><description>Diego Quintana's blog</description><lastBuildDate>Fri, 14 Dec 2018 09:03:00 -0600</lastBuildDate><item><title>Sistemas recomendadores, parte 4</title><link>https://diegoquintanav.github.io/recsys-4-ES.html</link><description>&lt;!-- Modified: 2010-12-05 19:30 --&gt;
 
 &lt;!-- entry 4, clase al 08.11 --&gt;
 
@@ -177,7 +177,7 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Fri, 14 Dec 2018 09:03:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-11-02:recsys-4.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 3</title><link>https://diegoquintanav.github.io/recsys-3-ES.html</link><description>&lt;div class="toc"&gt;
+&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Diego Quintana</dc:creator><pubDate>Fri, 14 Dec 2018 09:03:00 -0600</pubDate><guid isPermaLink="false">tag:diegoquintanav.github.io,2017-11-02:recsys-4-ES.html</guid><category>recsys</category></item><item><title>Sistemas recomendadores, parte 3</title><link>https://diegoquintanav.github.io/recsys-3-ES.html</link><description>&lt;div class="toc"&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="#previously"&gt;previously&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#sistemas-recomendadores-basados-en-contenido"&gt;Sistemas recomendadores basados en contenido&lt;/a&gt;&lt;/li&gt;
@@ -309,7 +309,7 @@ la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suf
 &lt;p&gt;En inglés se dice que una librería es &lt;em&gt;opinionated&lt;/em&gt; cuando impone ciertos patrones y procedimientos con base en la experiencia de los creadores de la herramienta. Un ejemplo de esto es &lt;em&gt;ruby on rails&lt;/em&gt; o &lt;em&gt;django&lt;/em&gt; para desarrollo web.&lt;/p&gt;
 &lt;p&gt;Esto se podría traducir como un diseño &lt;em&gt;dogmático&lt;/em&gt;, aunque esta traducción no me gusta del todo.&lt;/p&gt;
 &lt;h2 id="a-continuacion"&gt;A continuación&lt;/h2&gt;
-&lt;p&gt;Esto es todo por esta vez. En la &lt;a href="https://diegoquintanav.github.io/recsys-4.html"&gt;parte 4&lt;/a&gt; se verán&lt;/p&gt;
+&lt;p&gt;Esto es todo por esta vez. En la &lt;a href="https://diegoquintanav.github.io/recsys-4-ES.html"&gt;parte 4&lt;/a&gt; se verán&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Sistemas recomendadores híbridos&lt;/li&gt;
 &lt;li&gt;Métricas de calidad en sistemas recomendadores&lt;/li&gt;

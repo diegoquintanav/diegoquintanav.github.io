@@ -3938,7 +3938,7 @@ with client as c:
     assert b'Stuff that should appear in your view' in response.data
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;```&lt;/p&gt;
-&lt;p&gt;That's all I have to say about it.&lt;/p&gt;</summary><category term="flask"></category><category term="python"></category><category term="pytest"></category></entry><entry><title>Sistemas recomendadores, parte 4</title><link href="https://diegoquintanav.github.io/recsys-4.html" rel="alternate"></link><published>2018-12-14T09:03:00-06:00</published><updated>2018-12-14T09:03:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-11-02:recsys-4.html</id><summary type="html">&lt;!-- Modified: 2010-12-05 19:30 --&gt;
+&lt;p&gt;That's all I have to say about it.&lt;/p&gt;</summary><category term="flask"></category><category term="python"></category><category term="pytest"></category></entry><entry><title>Sistemas recomendadores, parte 4</title><link href="https://diegoquintanav.github.io/recsys-4-ES.html" rel="alternate"></link><published>2018-12-14T09:03:00-06:00</published><updated>2018-12-14T09:03:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-11-02:recsys-4-ES.html</id><summary type="html">&lt;!-- Modified: 2010-12-05 19:30 --&gt;
 
 &lt;!-- entry 4, clase al 08.11 --&gt;
 
@@ -4248,7 +4248,7 @@ la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suf
 &lt;p&gt;En inglés se dice que una librería es &lt;em&gt;opinionated&lt;/em&gt; cuando impone ciertos patrones y procedimientos con base en la experiencia de los creadores de la herramienta. Un ejemplo de esto es &lt;em&gt;ruby on rails&lt;/em&gt; o &lt;em&gt;django&lt;/em&gt; para desarrollo web.&lt;/p&gt;
 &lt;p&gt;Esto se podría traducir como un diseño &lt;em&gt;dogmático&lt;/em&gt;, aunque esta traducción no me gusta del todo.&lt;/p&gt;
 &lt;h2 id="a-continuacion"&gt;A continuación&lt;/h2&gt;
-&lt;p&gt;Esto es todo por esta vez. En la &lt;a href="https://diegoquintanav.github.io/recsys-4.html"&gt;parte 4&lt;/a&gt; se verán&lt;/p&gt;
+&lt;p&gt;Esto es todo por esta vez. En la &lt;a href="https://diegoquintanav.github.io/recsys-4-ES.html"&gt;parte 4&lt;/a&gt; se verán&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Sistemas recomendadores híbridos&lt;/li&gt;
 &lt;li&gt;Métricas de calidad en sistemas recomendadores&lt;/li&gt;

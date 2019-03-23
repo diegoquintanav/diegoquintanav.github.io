@@ -93,25 +93,12 @@
       </ul>
     </header>
     <div class="content">
-      <div class="toc">
-<ul>
-<li><a href="#por-que-esta-serie">Por qué esta serie</a></li>
-<li><a href="#indice">Índice</a></li>
-<li><a href="#sistemas-de-recomendacion">Sistemas de recomendación</a></li>
-<li><a href="#modelando-la-confianza">Modelando la confianza</a></li>
-<li><a href="#por-que-es-bueno-entender-los-sistemas-de-recomendacion">¿Por qué es bueno entender los sistemas de recomendación?</a></li>
-<li><a href="#definicion-formal-del-problema">Definición formal del problema</a></li>
-<li><a href="#metricas-de-prediccion">Métricas de predicción</a></li>
-<li><a href="#conclusiones">Conclusiones</a></li>
-<li><a href="#a-continuacion">A continuación</a></li>
-</ul>
-</div>
-<h1 id="por-que-esta-serie">Por qué esta serie</h1>
+      <h1>Por qué esta serie</h1>
 <p>Me encuentro tomando el módulo de sistemas de recomendación en la PUC
 (<a href="https://educacionprofesional.ing.uc.cl/?diplomado=diplomado-big-data">programa</a>)
 con el profesor <a href="http://dparra.sitios.ing.uc.cl/">Dennis Parra</a> y como tarea del
  módulo se solicitó crear un post por clase, a modo de resumen.</p>
-<h1 id="indice">Índice</h1>
+<h2>Índice</h2>
 <p>La serie consiste de cinco posts, los que se resumen de la siguiente manera</p>
 <ul>
 <li>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se revisan las distintas
@@ -126,7 +113,7 @@ con el profesor <a href="http://dparra.sitios.ing.uc.cl/">Dennis Parra</a> y com
   de factorización, un tipo de implementación de máquinas de vectores de
   soporte que da excelentes resultados en aplicaciones de recomendación y es extensible a otras áreas.</li>
 </ul>
-<h1 id="sistemas-de-recomendacion">Sistemas de recomendación</h1>
+<h2>Sistemas de recomendación</h2>
 <p>Las recomendaciones son una parte importante de nuestra sociedad.
 Seguimos recomendaciones de nuestros padres, amigos y compañeros. Las
 seguimos porque de alguna forma, confiamos en ellos, su experiencia y
@@ -146,7 +133,7 @@ gente que tiene un interés especial sobre algún tema.</p>
 resulta práctico leer todas las reseñas en internet. Debe existir algún tipo de
 <em>cuantificar</em> las recomendaciones, y alguna estrategia para <em>validarlas</em>. 
 No todas las recomendaciones son <em>buenas</em> desde el punto de vista de cada uno.</p>
-<h1 id="modelando-la-confianza">Modelando la confianza</h1>
+<h2>Modelando la confianza</h2>
 <p>La forma más elemental de validar algo en internet a través de votaciones, <em>ratings</em>
 o <em>likes</em>. Esto nos permite tratar las opiniones de la gente como números, y permite
 además extraer promedios, varianzas, <em>y todas esas cosas</em>.</p>
@@ -170,7 +157,7 @@ anteriores,</p>
  de ellas, al menos un 20% no había sido reproducida ni siquiera una vez. <a href="https://open.spotify.com/album/0ke5cFySqu1XkaVM4RWUZk">Quizás algo commo esto</a></li>
 <li>En el 2018 Facebook tiene alrededor de <a href="https://www.statista.com/statistics/264810/number-of-monthly-active-facebook-users-worldwide/">2 billones de usuarios activos</a></li>
 </ul>
-<h1 id="por-que-es-bueno-entender-los-sistemas-de-recomendacion">¿Por qué es bueno entender los sistemas de recomendación?</h1>
+<h2>¿Por qué es bueno entender los sistemas de recomendación?</h2>
 <p>En general estos servicios son gratuitos. Nadie paga por usar Facebook.
 Conocida es la frase <a href="https://www.reddit.com/r/explainlikeimfive/comments/2m3f05/eli5_if_something_is_free_you_are_the_product/"><em>"If you are not paying, then <strong>you</strong> are the product"</em></a>,
 que se traduce como <em>"Si tú no estás pagando por el producto, es porque tú eres el producto"</em></p>
@@ -186,7 +173,7 @@ que se traduce como <em>"Si tú no estás pagando por el producto, es porque tú
 <p>Finalmente, los sistemas de recomendación son una manifestación de
 inteligencia colectiva, lo que es bueno: Más gente involucrada en algo es mejor. 
 Lo importante es entender cómo funcionan estos modelos y así, eventualmente, poder crear modelos propios.</p>
-<h1 id="definicion-formal-del-problema">Definición formal del problema</h1>
+<h2>Definición formal del problema</h2>
 <p>Siguiendo la formalización presentada en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&amp;rep=rep1&amp;type=pdf">este paper</a>,
 para un conjunto de usuarios <span class="math">\(U\)</span> y un conjunto de items <span class="math">\(I\)</span>, se desea obtener un
  conjunto recomendado de items <span class="math">\(R\)</span>, tal que</p>
@@ -201,7 +188,7 @@ para un conjunto de usuarios <span class="math">\(U\)</span> y un conjunto de it
 <li><em>Elegir el ítem o el conjunto de ítems tal que maximicen <span class="math">\(R\)</span> i.e.</em></li>
 </ol>
 <div class="math">$$\forall u \in U, i = \mbox{argmax } R(i,u) \mbox{, }  i \in I$$</div>
-<h1 id="metricas-de-prediccion">Métricas de predicción</h1>
+<h2>Métricas de predicción</h2>
 <p>Podemos cuantificar el error entre el valor esperado <span class="math">\(\hat{r}\)</span> y la predicción <span class="math">\(r\)</span>, de las cuales se destacan</p>
 <ol>
 <li>RMSE, o <em>root mean square error</em> como</li>
@@ -217,7 +204,7 @@ para un conjunto de usuarios <span class="math">\(U\)</span> y un conjunto de it
 <div class="math">$$\frac{\sum_{i=1}^{n}|\hat{r}_{ui}-r_{ui}|}{n}$$</div>
 <p>Estas métricas basadas en el error son de uso frecuente en distintas áreas como
  la estadística y <em>machine learning</em>.</p>
-<h1 id="conclusiones">Conclusiones</h1>
+<h2>Conclusiones</h2>
 <ul>
 <li>Los métodos de recomendación buscan lidiar con la sobrecarga de información,
 y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
@@ -225,7 +212,7 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
 <li>Una forma de evaluar un sistema recomendador es a través del error en las
   predicciones realizadas</li>
 </ul>
-<h1 id="a-continuacion">A continuación</h1>
+<h2>A continuación</h2>
 <p>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se verán otras cosas, entre ellas, <strong>tipos de clasificadores.</strong></p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

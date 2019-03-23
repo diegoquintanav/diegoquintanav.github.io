@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Dumping postgres databases with Docker | On the shoulders of giants
+</title>
+  <link rel="canonical" href="https://diegoquintanav.github.io/dumping-postgres-db-with-docker.html">
+
+    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
+        href="https://diegoquintanav.github.io/feeds/web-development.rss.xml">  
+  <meta name="description" content="How to manage postgres backups with docker">
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      a.async = 1;
+      a.src = g;
+      m = s.getElementsByTagName(o)[0];
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-108898322-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="https://diegoquintanav.github.io/">
+        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+      <p class="text-muted">Diego Quintana's blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/contact-EN.html">Contact</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-envelope" href="mailto:daquintanav@gmail.com" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Dumping postgres databases with Docker
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2019-03-14T21:10:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          jue 14 marzo 2019
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="https://diegoquintanav.github.io/category/web-development.html">Web Development</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="https://diegoquintanav.github.io/tag/docker.html">#docker</a>,               <a href="https://diegoquintanav.github.io/tag/postgres.html">#postgres</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p><em>It's been a while</em> since I posted something. I started living in another country,
+and time has become scarce. This is a short post from my <em>developer journal</em>.</p>
+<p><code>Docker</code> and <code>postgres</code> work really good together. If you don't believe me, check their image <a href="https://hub.docker.com/_/postgres">documentation</a>.</p>
+<p>Take for instance, the barebones example given there:</p>
+<div class="highlight"><pre><span></span># Use postgres/example user/password credentials
+version: &#39;3.1&#39;
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+</pre></div>
+
+
+<p>With this file, you can get a living postgres instance in seconds with something like <code>docker-compose up -d</code>.</p>
+<h2>Managing database backups with <code>pg_dump</code></h2>
+<p>The simplest way to backup a <code>postgres</code> database is using <a href="https://www.postgresql.org/docs/10/app-pgdump.html"><code>pg_dump</code></a>. From the host, you can issue this using</p>
+<div class="highlight"><pre><span></span>docker-compose <span class="nb">exec</span> db pg_dump -U postgres postgres --no-owner <span class="p">|</span> gzip -9  &gt; db-backup-<span class="k">$(</span>date +%d-%m-%y<span class="k">)</span>.sql.gz
+</pre></div>
+
+
+<p>This executes <code>pg_dump</code> inside the running container specified in the <code>docker-compose.yml</code>
+file as the service <code>db</code>, and stores the result in the host as a <code>gzip</code> compressed file.</p>
+<p>Here, passing <code>--no-owner</code> ensures that the database backup will be importable into any other database, regardless of user privileges. <strong>Use this with care</strong>.</p>
+<p>Importing this backup into another database living in another container can be done in two ways:</p>
+<ul>
+<li>copying the file or mounting it in the container and importing it, from <em>inside the container</em></li>
+<li>Pipe the file from the host to the container through <code>stdin</code></li>
+</ul>
+<p>I like the second approach, as it don't require modifying the files inside the container:</p>
+<div class="highlight"><pre><span></span>gunzip -c path/to/db-backup.sql.gz <span class="p">|</span> docker-compose <span class="nb">exec</span> db -T psql -U postgres postgres
+</pre></div>
+
+
+<p>Note that we need to pass <code>-T</code> to disable <code>TTY</code> allocation. Also, we could use <code>docker</code> instead of <code>docker-compose</code>, with something like  <code>docker exec -i $(docker-compose ps -q db)</code>.</p>
+<p>These tasks can scheduled to be run at specific times with <a href="https://crontab.guru/">cron</a>. More info on backups <a href="https://www.postgresql.org/docs/10/backup-dump.html#BACKUP-DUMP-RESTORE">here</a>.</p>
+    </div>
+  </article>
+  <hr>
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function() {
+      this.page.url = 'https://diegoquintanav.github.io/dumping-postgres-db-with-docker.html';
+      this.page.identifier = 'dumping-postgres-db-with-docker';
+    };
+    (function() {
+      var d = document;
+      var s = d.createElement('script');
+      s.src = '//bluesmonk.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript class="text-muted">
+    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+  </noscript>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+</body>
+
+</html>

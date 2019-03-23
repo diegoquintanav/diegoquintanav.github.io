@@ -5,9 +5,9 @@
 
 &lt;p&gt;I've decided to start a blog, (again, for the &lt;em&gt;nth&lt;/em&gt; time) and this time I am giving a try on &lt;a href="https://jekyllrb.com/"&gt;jekyll&lt;/a&gt; and the &lt;a href="https://pages.github.com"&gt;github pages&lt;/a&gt;, since they seem to do quite a fine job.&lt;/p&gt;
 &lt;p&gt;Setting things up was easy. I'm not going to copy and paste the guides already present in both sites, since it won't add anything. Instead I will try to share a bit of the troubleshooting I had to do during the process.&lt;/p&gt;
-&lt;h1 id="first-steps"&gt;First steps&lt;/h1&gt;
+&lt;h1&gt;First steps&lt;/h1&gt;
 &lt;p&gt;Okay, it took me about nothing to have my site showing a humble &lt;em&gt;Hello World&lt;/em&gt; in my &lt;code&gt;index.html&lt;/code&gt; on my site.&lt;/p&gt;
-&lt;h2 id="creating-your-personal-page"&gt;Creating your personal page&lt;/h2&gt;
+&lt;h2&gt;Creating your personal page&lt;/h2&gt;
 &lt;p&gt;You can create a site for yourself or for some repo you own. I'm dealing with the first case for now: A site for myself.&lt;/p&gt;
 &lt;p&gt;Long story short, what I did was:&lt;/p&gt;
 &lt;ol&gt;
@@ -21,11 +21,10 @@ Before doing anything, I believe it's a good thing to understand &lt;em&gt;why&l
 &lt;p&gt;I tried using Wordpress, which has a lot of resources to get up and running right out of the box. It is also free, which is nice. In my case, I wanted to have more control over the stuff I was writing, namely be able to deploy my stuff whenever I want and to be able to change stuff from the very core, so to speak. Plus, this should work as a first experience running a site. Github pages may be too &lt;em&gt;vanilla&lt;/em&gt; for the hardcore developer, but is a very balanced solution for enthusiasts like me.&lt;/p&gt;
 &lt;p&gt;Now there are two ways it seems, to get started. The first one implies creating the folder structure manually, and this process is more or less explained in &lt;a href="http://jmcglone.com/guides/github-pages/"&gt;this fine post&lt;/a&gt; which is also referenced by the &lt;strong&gt;Jekyll&lt;/strong&gt; site.&lt;/p&gt;
 &lt;p&gt;What I didn't like about the post, though, is that doing things manually usually imply forgetting about things. I prefer to stick with the solution using &lt;strong&gt;Bundle&lt;/strong&gt; and &lt;strong&gt;Jekyll&lt;/strong&gt; from the terminal, which is more or less described &lt;a href="https://jekyllrb.com/docs/installation/"&gt;here&lt;/a&gt; and &lt;a href="https://jekyllrb.com/docs/quickstart/"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="issues"&gt;Issues&lt;/h2&gt;
-&lt;h3 id="new-posts-are-not-being-displayed"&gt;New posts are not being displayed&lt;/h3&gt;
+&lt;h2&gt;Issues&lt;/h2&gt;
+&lt;h3&gt;New posts are not being displayed&lt;/h3&gt;
 &lt;p&gt;If you deployed &lt;strong&gt;Jekyll&lt;/strong&gt; correctly, it should use the &lt;code&gt;minima&lt;/code&gt; template by default. You should be able to add more posts inside the folder &lt;code&gt;_posts&lt;/code&gt; and see them instantly on your &lt;code&gt;localhost&lt;/code&gt;. That didn't happen in my case. A short way to debug this issue that solved my problem required the &lt;code&gt;--verbose&lt;/code&gt; flag when firing up the service.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;bash
-$ sudo bundle exec jekyll serve --verbose
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo bundle &lt;span class="nb"&gt;exec&lt;/span&gt; jekyll serve --verbose
   Logging at level: debug
 Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
   Logging at level: debug
@@ -40,11 +39,14 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
            Reading: _posts/2017-10-27-on-jekyll.md
            Reading: _posts/2017-10-26-welcome-to-jekyll.markdown
           Skipping: _posts/2017-10-27-on-jekyll.md has a future date
-        Generating: JekyllFeed::Generator finished in 0.000744857 seconds.
-...&lt;/code&gt;&lt;/p&gt;
+        Generating: JekyllFeed::Generator finished in &lt;span class="m"&gt;0&lt;/span&gt;.000744857 seconds.
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;In line &lt;code&gt;15&lt;/code&gt; you can observe the &lt;code&gt;Skipping: _posts/2017-10-27-on-jekyll.md has a future date&lt;/code&gt;. Changing the date solved the problem. About the &lt;code&gt;sudo&lt;/code&gt; thing, consider it a malpractice. The ruby environment manager &lt;a href="https://github.com/rbenv/rbenv"&gt;&lt;code&gt;rbenv&lt;/code&gt;&lt;/a&gt; fought bravely against the &lt;a href="https://anaconda.org/"&gt;Anaconda's&lt;/a&gt; &lt;code&gt;gcc&lt;/code&gt; dependencies and I just could not manage to have a ruby instance outside of &lt;code&gt;root&lt;/code&gt;. &lt;em&gt;Sorry&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Other reasons may involve a bad filename formatting or the presence of colons &lt;code&gt;:&lt;/code&gt; in it. You can read more about this &lt;a href="https://stackoverflow.com/questions/30625044/jekyll-post-not-generated"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id="using-latex-equations"&gt;Using Latex equations&lt;/h3&gt;
+&lt;h3&gt;Using Latex equations&lt;/h3&gt;
 &lt;p&gt;This was not trivial for me. If you follow the &lt;a href="https://jekyllrb.com/docs/extras/"&gt;guidelines&lt;/a&gt; inside the documentation, you should end in the tutorial.&lt;/p&gt;
 &lt;p&gt;It should be something easy. Copying and pasting the CDN in the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; of the document. &lt;em&gt;But where is this file?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;This was not obvious to me.&lt;/p&gt;
@@ -64,11 +66,13 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;code&gt;latex
-$$\text{A } \LaTeX \text{ equation.}$$&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sb"&gt;$$&lt;/span&gt;&lt;span class="nv"&gt;\text&lt;/span&gt;&lt;span class="nb"&gt;{A } &lt;/span&gt;&lt;span class="nv"&gt;\LaTeX&lt;/span&gt;&lt;span class="nb"&gt; &lt;/span&gt;&lt;span class="nv"&gt;\text&lt;/span&gt;&lt;span class="nb"&gt;{ equation.}&lt;/span&gt;&lt;span class="s"&gt;$$&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;div class="math"&gt;$$\text{A } \LaTeX \text{ equation.}$$&lt;/div&gt;
 &lt;p&gt;Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using &lt;a href="https://kramdown.gettalong.org/syntax.html#math-blocks"&gt;kramdown&lt;/a&gt; which is set by default.&lt;/p&gt;
-&lt;h1 id="next-steps"&gt;Next Steps&lt;/h1&gt;
+&lt;h1&gt;Next Steps&lt;/h1&gt;
 &lt;p&gt;I think there are a lot of other things to play around, which I will document and comment in the future posts. Not yet. This is my &lt;em&gt;MVP&lt;/em&gt; for now. Next iteration should include:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Comments section. Might prove useful somewhere.&lt;/li&gt;

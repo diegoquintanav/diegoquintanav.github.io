@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>On the shoulders of giants</title><link href="https://diegoquintanav.github.io/" rel="alternate"></link><link href="https://diegoquintanav.github.io/feeds/all.atom.xml" rel="self"></link><id>https://diegoquintanav.github.io/</id><updated>2018-12-14T09:03:00-06:00</updated><entry><title>Using psycopg2 for your postgres needs</title><link href="https://diegoquintanav.github.io/dq-de-mission-01-EN.html" rel="alternate"></link><published>2018-12-03T23:00:00+01:00</published><updated>2018-12-03T23:00:00+01:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2018-12-03:dq-de-mission-01-EN.html</id><summary type="html">&lt;style type="text/css"&gt;/*!
+<feed xmlns="http://www.w3.org/2005/Atom"><title>On the shoulders of giants</title><link href="https://diegoquintanav.github.io/" rel="alternate"></link><link href="https://diegoquintanav.github.io/feeds/all.atom.xml" rel="self"></link><id>https://diegoquintanav.github.io/</id><updated>2019-03-14T21:10:00+01:00</updated><entry><title>Dumping postgres databases with Docker</title><link href="https://diegoquintanav.github.io/dumping-postgres-db-with-docker.html" rel="alternate"></link><published>2019-03-14T21:10:00+01:00</published><updated>2019-03-14T21:10:00+01:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2019-03-14:dumping-postgres-db-with-docker.html</id><summary type="html">&lt;p&gt;&lt;em&gt;It's been a while&lt;/em&gt; since I posted something. I started living in another country,
+and time has become scarce. This is a short post from my &lt;em&gt;developer journal&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Docker&lt;/code&gt; and &lt;code&gt;postgres&lt;/code&gt; work really good together. If you don't believe me, check their image &lt;a href="https://hub.docker.com/_/postgres"&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Take for instance, the barebones example given there:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# Use postgres/example user/password credentials
+version: &amp;#39;3.1&amp;#39;
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With this file, you can get a living postgres instance in seconds with something like &lt;code&gt;docker-compose up -d&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Managing database backups with &lt;code&gt;pg_dump&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;The simplest way to backup a &lt;code&gt;postgres&lt;/code&gt; database is using &lt;a href="https://www.postgresql.org/docs/10/app-pgdump.html"&gt;&lt;code&gt;pg_dump&lt;/code&gt;&lt;/a&gt;. From the host, you can issue this using&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker-compose &lt;span class="nb"&gt;exec&lt;/span&gt; db pg_dump -U postgres postgres --no-owner &lt;span class="p"&gt;|&lt;/span&gt; gzip -9  &amp;gt; db-backup-&lt;span class="k"&gt;$(&lt;/span&gt;date +%d-%m-%y&lt;span class="k"&gt;)&lt;/span&gt;.sql.gz
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This executes &lt;code&gt;pg_dump&lt;/code&gt; inside the running container specified in the &lt;code&gt;docker-compose.yml&lt;/code&gt;
+file as the service &lt;code&gt;db&lt;/code&gt;, and stores the result in the host as a &lt;code&gt;gzip&lt;/code&gt; compressed file.&lt;/p&gt;
+&lt;p&gt;Here, passing &lt;code&gt;--no-owner&lt;/code&gt; ensures that the database backup will be importable into any other database, regardless of user privileges. &lt;strong&gt;Use this with care&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Importing this backup into another database living in another container can be done in two ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;copying the file or mounting it in the container and importing it, from &lt;em&gt;inside the container&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Pipe the file from the host to the container through &lt;code&gt;stdin&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I like the second approach, as it don't require modifying the files inside the container:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gunzip -c path/to/db-backup.sql.gz &lt;span class="p"&gt;|&lt;/span&gt; docker-compose &lt;span class="nb"&gt;exec&lt;/span&gt; db -T psql -U postgres postgres
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that we need to pass &lt;code&gt;-T&lt;/code&gt; to disable &lt;code&gt;TTY&lt;/code&gt; allocation. Also, we could use &lt;code&gt;docker&lt;/code&gt; instead of &lt;code&gt;docker-compose&lt;/code&gt;, with something like  &lt;code&gt;docker exec -i $(docker-compose ps -q db)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;These tasks can scheduled to be run at specific times with &lt;a href="https://crontab.guru/"&gt;cron&lt;/a&gt;. More info on backups &lt;a href="https://www.postgresql.org/docs/10/backup-dump.html#BACKUP-DUMP-RESTORE"&gt;here&lt;/a&gt;.&lt;/p&gt;</summary><category term="docker"></category><category term="postgres"></category></entry><entry><title>Using psycopg2 for your postgres needs</title><link href="https://diegoquintanav.github.io/dq-de-mission-01-EN.html" rel="alternate"></link><published>2018-12-03T23:00:00+01:00</published><updated>2018-12-03T23:00:00+01:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2018-12-03:dq-de-mission-01-EN.html</id><summary type="html">&lt;style type="text/css"&gt;/*!
 *
 * IPython notebook
 *
@@ -3658,10 +3702,12 @@ Done.
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 &lt;/script&gt;
-</summary><category term="python"></category><category term="dataquest"></category><category term="data-engineering"></category><category term="postgres"></category></entry><entry><title>Flask contexts (And how to use them)</title><link href="https://diegoquintanav.github.io/flask-contexts.html" rel="alternate"></link><published>2018-11-24T13:14:00-06:00</published><updated>2018-11-24T13:14:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2018-11-24:flask-contexts.html</id><summary type="html">&lt;h1 id="motivation"&gt;Motivation&lt;/h1&gt;
+</summary><category term="python"></category><category term="dataquest"></category><category term="data-engineering"></category><category term="postgres"></category></entry><entry><title>Flask contexts (And how to use them)</title><link href="https://diegoquintanav.github.io/flask-contexts.html" rel="alternate"></link><published>2018-11-24T13:14:00-06:00</published><updated>2018-11-24T13:14:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2018-11-24:flask-contexts.html</id><summary type="html">&lt;h1&gt;Motivation&lt;/h1&gt;
 &lt;p&gt;There's this thing going on with the &lt;a href="http://flask.pocoo.org/docs/1.0/appcontext/#creating-an-application-context"&gt;flask context&lt;/a&gt; and the &lt;a href="http://flask.pocoo.org/docs/1.0/reqcontext/"&gt;request context&lt;/a&gt;, that used to confuse me a lot. Before testing these two probably will never be used, but after reading &lt;a href="http://flask.pocoo.org/docs/1.0/testing/"&gt;the documentation&lt;/a&gt; and writing your first tests, it's probable that you run into something like&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;plain
-Flask.url_for() error: Attempted to generate a URL without the application context being pushed&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Flask.url_for() error: Attempted to generate a URL without the application context being pushed
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;So, what is that went &lt;em&gt;wrong&lt;/em&gt;?&lt;/p&gt;
 &lt;p&gt;Someone already wrote an &lt;a href="http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html"&gt;exhaustive revision&lt;/a&gt; of what are the different approaches, but it actually never closes the issue of &lt;em&gt;how&lt;/em&gt; to test an application properly.&lt;/p&gt;
 &lt;p&gt;Others mention it, but it just &lt;em&gt;doesn't stick&lt;/em&gt;&lt;/p&gt;
@@ -3672,7 +3718,7 @@ Flask.url_for() error: Attempted to generate a URL without the application conte
 &lt;li&gt;&lt;a href="https://github.com/pallets/flask/tree/1.0.2/examples/tutorial/tests"&gt;flask/examples/tutorial/tests at 1.0.2 · pallets/flask · GitHub&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For the sake of completeness and for my own understanding of the issue, here's my view on the topic.&lt;/p&gt;
-&lt;h2 id="flask-contexts"&gt;Flask Contexts&lt;/h2&gt;
+&lt;h2&gt;Flask Contexts&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;In the lifecycle of a request, both an &lt;em&gt;Application context&lt;/em&gt; and a &lt;em&gt;Request Context&lt;/em&gt; are created at the beginning, and destroyed at the end (see &lt;a href="https://speakerdeck.com/mitsuhiko/advanced-flask-patterns-1?slide=7"&gt;Advanced Flask Patterns - Speaker Deck, Slide 7&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;The idea behind having two detached contexts is so an application can exist
@@ -3687,61 +3733,60 @@ Flask.url_for() error: Attempted to generate a URL without the application conte
   request in process&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/pallets/flask/blob/1949c4a9abc174bf29620f6dd8ceab9ed3ace2eb/flask/ctx.py#L230"&gt;Every request pushes a new application context&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="flask-contexts-vernacular"&gt;Flask contexts vernacular&lt;/h2&gt;
+&lt;h2&gt;Flask contexts vernacular&lt;/h2&gt;
 &lt;p&gt;For a given &lt;code&gt;app&lt;/code&gt; object, there are some design aspects and specific objects
 it's good to get familiar with when testing with Flask&lt;/p&gt;
-&lt;h3 id="flaskapptest_client"&gt;&lt;code&gt;flask.app.test_client()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;code&gt;flask.app.test_client()&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;Provides a client that can perform requests to our application.&lt;/p&gt;
-&lt;h3 id="flaskappapp_context"&gt;&lt;code&gt;flask.app.app_context()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;code&gt;flask.app.app_context()&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The application context, it gives life to &lt;code&gt;current_app&lt;/code&gt;. Starts and dies with
 a request.&lt;/p&gt;
-&lt;h3 id="flaskapptest_request_context"&gt;&lt;code&gt;flask.app.test_request_context()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;code&gt;flask.app.test_request_context()&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The request context, it gives life to &lt;code&gt;request&lt;/code&gt;. If there's no application context
 at the moment, it pushes a new one. Starts and ends with a request.&lt;/p&gt;
-&lt;h3 id="g"&gt;&lt;code&gt;g&lt;/code&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;code&gt;g&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A proxy that lives within a pushed &lt;strong&gt;application&lt;/strong&gt; context, used to store &lt;em&gt;non sensible&lt;/em&gt;
 information about the current application. Its life is bound to that of the request.&lt;/p&gt;
-&lt;h3 id="session"&gt;&lt;code&gt;session&lt;/code&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;code&gt;session&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A proxy that lives within a pushed &lt;strong&gt;request&lt;/strong&gt; context, used to store &lt;em&gt;sensible&lt;/em&gt;
-information &lt;em&gt;through the client&lt;/em&gt;, and encrypted with your &lt;code&gt;SECRET_KEY&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Using &lt;code&gt;session&lt;/code&gt; to store private information like passwords and credentials is
-discouraged. See the caveats in &lt;a href="https://blog.miguelgrinberg.com/post/how-secure-is-the-flask-user-session"&gt;Miguel Grinberg's post about it&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="practical-differences-in-code"&gt;Practical differences (in code)&lt;/h2&gt;
+information and encrypted with your &lt;code&gt;SECRET_KEY&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Practical differences (in code)&lt;/h2&gt;
 &lt;p&gt;This &lt;a href="https://stackoverflow.com/a/33382823/5819113"&gt;SO answer&lt;/a&gt; puts it simple, so I will be kinda adding my own comments to it.&lt;/p&gt;
-&lt;p&gt;```python
-from flask import Flask, g
-app = Flask(&lt;strong&gt;name&lt;/strong&gt;)&lt;/p&gt;
-&lt;p&gt;with app.app_context():
-    print('in app context, before first request context')
-    print('setting g.foo to abc')
-    g.foo = 'abc'
-    print('g.foo should be abc, is: {0}'.format(g.foo))&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;with app.test_request_context():
-    # this reuses g from the current context
-    print('in first request context')
-    print('g.foo should be abc, is: {0}'.format(g.foo))
-    print('setting g.foo to xyz')
-    # this is the same g, so it will be replaced
-    g.foo = 'xyz'
-    print('g.foo should be xyz, is: {0}'.format(g.foo))
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;
+&lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-print('in app context, after first request context')
-print('g.foo should be abc, is: {0}'.format(g.foo))
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, before first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
-with app.test_request_context():
-    print('in second request context')
-    print('g.foo should be abc, is: {0}'.format(g.foo))
-    print('setting g.foo to pqr')
-    g.foo = 'pqr'
-    print('g.foo should be pqr, is: {0}'.format(g.foo))
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="c1"&gt;# this reuses g from the current context&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to xyz&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="c1"&gt;# this is the same g, so it will be replaced&lt;/span&gt;
+        &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;xyz&amp;#39;&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be xyz, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
-print('in app context, after second request context')
-print('g.foo should be abc, is: {0}'.format(g.foo))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;```&lt;/p&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, after first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in second request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to pqr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pqr&amp;#39;&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be pqr, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, after second request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;And here's the output that it gives:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;plain
-in app context, before first request context
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;in app context, before first request context
 setting g.foo to abc
 g.foo should be abc, is: abc
 in first request context
@@ -3755,37 +3800,43 @@ g.foo should be abc, is: xyz
 setting g.foo to pqr
 g.foo should be pqr, is: pqr
 in app context, after second request context
-g.foo should be abc, is: pqr&lt;/code&gt;&lt;/p&gt;
+g.foo should be abc, is: pqr
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;In this first example &lt;code&gt;g&lt;/code&gt; is shared across contexts because it's the same
 context in &lt;em&gt;nested contexts&lt;/em&gt;, and it's a &lt;em&gt;caveat&lt;/em&gt; mentioned in the answer (some emphasis is mine)&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"Every request pushes a new application context". And &lt;a href="http://flask.pocoo.org/docs/0.10/appcontext/"&gt;as the Flask docs say&lt;/a&gt;, the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that &lt;em&gt;you should &lt;strong&gt;never&lt;/strong&gt; explicitly create multiple request contexts nested inside one application context, because &lt;code&gt;flask.g&lt;/code&gt; (and co) doesn't have any magic whereby it functions in the two different "levels" of context&lt;/em&gt;, with different states existing independently at the application and request levels.&lt;/p&gt;
 &lt;p&gt;The reality is that "application context" is potentially quite a misleading name, because &lt;code&gt;app.app_context()&lt;/code&gt; &lt;strong&gt;is&lt;/strong&gt; a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;```python
-from flask import Flask, g
-app = Flask(&lt;strong&gt;name&lt;/strong&gt;)&lt;/p&gt;
-&lt;p&gt;with app.app_context():
-    print('in app context, before first request context')
-    print('setting g.foo to abc')
-    g.foo = 'abc'
-    print('g.foo should be abc, is: {0}'.format(g.foo))&lt;/p&gt;
-&lt;p&gt;with app.test_request_context():
-    print('in first request context')
-    print('g.foo should be None, is: {0}'.format(g.get('foo')))
-    print('setting g.foo to xyz')
-    g.foo = 'xyz'
-    print('g.foo should be xyz, is: {0}'.format(g.foo))&lt;/p&gt;
-&lt;p&gt;with app.test_request_context():
-    print('in second request context')
-    print('g.foo should be None, is: {0}'.format(g.get('foo')))
-    print('setting g.foo to pqr')
-    g.foo = 'pqr'
-    print('g.foo should be pqr, is: {0}'.format(g.foo))
-```&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;
+&lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in app context, before first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to abc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;abc&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be abc, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in first request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be None, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to xyz&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;xyz&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be xyz, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;in second request context&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be None, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;setting g.foo to pqr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pqr&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g.foo should be pqr, is: {0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;Which will give the expected results:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;plain
-in app context, before first request context
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;in app context, before first request context
 setting g.foo to abc
 g.foo should be abc, is: abc
 in first request context
@@ -3795,33 +3846,44 @@ g.foo should be xyz, is: xyz
 in second request context
 g.foo should be None, is: None
 setting g.foo to pqr
-g.foo should be pqr, is: pqr&lt;/code&gt;&lt;/p&gt;
+g.foo should be pqr, is: pqr
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;In this second example, all three &lt;code&gt;with&lt;/code&gt; blocks are pushing independent contexts. The difference is that
 last two are also pushing an application context &lt;em&gt;implicitly&lt;/em&gt;, and the first one is not pushing a request context.&lt;/p&gt;
-&lt;h2 id="so-how-do-i-test-my-app"&gt;So, how do I test my app?&lt;/h2&gt;
+&lt;h2&gt;So, how do I test my app?&lt;/h2&gt;
 &lt;p&gt;I will be using &lt;a href="https://docs.pytest.org/en/latest/"&gt;&lt;code&gt;pytest&lt;/code&gt;&lt;/a&gt; because it's good. Just google "&lt;code&gt;unittest versus pytest&lt;/code&gt;" to find out why.&lt;/p&gt;
 &lt;p&gt;This &lt;a href="https://stackoverflow.com/a/17377101/5819113"&gt;SO answer&lt;/a&gt; summarizes the differences in the best way I've found so far.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;If you want to make a request to your application, use the &lt;a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_client"&gt;&lt;code&gt;test_client&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;c = app.test_client()
-response = c.get('/test/url')
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;c = app.test_client()
+response = c.get(&amp;#39;/test/url&amp;#39;)
 # test response
-&lt;/code&gt;&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;If you want to test code which uses an application context (&lt;code&gt;current_app&lt;/code&gt;, &lt;code&gt;g&lt;/code&gt;, &lt;code&gt;url_for&lt;/code&gt;), push an &lt;a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.app_context"&gt;&lt;code&gt;app_context&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;with app.app_context():
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;with app.app_context():
     # test your app context code
-&lt;/code&gt;&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;If you want test code which uses a request context (&lt;code&gt;request&lt;/code&gt;, &lt;code&gt;session&lt;/code&gt;), push a &lt;a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_request_context"&gt;&lt;code&gt;test_request_context&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;with current_app.test_request_context():
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;with current_app.test_request_context():
     # test your request context code
-&lt;/code&gt;&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/blockquote&gt;
 &lt;p&gt;It's also important to note that&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Both app and request contexts can also be pushed manually, which is useful when using the interpreter.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; ctx = app.app_context()
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; ctx = app.app_context()
 &amp;gt;&amp;gt;&amp;gt; ctx.push()
-&lt;/code&gt;&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/blockquote&gt;
 &lt;p&gt;So far there are &lt;em&gt;two&lt;/em&gt; approaches:&lt;/p&gt;
 &lt;ol&gt;
@@ -3831,80 +3893,98 @@ response = c.get('/test/url')
 &lt;/ol&gt;
 &lt;p&gt;Everything in the middle is prone to produce weird results and drive you crazy, so &lt;em&gt;try&lt;/em&gt; to be consistent!&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://lucumr.pocoo.org/about/"&gt;Armin Ronacher&lt;/a&gt; suggests a pytest fixture pattern in &lt;a href="https://youtu.be/1ByQhAM5c1I?t=2285"&gt;this presentation&lt;/a&gt; (&lt;a href="https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52"&gt;slides&lt;/a&gt;), which relies in the first approach. The code is as follows:&lt;/p&gt;
-&lt;p&gt;```python
-import pytest&lt;/p&gt;
-&lt;p&gt;@pytest.fixture(scope="module")
-def app(request):&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# import app factory pattern
-from yourapp import create_app
-app = create_app()
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pytest&lt;/span&gt;
 
-# pushes an application context manually
-ctx = app.app_context()
-ctx.push()
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scope&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;app&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
-# bind the test life with the context through the
-request.addfinalizer(ctx.pop)
-return app
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;@pytest.fixture()
-def test_client(request, app):&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;client = app.test_client()
-client.__enter__()
+    &lt;span class="c1"&gt;# import app factory pattern&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;
+    &lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-request.addfinalizer(
-    lambda: client.__exit__(None, None, None))
-return client
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;```&lt;/p&gt;
+    &lt;span class="c1"&gt;# pushes an application context manually&lt;/span&gt;
+    &lt;span class="n"&gt;ctx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;push&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# bind the test life with the context through the&lt;/span&gt;
+    &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addfinalizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pop&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;
+
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_client&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__enter__&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addfinalizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__exit__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;Note that &lt;code&gt;request&lt;/code&gt; here refers to the &lt;a href="https://docs.pytest.org/en/latest/reference.html#request"&gt;&lt;code&gt;pytest&lt;/code&gt; fixture&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id="but-how-do-i-test-really"&gt;But how do I test? really&lt;/h2&gt;
+&lt;h2&gt;But how do I test? really&lt;/h2&gt;
 &lt;p&gt;After a lot of churning and with the help of &lt;code&gt;#pocoo&lt;/code&gt; in IRC, I came up with this:&lt;/p&gt;
-&lt;p&gt;```python
-import pytest&lt;/p&gt;
-&lt;p&gt;@pytest.fixture
-def runner(app):
-    """A test runner for the app's Click commands."""
-    return app.test_cli_runner()&lt;/p&gt;
-&lt;p&gt;@pytest.fixture(scope='session')
-def app(request):
-    from yourapp import create_app
-    return create_app('testing')&lt;/p&gt;
-&lt;p&gt;@pytest.fixture(autouse=True)
-def app_context(app):
-    """Creates a flask app context"""
-    with app.app_context():
-        yield app&lt;/p&gt;
-&lt;p&gt;@pytest.fixture
-def request_context(app_context):
-    """Creates a flask request context"""
-    with app_context.test_request_context():
-        yield&lt;/p&gt;
-&lt;p&gt;@pytest.fixture
-def client(app_context):
-    return app_context.test_client(use_cookies=True)&lt;/p&gt;
-&lt;p&gt;@pytest.fixture(scope="model")
-def db(app_context):&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113
-from yourapp.extensions import db
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pytest&lt;/span&gt;
 
-db.create_all()
 
-# seed the database
-seed_db()
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;A test runner for the app&amp;#39;s Click commands.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_cli_runner&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-yield db
 
-# teardown database
-# https://stackoverflow.com/a/18365654/5819113
-db.session.remove()
-db.drop_all()
-db.get_engine(app_context).dispose()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;def seed_db():
-    # insert default users and roles
-    print("Seeding the database or something")
-```&lt;/p&gt;
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scope&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;session&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;app&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;create_app&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;testing&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;autouse&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Creates a flask app context&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;request_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Creates a flask request context&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_request_context&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;yield&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;client&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test_client&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;use_cookies&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@pytest.fixture&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scope&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;model&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;db&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.extensions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;
+
+    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# seed the database&lt;/span&gt;
+    &lt;span class="n"&gt;seed_db&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# teardown database&lt;/span&gt;
+    &lt;span class="c1"&gt;# https://stackoverflow.com/a/18365654/5819113&lt;/span&gt;
+    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;drop_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_engine&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dispose&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;seed_db&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="c1"&gt;# insert default users and roles&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Seeding the database or something&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;This is working for me. In short&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;If your test requires a living app, import the &lt;code&gt;app_context&lt;/code&gt; fixture&lt;/li&gt;
@@ -3912,233 +3992,39 @@ db.get_engine(app_context).dispose()
 &lt;li&gt;If your test requires examining a part of the request, import the &lt;code&gt;request_context&lt;/code&gt; fixture&lt;/li&gt;
 &lt;li&gt;If your test requires a logged in user, you can use the &lt;code&gt;client&lt;/code&gt; fixture and &lt;code&gt;flask_login&lt;/code&gt; as&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;```python
-def login(client, email, password):
-    """A helper method that logs in users"""
-    return client.post(url_for('auth.login'),
-                    data={
-                        'email': email,
-                        'password': password},
-                    follow_redirects=True)&lt;/p&gt;
-&lt;p&gt;def test_with_logged_in_user(client):
-    """Tests a view that requires authentication"""
-    from flask_login import current_user&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# client is a pytest fixture
-with client as c:
-    # login is a helper method that issues a POST request
-    login(c, "user@test.com", "test")
-    assert current_user.email == "user@test.com"
-    assert current_user.is_authenticated
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;A helper method that logs in users&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url_for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;auth.login&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                    &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+                        &lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                        &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+                    &lt;span class="n"&gt;follow_redirects&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-    response = c.get(
-        '/restricted_view/',
-        follow_redirects=True)
 
-    assert response.status_code == 200
-    assert b'Stuff that should appear in your view' in response.data
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;```&lt;/p&gt;
-&lt;p&gt;That's all I have to say about it.&lt;/p&gt;</summary><category term="flask"></category><category term="python"></category><category term="pytest"></category></entry><entry><title>Sistemas recomendadores, parte 4</title><link href="https://diegoquintanav.github.io/recsys-4-ES.html" rel="alternate"></link><published>2018-12-14T09:03:00-06:00</published><updated>2018-12-14T09:03:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-11-02:recsys-4-ES.html</id><summary type="html">&lt;!-- Modified: 2010-12-05 19:30 --&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_with_logged_in_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Tests a view that requires authentication&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask_login&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;current_user&lt;/span&gt;
 
-&lt;!-- entry 4, clase al 08.11 --&gt;
+    &lt;span class="c1"&gt;# client is a pytest fixture&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="c1"&gt;# login is a helper method that issues a POST request&lt;/span&gt;
+        &lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user@test.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;current_user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user@test.com&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;current_user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;
 
-&lt;!-- Hoy --&gt;
+        &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;/restricted_view/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;follow_redirects&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;!-- *  Evaluación --&gt;
+        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;
+        &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Stuff that should appear in your view&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;!-- *  Laboratorio --&gt;
 
-&lt;!-- *  usando *Bag of Words* --&gt;
-
-&lt;!-- *  LDA --&gt;
-
-&lt;!-- *  Usando un software llamado *gensim* --&gt;
-
-&lt;div class="toc"&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="#previously"&gt;Previously&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#sistemas-de-recomendacion-hibridos"&gt;Sistemas de recomendación híbridos&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#monolitico"&gt;Monolítico&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#paralelizado"&gt;Paralelizado&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#pipeline"&gt;Pipeline&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#evaluacion-de-un-recomendador"&gt;Evaluación de un recomendador&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#metricas-en-contexto-de-clasificacion"&gt;Métricas en contexto de clasificación&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#metricas-en-el-contexto-de-recomendadores"&gt;Métricas en el contexto de recomendadores&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;h1 id="previously"&gt;&lt;em&gt;Previously&lt;/em&gt;&lt;/h1&gt;
-&lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-3-ES.html"&gt;parte 3&lt;/a&gt; se comentaron algunos &lt;em&gt;SR&lt;/em&gt; basados en contenido, quedando para esta parte comentar un poco sobre sistemas &lt;em&gt;híbridos&lt;/em&gt; y sobre métricas usadas en la evaluación de un &lt;em&gt;SR&lt;/em&gt;.&lt;/p&gt;
-&lt;h1 id="sistemas-de-recomendacion-hibridos"&gt;Sistemas de recomendación híbridos&lt;/h1&gt;
-&lt;p&gt;Se trata de una familia de &lt;em&gt;SR&lt;/em&gt; que combina elementos de las clasificaciones vistas antes, &lt;em&gt;content based&lt;/em&gt; (CB) y &lt;em&gt;collaborative filtering based&lt;/em&gt; (CF). Al respecto en &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.8200&amp;amp;rep=rep1&amp;amp;type=pdf"&gt;&lt;em&gt;Burke, 2007&lt;/em&gt;&lt;/a&gt; y en &lt;a href="http://blog.ag-nbi.de/wp-content/uploads/2015/10/adomavicius-recsys.pdf"&gt;&lt;em&gt;Adomavicius, 2005&lt;/em&gt;&lt;/a&gt; se hace una revisión extensa sobre el tema.&lt;/p&gt;
-&lt;p&gt;Según Burke existen 7 formas distintas de &lt;em&gt;hibridizar sistemas&lt;/em&gt;,&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Weighted&lt;/strong&gt; Los puntajes o scores de las recomendaciones provenientes de distintos &lt;em&gt;SR&lt;/em&gt; son combinadas en una sola recomendación&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Switching&lt;/strong&gt; El &lt;em&gt;SR&lt;/em&gt; es intercambiado dependiendo de la situación&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mixed&lt;/strong&gt; Recomendaciones de distintos &lt;em&gt;SR&lt;/em&gt; se presentan al mismo tiempo&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Feature combination&lt;/strong&gt; Las características de distintos &lt;em&gt;SR&lt;/em&gt; se combinan en un nuevo algoritmo de recomendación.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Cascade&lt;/strong&gt; Un &lt;em&gt;SR&lt;/em&gt; refina las recomendaciones de otro &lt;em&gt;SR&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Feature augmentation&lt;/strong&gt; La recomendación de un &lt;em&gt;SR&lt;/em&gt; es usada como parámetros de entrada para otro &lt;em&gt;SR&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Meta-level&lt;/strong&gt; El modelo aprendido por un &lt;em&gt;SR&lt;/em&gt; es usado como información de entrada para otro &lt;em&gt;SR&lt;/em&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Estas siguen 3 diseños generales:&lt;/p&gt;
-&lt;h2 id="monolitico"&gt;Monolítico&lt;/h2&gt;
-&lt;p&gt;Se refiere a la unión de dos o más &lt;em&gt;SR&lt;/em&gt; en uno solo. Ejemplos de esto son aquellos que implementan &lt;em&gt;Feature augmentation y Feature combination&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="monolithic" src="https://diegoquintanav.github.io/images/monolithic_hybrid.png" /&gt;&lt;/p&gt;
-&lt;h2 id="paralelizado"&gt;Paralelizado&lt;/h2&gt;
-&lt;p&gt;Se refiere a la ejecución de diversos &lt;em&gt;SR&lt;/em&gt; en paralelo, cuyas recomendaciones son combinadas en la salida. Algoritmos hibridos tipo &lt;em&gt;Weighted, Switching, Mixed&lt;/em&gt; lo implementan.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="parallel" src="https://diegoquintanav.github.io/images/parallel_hybrid.png" /&gt;&lt;/p&gt;
-&lt;h2 id="pipeline"&gt;Pipeline&lt;/h2&gt;
-&lt;p&gt;Se refieren a los &lt;em&gt;SR&lt;/em&gt; cuya entrada es la salida de otro &lt;em&gt;SR&lt;/em&gt;, siguiendo una ejecución en serie. Ejemplos de implementaciones son &lt;em&gt;Cascade, Meta-Level&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="pipeline" src="https://diegoquintanav.github.io/images/pipeline_hybrid.png" /&gt;&lt;/p&gt;
-&lt;h1 id="evaluacion-de-un-recomendador"&gt;Evaluación de un recomendador&lt;/h1&gt;
-&lt;h2 id="metricas-en-contexto-de-clasificacion"&gt;Métricas en contexto de clasificación&lt;/h2&gt;
-&lt;p&gt;El problema de recomendación puede verse como un problema de clasificación, en el sentido que un &lt;em&gt;SR&lt;/em&gt; intenta clasificar elementos como recomendables o no recomendables, dado un usuario cualquiera. En esta tarea de clasificación un &lt;em&gt;SR&lt;/em&gt; puede fallar o acertar, lo que da lugar a dos a distintas métricas que permitan cuantificar la &lt;em&gt;calidad&lt;/em&gt; de un clasificador.&lt;/p&gt;
-&lt;p&gt;La primera herramienta que uno debería considerar es la matriz de confusión, la que puede leerse con más detalle en &lt;a href="http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/"&gt;dataschool&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Una matriz de confusión es una representación de la cantidad de aciertos por clase en una tarea &lt;em&gt;de clasificación&lt;/em&gt;. En este sentido se habla de&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Verdaderos positivos, TP&lt;/li&gt;
-&lt;li&gt;Verdaderos negativos, TN&lt;/li&gt;
-&lt;li&gt;Falsos positivos, FP&lt;/li&gt;
-&lt;li&gt;Falsos negativos, FN&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;En el contexto de &lt;em&gt;SR&lt;/em&gt;, sin embargo, se define un &lt;em&gt;acierto&lt;/em&gt; en un conjunto de recomendaciones como &lt;em&gt;relevante&lt;/em&gt;. La definición de relevancia puede variar dependiendo de cada caso, pudiendo ser&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Un usuario hace click en un link de una lista de links recomendados&lt;/li&gt;
-&lt;li&gt;Un usuario compra un libro recomendado&lt;/li&gt;
-&lt;li&gt;Un usuario comparte un video sugerido&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un &lt;em&gt;SR&lt;/em&gt;. Si se visualizan estas clases en un diagrama de conjuntos, se tiene&lt;/p&gt;
-&lt;p&gt;&lt;img alt="venn1" src="https://diegoquintanav.github.io/images/venn1.png" /&gt;&lt;/p&gt;
-&lt;p&gt;De aquí se tiene que la &lt;strong&gt;Precisión&lt;/strong&gt; es la fracción de instancias &lt;em&gt;relevantes&lt;/em&gt; obtenidas en alguna tarea en específico, del resultado de recomendaciones.&lt;/p&gt;
-&lt;div class="math"&gt;$$\mbox{precision} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FP}}$$&lt;/div&gt;
-&lt;p&gt;O en el contexto de &lt;em&gt;SR&lt;/em&gt;,&lt;/p&gt;
-&lt;div class="math"&gt;$$\mbox{precision} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{recomendados}|}$$&lt;/div&gt;
-&lt;p&gt;Para el caso del diagrama, la recomendación o el &lt;em&gt;SR&lt;/em&gt; tiene una precisión de &lt;span class="math"&gt;\(2/5=0.4\)&lt;/span&gt;. La &lt;em&gt;precisión&lt;/em&gt; entonces mide qué tan posible es obtener los elementos relevantes &lt;em&gt;con la menor cantidad&lt;/em&gt; de recomendaciones.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Recall&lt;/strong&gt; o &lt;em&gt;true positive rate&lt;/em&gt; (TPR) se refiere a la fracción de instancias relevantes obtenidas del total de instancias relevantes, o bien&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\mbox{TPR} = \mbox{recall} = \frac{\mbox{TP}}{\mbox{TP}+\mbox{FN}}
-$$&lt;/div&gt;
-&lt;p&gt;O en términos de recomendaciones&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\mbox{recall} = \frac{|\mbox{recomendados} \cap \mbox{relevantes}|}{|\mbox{relevantes}|}$$&lt;/div&gt;
-&lt;p&gt;Para el caso del diagrama, el &lt;em&gt;recall&lt;/em&gt; del &lt;em&gt;SR&lt;/em&gt; es de &lt;span class="math"&gt;\(2/10=0.2\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Ambos, precision y &lt;em&gt;recall&lt;/em&gt; tienen una relación inversa, tal que el &lt;em&gt;recall&lt;/em&gt; disminuye a medida que la precisión aumenta. En este sentido, para un clasificador es posible graficar su desempeño en términos de la curva &lt;em&gt;precision vs recall&lt;/em&gt; o curva PR.&lt;/p&gt;
-&lt;p&gt;Esta curva puede transformarse a otro espacio más conocido, llamado &lt;a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic"&gt;curva ROC&lt;/a&gt; o &lt;em&gt;receiving operating characteristic curve&lt;/em&gt;, en el cual se grafica el &lt;em&gt;recall&lt;/em&gt; como TPR o &lt;em&gt;true positive rate&lt;/em&gt; versus &lt;strong&gt;FPR&lt;/strong&gt; o &lt;em&gt;false positive rate&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://www.youtube.com/watch?v=OAl6eAyP-yo" title="ROC Curve explained"&gt;&lt;img alt="roc_video" src="http://img.youtube.com/vi/OAl6eAyP-yo/0.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Conviene tener en cuenta que &lt;strong&gt;ambas curvas no son equivalentes&lt;/strong&gt; y la curva PR describe mejor el desempeño de clasificadores en casos donde hay un desbalance importante de clases. Una comparación completa entre ambas curvas puede leerse &lt;a href="http://pages.cs.wisc.edu/~jdavis/davisgoadrichcamera2.pdf"&gt;aquí&lt;/a&gt;&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
-$$&lt;/div&gt;
-&lt;p&gt;&lt;img alt="roc_vs_pr" src="https://diegoquintanav.github.io/images/roc_vs_pr.png" /&gt;&lt;/p&gt;
-&lt;p&gt;Finalmente, algunas notas sobre este tema&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Considerando que hay tipos de &lt;em&gt;SR&lt;/em&gt; distintos que generan resultados distintos, estas métricas resultan útiles para poder comparar los distintos modelos, por ejemplo a través de &lt;em&gt;A/B Testing&lt;/em&gt; o tests de hipótesis.&lt;/li&gt;
-&lt;li&gt;Dependiendo del caso, puedo darse la necesidad de usar algoritmos con mayor &lt;em&gt;recall&lt;/em&gt; que precisión i.e. si quiero saber cuándo es el siguiente partido de chile, me importa más usar un &lt;em&gt;SR&lt;/em&gt; que recomiende el &lt;em&gt;resultado correcto&lt;/em&gt;, en vez de un &lt;em&gt;SR&lt;/em&gt; que me recomiende &lt;em&gt;la mejor página con el resultado&lt;/em&gt;. En este caso requiero mayor &lt;em&gt;recall&lt;/em&gt; que &lt;em&gt;precisión&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;Es bueno recordar que estas métricas evalúan &lt;em&gt;conjuntos de recomendaciones&lt;/em&gt;, no las recomendaciones en sí.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="metricas-en-el-contexto-de-recomendadores"&gt;Métricas en el contexto de recomendadores&lt;/h2&gt;
-&lt;p&gt;En el contexto de recomendadores existen muchos otros indicadores que ayudan a evaluar un &lt;em&gt;SR&lt;/em&gt;, y por mencionar algunos&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Mean reciprocal rank (MRR)&lt;/li&gt;
-&lt;li&gt;Precision at N (P@N)&lt;/li&gt;
-&lt;li&gt;Mean Average Precision (MAP)&lt;/li&gt;
-&lt;li&gt;DCG y nDCG&lt;/li&gt;
-&lt;li&gt;Coverage index&lt;/li&gt;
-&lt;li&gt;Diversity index&lt;/li&gt;
-&lt;li&gt;Mean Percentage Ranking&lt;/li&gt;
-&lt;/ul&gt;
-&lt;!-- TODO: sugerir links --&gt;
-
-&lt;!-- # Diversity
-
-Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equipo, la diversidad es muy baja. Si en cambio le recomiendo noticias de fútbol, añado diversidad a mi conjunto de recomendaciones. Esto apunta a resolver el problema de *burbujas de información*, algo que se puede hacer de manera programática y controlada. --&gt;
-
-&lt;h1 id="a-continuacion"&gt;A continuación&lt;/h1&gt;
-&lt;!-- Esto es todo por ahora. En la [parte 5 y final]({filename}/blog/sysrec-5.md) se verán las _Máquinas de Factorización_. --&gt;
-
-&lt;p&gt;Esto es todo por ahora. En la parte 5 y final se verán las &lt;em&gt;Máquinas de Factorización&lt;/em&gt;.&lt;/p&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</summary><category term="recsys"></category></entry><entry><title>Sistemas recomendadores, parte 3</title><link href="https://diegoquintanav.github.io/recsys-3-ES.html" rel="alternate"></link><published>2018-12-03T20:48:00-06:00</published><updated>2018-12-03T20:48:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-11-01:recsys-3-ES.html</id><summary type="html">&lt;div class="toc"&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="#previously"&gt;previously&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#sistemas-recomendadores-basados-en-contenido"&gt;Sistemas recomendadores basados en contenido&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#como-podemos-analizar-el-contenido"&gt;¿Cómo podemos analizar el contenido?&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#representacion-vectorial-de-texto"&gt;Representación vectorial de texto&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#regularizacion-de-texto"&gt;Regularización de texto&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#representacion-semantica-del-contenido-y-la-web-semantica"&gt;Representación semántica del contenido y la web semántica&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#metricas-de-similitud"&gt;Métricas de similitud&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#manejo-de-sinonimos"&gt;Manejo de sinónimos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#tecnicas-de-procesamiento-adicionales"&gt;Técnicas de procesamiento adicionales&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#en-python"&gt;En python&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;h1 id="previously"&gt;&lt;em&gt;previously&lt;/em&gt;&lt;/h1&gt;
+&lt;p&gt;That's all I have to say about it.&lt;/p&gt;</summary><category term="flask"></category><category term="python"></category><category term="pytest"></category></entry><entry><title>Sistemas recomendadores, parte 3</title><link href="https://diegoquintanav.github.io/recsys-3-ES.html" rel="alternate"></link><published>2018-12-03T20:48:00-06:00</published><updated>2018-12-03T20:48:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-11-01:recsys-3-ES.html</id><summary type="html">&lt;h1&gt;&lt;em&gt;previously&lt;/em&gt;&lt;/h1&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-2-ES.html"&gt;parte 2&lt;/a&gt; se vieron algunas clasificaciones de &lt;em&gt;SR&lt;/em&gt;, y mencionamos aquellos basados en &lt;em&gt;memoria&lt;/em&gt; y basados en &lt;em&gt;modelos&lt;/em&gt;. &lt;/p&gt;
 &lt;p&gt;Otra clasificación que se mencionó se refiere a &lt;em&gt;SR&lt;/em&gt; basados en &lt;strong&gt;contenido&lt;/strong&gt;, o &lt;em&gt;content-based&lt;/em&gt;.&lt;/p&gt;
-&lt;h1 id="sistemas-recomendadores-basados-en-contenido"&gt;Sistemas recomendadores basados en contenido&lt;/h1&gt;
+&lt;h1&gt;Sistemas recomendadores basados en contenido&lt;/h1&gt;
 &lt;p&gt;Existen elementos que son cuantificables de manera directa, i.e.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Popularidad&lt;/li&gt;
@@ -4162,11 +4048,11 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
 &lt;p&gt;Este tipo de &lt;em&gt;SR&lt;/em&gt; presentan la ventaja de que es más fácil explicar las recomendaciones en función del mismo contenido.&lt;/p&gt;
 &lt;p&gt;Sin embargo, dado que las recomendaciones dependen del análisis de contenido de las recomendaciones previas, puede ocurrir lo que se conoce como una burbuja de información o &lt;em&gt;filter bubble&lt;/em&gt;. Esta situación produce que las nuevas recomendaciones terminen siendo muy similares a lo ya consumido. &lt;/p&gt;
 &lt;p&gt;Por ejemplo, si me gusta Harry Potter, puede ocurrir que el &lt;em&gt;SR&lt;/em&gt; sólo pueda recomendarme libros de Harry Potter y no de la narrativa fantástica en general, lo que dependiendo del caso, puede ser un resultado indeseado.&lt;/p&gt;
-&lt;h1 id="como-podemos-analizar-el-contenido"&gt;¿Cómo podemos analizar el contenido?&lt;/h1&gt;
+&lt;h1&gt;¿Cómo podemos analizar el contenido?&lt;/h1&gt;
 &lt;p&gt;El aspecto más importante de este tipo de &lt;em&gt;SR&lt;/em&gt; es su dependencia de la ?&lt;em&gt;representación&lt;/em&gt; del contenido. &lt;/p&gt;
 &lt;p&gt;De manera más general en otras áreas esto se conoce como &lt;em&gt;information retrieval&lt;/em&gt;, y tiene que ver en cómo se extrae y representa información de los datos.&lt;/p&gt;
 &lt;p&gt;En ese sentido, la forma más simple es la de analizar el texto en las descripciones de los ítems que forman parte del dataset.&lt;/p&gt;
-&lt;h2 id="representacion-vectorial-de-texto"&gt;Representación vectorial de texto&lt;/h2&gt;
+&lt;h2&gt;Representación vectorial de texto&lt;/h2&gt;
 &lt;p&gt;La primera representación que se puede hacer de un texto es a través de lo que se conoce como &lt;a href="https://machinelearningmastery.com/gentle-introduction-bag-words-model/"&gt;&lt;em&gt;bag of words&lt;/em&gt;&lt;/a&gt;, donde las palabras se comparan con un diccionario o &lt;em&gt;corpus&lt;/em&gt;, y se representan como el número de repeticiones que esa palabra aparece en el texto.&lt;/p&gt;
 &lt;p&gt;Esto a su vez permite otras representaciones, una es VSM o &lt;em&gt;Vector space model&lt;/em&gt;, el cual se trata de vectorizar términos en función de su aparición en una &lt;strong&gt;familia&lt;/strong&gt; &lt;/p&gt;
 &lt;p&gt;Un ejemplo se puede ver en la siguiente imagen, donde la palabra &lt;em&gt;likes&lt;/em&gt; se representa como la frecuencia en la que la palabra aparece en tres documentos distintos:&lt;/p&gt;
@@ -4177,7 +4063,7 @@ v = [f_{1},f_{2},...,f_{n}]
 $$&lt;/div&gt;
 &lt;p&gt;donde &lt;span class="math"&gt;\(f_{i}\)&lt;/span&gt; es la frecuencia de cada palabra. Un vector de palabras o diccionario o &lt;em&gt;corpus&lt;/em&gt;, para el caso del castellano por ejemplo, es de aproximadamente 60000 palabras. &lt;/p&gt;
 &lt;p&gt;La ventaja de esta representación es que al tratarse de vectores, estos tienen propiedades geométricas que permiten establecer comparaciones entre ellos.&lt;/p&gt;
-&lt;h3 id="regularizacion-de-texto"&gt;Regularización de texto&lt;/h3&gt;
+&lt;h3&gt;Regularización de texto&lt;/h3&gt;
 &lt;p&gt;La frecuencia de las palabras por sí sola en un documento no ayuda necesariamente a establecer similitudes, por ejemplo es muy posible encontrar muchas veces en un documento las palabras &lt;em&gt;él, ella, qué, etcétera&lt;/em&gt;, lo que no ayudan mucho. Dos documentos no son necesariamente iguales si tienen relativamente la misma cantidad de veces la palabra &lt;em&gt;qué&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Es por esto que se desarrollan métodos de regularización, el primero es normalizar la frecuencia de los términos, a través de lo que se conoce como TF o &lt;em&gt;term frequency&lt;/em&gt;. En otras palabras, esto significa:&lt;/p&gt;
 &lt;div class="math"&gt;$$
@@ -4203,10 +4089,10 @@ $$&lt;/div&gt;
 &lt;li&gt;&lt;span class="math"&gt;\(n_{p}\)&lt;/span&gt; es la cantidad de documentos donde aparece la palabra&lt;/li&gt;
 &lt;li&gt;El valor de &lt;span class="math"&gt;\(\log(N/n_{p})\)&lt;/span&gt; tiende a cero cuando la palabra aparece en muchos documentos (por ejemplo artículos, preposiciones, etc.)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="representacion-semantica-del-contenido-y-la-web-semantica"&gt;Representación semántica del contenido y la web semántica&lt;/h2&gt;
+&lt;h2&gt;Representación semántica del contenido y la web semántica&lt;/h2&gt;
 &lt;p&gt;El texto representado como &lt;em&gt;bag of words&lt;/em&gt; carece de sentido contextual. El contexto en sí mismo añade una nueva capa al análisis de texto, y entre las formas de incorporarlo se pueden usar &lt;em&gt;ontologías&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Al respecto, la idea de una &lt;a href="https://en.wikipedia.org/wiki/Semantic_Web"&gt;web semántica&lt;/a&gt; intenta modelar los contenidos de internet a través de estructuras ontológicas estandarizadas llamadas &lt;a href="https://en.wikipedia.org/wiki/Resource_Description_Framework"&gt;RDF&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id="metricas-de-similitud"&gt;Métricas de similitud&lt;/h2&gt;
+&lt;h2&gt;Métricas de similitud&lt;/h2&gt;
 &lt;p&gt;Como vimos anteriormente, la vectorización de documentos permite operaciones entre vectores, los cuales tienen un sentido geométrico y por lo tanto permiten establecer métricas de distancia entre ellos. &lt;/p&gt;
 &lt;p&gt;Las más conocidas ya se han visto y corresponden a:&lt;/p&gt;
 &lt;ul&gt;
@@ -4215,13 +4101,13 @@ $$&lt;/div&gt;
 &lt;/ul&gt;
 &lt;p&gt;Sin embargo, un &lt;em&gt;corpus&lt;/em&gt; en general es de alta dimensionalidad, (60000 palabras para el castellano, por ejemplo) y aquí &lt;strong&gt;la maldición de la dimensionalidad&lt;/strong&gt; (&lt;em&gt;curse of dimensionality&lt;/em&gt;) se presenta nuevamente como un problema. &lt;/p&gt;
 &lt;p&gt;Al respecto, podemos normalizar los vectores y obtener mejores resultados con la distancia coseno, y otras métricas diseñadas para este problema como por ejemplo &lt;a href="https://dl.acm.org/citation.cfm?doid=1639714.1639757"&gt;OKAPI BM25&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id="manejo-de-sinonimos"&gt;Manejo de sinónimos&lt;/h2&gt;
+&lt;h2&gt;Manejo de sinónimos&lt;/h2&gt;
 &lt;p&gt;Puede ocurrir que dos palabras son iguales pero tienen distintos significados, lo que complica las comparaciones. Al respecto existen técnicas como&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;em&gt;Latent semantic Indexing&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Latent dirichlet allocation&lt;/em&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="tecnicas-de-procesamiento-adicionales"&gt;Técnicas de procesamiento adicionales&lt;/h2&gt;
+&lt;h2&gt;Técnicas de procesamiento adicionales&lt;/h2&gt;
 &lt;p&gt;El análisis de texto presenta otro tipo de problemas, pudiendo encontrarse&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;palabras mal escritas&lt;/li&gt;
@@ -4237,7 +4123,7 @@ $$&lt;/div&gt;
 &lt;li&gt;&lt;em&gt;Krovetz&lt;/em&gt;: &lt;em&gt;Stem&lt;/em&gt;, pero asociada a una palabra existente.&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Lemmatization&lt;/em&gt;: Una variante de &lt;em&gt;stemming&lt;/em&gt; que incorpora el análisis morfológico del texto. Ver más información &lt;a href="https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html"&gt;aquí&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="en-python"&gt;En python&lt;/h2&gt;
+&lt;h2&gt;En python&lt;/h2&gt;
 &lt;p&gt;En python existen dos librerías importantes para esto,&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="www.nltk.org"&gt;NLTK&lt;/a&gt;&lt;/li&gt;
@@ -4247,8 +4133,9 @@ $$&lt;/div&gt;
 la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suficientes) y utiliza &lt;em&gt;defaults&lt;/em&gt; aptos para su uso en la industria.&lt;/p&gt;
 &lt;p&gt;En inglés se dice que una librería es &lt;em&gt;opinionated&lt;/em&gt; cuando impone ciertos patrones y procedimientos con base en la experiencia de los creadores de la herramienta. Un ejemplo de esto es &lt;em&gt;ruby on rails&lt;/em&gt; o &lt;em&gt;django&lt;/em&gt; para desarrollo web.&lt;/p&gt;
 &lt;p&gt;Esto se podría traducir como un diseño &lt;em&gt;dogmático&lt;/em&gt;, aunque esta traducción no me gusta del todo.&lt;/p&gt;
-&lt;h2 id="a-continuacion"&gt;A continuación&lt;/h2&gt;
-&lt;p&gt;Esto es todo por esta vez. En la &lt;a href="https://diegoquintanav.github.io/recsys-4-ES.html"&gt;parte 4&lt;/a&gt; se verán&lt;/p&gt;
+&lt;h2&gt;A continuación&lt;/h2&gt;
+&lt;p&gt;En la parte 4 se verán
+&lt;!-- En la &lt;a href="https://diegoquintanav.github.io/drafts/recsys-4.html"&gt;parte 4&lt;/a&gt; se verán --&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Sistemas recomendadores híbridos&lt;/li&gt;
 &lt;li&gt;Métricas de calidad en sistemas recomendadores&lt;/li&gt;
@@ -4307,45 +4194,7 @@ la mejor manera. Spacy, al contrario, presenta menos funcionalidades (aunque suf
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</summary><category term="recsys"></category></entry><entry><title>Sistemas recomendadores, parte 2</title><link href="https://diegoquintanav.github.io/recsys-2-ES.html" rel="alternate"></link><published>2018-11-25T19:15:00-06:00</published><updated>2018-11-25T19:15:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-10-28:recsys-2-ES.html</id><summary type="html">&lt;div class="toc"&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="#previously"&gt;Previously&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#tipos-de-recomendadores"&gt;Tipos de recomendadores&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#segun-el-agente-que-controla-el-sr"&gt;Según el agente que controla el SR&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#segun-la-forma-que-los-modelos-aprenden"&gt;Según la forma que los modelos aprenden&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#metricas-de-similitud"&gt;Métricas de similitud&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#similitud-coseno"&gt;Similitud coseno&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#correlacion-de-pearson"&gt;Correlación de Pearson&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#similitud-coseno-ajustada"&gt;Similitud coseno ajustada&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#otra-propuesta-de-clasificacion"&gt;Otra propuesta de clasificación&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#basados-en-reglas-rule-based"&gt;Basados en reglas (Rule based)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#basados-en-contenido-content-based"&gt;Basados en contenido (Content based)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#filtrado-colaborativo-user-based"&gt;Filtrado colaborativo (User based)&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#clasificacion-de-recomendadores-basados-en-filtrado-colaborativo"&gt;Clasificación de recomendadores basados en filtrado colaborativo&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#user-based-collaborative-filtering-ub-cf"&gt;User Based Collaborative Filtering (UB-CF)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#item-based-collaborative-filtering-ib-cf"&gt;Item Based collaborative filtering (IB-CF)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#sistemas-hibridos"&gt;Sistemas híbridos&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#anexo-knn-y-la-maldicion-de-la-dimensionalidad"&gt;Anexo: KNN y la maldición de la dimensionalidad&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href="#k-nearest-neighbors-knn"&gt;K Nearest neighbors (KNN)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#la-maldicion-de-la-dimensionalidad-o-curse-of-dimensionality"&gt;La maldición de la dimensionalidad (o Curse of dimensionality)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;h1 id="previously"&gt;&lt;em&gt;Previously&lt;/em&gt;&lt;/h1&gt;
+&lt;/script&gt;</summary><category term="recsys"></category></entry><entry><title>Sistemas recomendadores, parte 2</title><link href="https://diegoquintanav.github.io/recsys-2-ES.html" rel="alternate"></link><published>2018-11-25T19:15:00-06:00</published><updated>2018-11-25T19:15:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-10-28:recsys-2-ES.html</id><summary type="html">&lt;h1&gt;&lt;em&gt;Previously&lt;/em&gt;&lt;/h1&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-1-ES.html"&gt;parte 1&lt;/a&gt; se vieron varios aspectos elementales
 de los sistemas recomendadores. El concepto del error, Un modelo inicial de una
 recomendación, y la necesidad que cubren estos sistemas. 
@@ -4354,8 +4203,8 @@ con deficiones más rigurosas. La idea ahora es introducir algunos conceptos gen
 sobre los tipos de sistemas recomendadores.&lt;/p&gt;
 &lt;p&gt;Podemos agrupar clasificadores según sus características. &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.702.4429&amp;amp;rep=rep1&amp;amp;type=pdf"&gt;Este paper&lt;/a&gt; presenta algunas directrices, las que serán reflejadas aquí de manera 
 menos rigurosa.&lt;/p&gt;
-&lt;h1 id="tipos-de-recomendadores"&gt;Tipos de recomendadores&lt;/h1&gt;
-&lt;h2 id="segun-el-agente-que-controla-el-sr"&gt;Según el agente que &lt;em&gt;controla&lt;/em&gt; el &lt;em&gt;SR&lt;/em&gt;&lt;/h2&gt;
+&lt;h1&gt;Tipos de recomendadores&lt;/h1&gt;
+&lt;h2&gt;Según el agente que &lt;em&gt;controla&lt;/em&gt; el &lt;em&gt;SR&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;El agente se refiere aquí a quién &lt;em&gt;entrena&lt;/em&gt; al recomendador. Al respecto se indican&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Sistemas customizados&lt;/li&gt;
@@ -4363,7 +4212,7 @@ menos rigurosa.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;p&gt;El primero es aquel en que &lt;em&gt;el usuario&lt;/em&gt; modifica su perfil manualmente en base a sus preferencias, mientras que en el segundo es la implementación del &lt;em&gt;SR&lt;/em&gt; la 
 que crea y actualiza el perfil para cada usuario, con control explícito mínimo del usuario, e incluso nulo en algunas ocasiones.&lt;/p&gt;
-&lt;h2 id="segun-la-forma-que-los-modelos-aprenden"&gt;Según la forma que los modelos aprenden&lt;/h2&gt;
+&lt;h2&gt;Según la forma que los modelos aprenden&lt;/h2&gt;
 &lt;p&gt;Esta clasificación es más primitiva, y da lugar a&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Sistemas &lt;em&gt;basados en memoria&lt;/em&gt;&lt;/li&gt;
@@ -4390,21 +4239,21 @@ no tiene información de ratings, por lo que no puede recomendar nada. El proble
 implica entonces el cómo se completa inicialmente esta información. Esto también es válido para nuevos usuarios que no han definido sus preferencias o presentan pocos ratings.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Por el otro lado, los &lt;strong&gt;&lt;em&gt;SR&lt;/em&gt; basados en modelos&lt;/strong&gt; tratan de completar esta matriz con probabilidades de que un usuario valore positivamente un ítem que no había encontrado antes. Para esto se apoyan en algoritmos de aprendizaje automático o &lt;em&gt;machine learning&lt;/em&gt;.&lt;/p&gt;
-&lt;h3 id="metricas-de-similitud"&gt;Métricas de similitud&lt;/h3&gt;
-&lt;h4 id="similitud-coseno"&gt;Similitud coseno&lt;/h4&gt;
+&lt;h3&gt;Métricas de similitud&lt;/h3&gt;
+&lt;h4&gt;Similitud coseno&lt;/h4&gt;
 &lt;p&gt;Si se consideran dos vectores de dimensionalidad &lt;span class="math"&gt;\(m\)&lt;/span&gt;, se define la similitud entre ambos a través del cálculo del &lt;em&gt;coseno&lt;/em&gt; del ángulo entre ambos vectores. Formalmente, Si consideramos la matriz &lt;span class="math"&gt;\(M\)&lt;/span&gt; de &lt;span class="math"&gt;\(m\)&lt;/span&gt; usuarios y &lt;span class="math"&gt;\(n\)&lt;/span&gt; items, la similitud entre dos elementos está dada por&lt;/p&gt;
 &lt;div class="math"&gt;$$sim(i,j) = \cos (\vec{i},\vec{j}) = \frac{\vec{i} \cdot \vec{j}}{ { \lVert \vec{i} \rVert }_{2} \ast { \lVert \vec{j} \rVert }_{2} }$$&lt;/div&gt;
-&lt;h4 id="correlacion-de-pearson"&gt;Correlación de Pearson&lt;/h4&gt;
+&lt;h4&gt;Correlación de Pearson&lt;/h4&gt;
 &lt;p&gt;Una métrica de similitud se obtiene a través de la correlación de Pearson. Esta permite aislar los casos donde ocurra &lt;em&gt;co-validación&lt;/em&gt; i.e. aquellos casos en que el usuario ha validado ítems &lt;span class="math"&gt;\(i\)&lt;/span&gt; y &lt;span class="math"&gt;\(j\)&lt;/span&gt; (ver imagen, obtenida del paper).&lt;/p&gt;
 &lt;div class="math"&gt;$$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})(r_{u,j}-\bar{r}_{j}) }{ \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})^2} \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{j})^2} }$$&lt;/div&gt;
 &lt;p&gt;Donde &lt;span class="math"&gt;\(r_{u,j}\)&lt;/span&gt; es el rating del usuario &lt;span class="math"&gt;\(u\)&lt;/span&gt; sobre el ítem &lt;span class="math"&gt;\(j\)&lt;/span&gt; y &lt;span class="math"&gt;\(\bar{r}_{j}\)&lt;/span&gt; es el &lt;em&gt;rating&lt;/em&gt; promedio sobre el otro ítem.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="IB-CF1" src="https://diegoquintanav.github.io/images/CF-IB_1.png" title="IB-CF" /&gt;&lt;/p&gt;
-&lt;h4 id="similitud-coseno-ajustada"&gt;Similitud coseno ajustada&lt;/h4&gt;
+&lt;h4&gt;Similitud coseno ajustada&lt;/h4&gt;
 &lt;p&gt;Se obtiene incorporando el promedio &lt;span class="math"&gt;\(\bar{r}_{u}\)&lt;/span&gt; de votos de cada usuario en el cálculo de similitud, es decir&lt;/p&gt;
 &lt;div class="math"&gt;$$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})(r_{u,j}-\bar{r}_{u}) }{ \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})^2} \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})^2} }$$&lt;/div&gt;
 &lt;p&gt;De los tres métodos indicados, es esta noción de similitud la que obtiene mejores resultados&lt;/p&gt;
 &lt;p&gt;&lt;img alt="IB-CF2" src="https://diegoquintanav.github.io/images/similarities.png" title="Similarities comparison" /&gt;&lt;/p&gt;
-&lt;h2 id="otra-propuesta-de-clasificacion"&gt;Otra propuesta de clasificación&lt;/h2&gt;
+&lt;h2&gt;Otra propuesta de clasificación&lt;/h2&gt;
 &lt;p&gt;También es posible dividir los &lt;em&gt;SR&lt;/em&gt; en cuatro grandes grupos, con base en&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;El tipo de datos de entrada que utilizan&lt;/li&gt;
@@ -4412,7 +4261,7 @@ implica entonces el cómo se completa inicialmente esta información. Esto tambi
 &lt;li&gt;Los métodos algorítmicos usados para producir recomendaciones&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Estos son&lt;/p&gt;
-&lt;h3 id="basados-en-reglas-rule-based"&gt;Basados en reglas (&lt;em&gt;Rule based&lt;/em&gt;)&lt;/h3&gt;
+&lt;h3&gt;Basados en reglas (&lt;em&gt;Rule based&lt;/em&gt;)&lt;/h3&gt;
 &lt;p&gt;Las reglas son definidas manual y explícitamente en función de los objetivos del 
 &lt;em&gt;SR&lt;/em&gt;, por lo que tienden a ser más rígidos y a depender más de conocimiento 
 experto. Esto ocurre mucho en sitios de &lt;em&gt;e-commerce&lt;/em&gt;, donde los &lt;em&gt;SR&lt;/em&gt; reflejan en 
@@ -4420,7 +4269,7 @@ gran medida los intereses de la compañía.&lt;/p&gt;
 &lt;p&gt;La gran desventaja de estos &lt;em&gt;SR&lt;/em&gt; es que dependen de reglas explícitas, y que 
 alimentan los perfiles en base a la ingesta manual de intereses del usuario. Todo 
 esto incluye un sesgo que entorpece el dinamismo del &lt;em&gt;SR&lt;/em&gt; ante nuevos escenarios.&lt;/p&gt;
-&lt;h3 id="basados-en-contenido-content-based"&gt;Basados en contenido (&lt;em&gt;Content based&lt;/em&gt;)&lt;/h3&gt;
+&lt;h3&gt;Basados en contenido (&lt;em&gt;Content based&lt;/em&gt;)&lt;/h3&gt;
 &lt;p&gt;La principal característica de este &lt;em&gt;SR&lt;/em&gt; es que sus recomendaciones se basan en los 
 ítems que el usuario ha demostrado interés explícito anteriormente (ejemplo &lt;em&gt;"Add 
 to my wishlist&lt;/em&gt;"). &lt;/p&gt;
@@ -4433,7 +4282,7 @@ usuario para poder recomendar nuevos ítems, lo que produce una burbuja. &lt;/p&
 &lt;li&gt;&lt;em&gt;¿Cómo decido qué nuevos productos presentarle primero?&lt;/em&gt; &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;En estos casos los ítems más novedosos son la mejor elección.&lt;/p&gt;
-&lt;h3 id="filtrado-colaborativo-user-based"&gt;Filtrado colaborativo (&lt;em&gt;User based&lt;/em&gt;)&lt;/h3&gt;
+&lt;h3&gt;Filtrado colaborativo (&lt;em&gt;User based&lt;/em&gt;)&lt;/h3&gt;
 &lt;p&gt;Apuntan a resolver los problemas presentes en los dos &lt;em&gt;SR&lt;/em&gt; anteriores, utilizando 
 los datos como clicks y ratings de otros usuarios en la &lt;em&gt;vecindad&lt;/em&gt; del usuario 
 usando el &lt;em&gt;SR&lt;/em&gt;.&lt;/p&gt;
@@ -4459,7 +4308,7 @@ el &lt;em&gt;SR&lt;/em&gt; no puede recomendárselo a nadie.&lt;/p&gt;
 &lt;p&gt;Finalmente, uno de los pincipales problemas que presentan estos algoritmos es que 
 no son escalables. Por ejemplo, para el algoritmo KNN, la formación de &lt;em&gt;clusters&lt;/em&gt; obtiene un modelo utilizando todo el conjunto de datos a la vez, lo cual presenta
 problemas si pensamos que la generación de nuevos ratings y productos puede ocurrir con mucha frecuencia, incluso a diario.&lt;/p&gt;
-&lt;h4 id="clasificacion-de-recomendadores-basados-en-filtrado-colaborativo"&gt;Clasificación de recomendadores basados en filtrado colaborativo&lt;/h4&gt;
+&lt;h4&gt;Clasificación de recomendadores basados en filtrado colaborativo&lt;/h4&gt;
 &lt;p&gt;El filtrado colaborativo puede dividirse en dos grandes grupos, dependiendo sobre cuál es la entidad usada para establecer patrones o &lt;em&gt;clusters&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;filtrado colaborativo basado en usuarios (UB-CF)&lt;/li&gt;
@@ -4479,7 +4328,7 @@ factor se diluye entre todos los usuarios. Una forma de resolver es con la
 &lt;li&gt;&lt;a href="https://arxiv.org/abs/cs/0702144"&gt;Slope One&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;FunkSVD, &lt;a href="http://sifter.org/simon/journal/20061211.html"&gt;ganador del premio Netflix&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h5 id="user-based-collaborative-filtering-ub-cf"&gt;User Based Collaborative Filtering (UB-CF)&lt;/h5&gt;
+&lt;h5&gt;User Based Collaborative Filtering (UB-CF)&lt;/h5&gt;
 &lt;p&gt;Se puede resumir como&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;La predicción del rating sobre un ítem &lt;span class="math"&gt;\(i\)&lt;/span&gt; mejora mientras más vecinos &lt;span class="math"&gt;\(k\)&lt;/span&gt; de un 
@@ -4492,7 +4341,7 @@ factor se diluye entre todos los usuarios. Una forma de resolver es con la
    &lt;a href="https://stats.stackexchange.com/questions/219655/k-nn-computational-complexity"&gt;en función de cómo se recorren los elementos.&lt;/a&gt;) lo cual vuelve a KNN un algoritmo costoso cuando &lt;span class="math"&gt;\(n\)&lt;/span&gt; es lo suficientemente grande.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Un &lt;em&gt;SR&lt;/em&gt; alternativo al &lt;em&gt;User Based&lt;/em&gt; (UB-CF) es la del filtrado colaborativo basado en &lt;em&gt;ítems&lt;/em&gt;, o &lt;em&gt;Item based collaborative filtering (IB-CF)&lt;/em&gt;&lt;/p&gt;
-&lt;h5 id="item-based-collaborative-filtering-ib-cf"&gt;Item Based collaborative filtering (IB-CF)&lt;/h5&gt;
+&lt;h5&gt;Item Based collaborative filtering (IB-CF)&lt;/h5&gt;
 &lt;p&gt;Nacen de la necesidad de generar recomendaciones más rápidas sobre datasets masivos,
 para los cuales los algoritmos de tipo UB-CF no escalan bien. &lt;/p&gt;
 &lt;p&gt;Estas técnicas analizan primero la matriz de usuarios e ítems &lt;span class="math"&gt;\(M\)&lt;/span&gt; para identificar 
@@ -4505,14 +4354,14 @@ calificado positivamente. Dado que las relaciones entre ítems es &lt;em&gt;rela
 estática (a diferencia de los gustos de los usuarios, que son más dinámicos), estas 
 recomendaciones tienden a ser más estables en el tiempo.&lt;/p&gt;
 &lt;p&gt;De la misma manera que en el caso de UB-CF, algunas métricas de similitud pueden ser la &lt;em&gt;correlación entre ítems&lt;/em&gt;, o &lt;em&gt;similitud coseno&lt;/em&gt;. &lt;a href="http://files.grouplens.org/papers/www10_sarwar.pdf"&gt;Este paper&lt;/a&gt; hace una revisión de los métodos indicados, y concluye que este tipo de &lt;em&gt;SR&lt;/em&gt; poseen un rendimiento superior, además de proveer mejores recomendaciones que su compañero UB-CF.&lt;/p&gt;
-&lt;h3 id="sistemas-hibridos"&gt;Sistemas híbridos&lt;/h3&gt;
+&lt;h3&gt;Sistemas híbridos&lt;/h3&gt;
 &lt;p&gt;Los &lt;em&gt;SR&lt;/em&gt; basados en contenido y en filtrado colaborativo presentan sus propios problemas. Los sistemas híbridos apuntan a resolver estas limitaciones a través de
 combinaciones de otros &lt;em&gt;SR&lt;/em&gt;&lt;/p&gt;
-&lt;h2 id="a-continuacion"&gt;A continuación&lt;/h2&gt;
+&lt;h2&gt;A continuación&lt;/h2&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-3-ES.html"&gt;parte 3&lt;/a&gt; se verán los sistemas de recomendación basados en contenido con mayor detalle.&lt;/p&gt;
-&lt;h2 id="anexo-knn-y-la-maldicion-de-la-dimensionalidad"&gt;Anexo: KNN y la maldición de la dimensionalidad&lt;/h2&gt;
+&lt;h2&gt;Anexo: KNN y la maldición de la dimensionalidad&lt;/h2&gt;
 &lt;p&gt;(o en inglés, &lt;em&gt;curse of dimensionality&lt;/em&gt;)&lt;/p&gt;
-&lt;h3 id="k-nearest-neighbors-knn"&gt;K &lt;em&gt;Nearest neighbors&lt;/em&gt; (KNN)&lt;/h3&gt;
+&lt;h3&gt;K &lt;em&gt;Nearest neighbors&lt;/em&gt; (KNN)&lt;/h3&gt;
 &lt;p&gt;Este algoritmo crea modelos de grupos o &lt;em&gt;clusters&lt;/em&gt; de usuarios o ítem que guardan 
 relación entre sí de acuerdo a una métrica preestablecida. La idea de KNN en el 
 contexto de recomendación es, en términos simples:&lt;/p&gt;
@@ -4533,7 +4382,7 @@ usuario sobre un item a predecir, es la suma ponderada de los &lt;em&gt;ratings&
 - &lt;span class="math"&gt;\(\bar{r}_u\)&lt;/span&gt; es el promedio de votos del usuario &lt;span class="math"&gt;\(u\)&lt;/span&gt;
 - &lt;span class="math"&gt;\((r_{j,i}-\bar{r}_j)\)&lt;/span&gt; es el voto de cada usuario o vecino sobre el ítem &lt;span class="math"&gt;\(i\)&lt;/span&gt; menos el promedio de sus votos
 - &lt;span class="math"&gt;\(w(u,j)\)&lt;/span&gt; es una función que asigna un peso a cada una de estas valoraciones.&lt;/p&gt;
-&lt;h2 id="la-maldicion-de-la-dimensionalidad-o-curse-of-dimensionality"&gt;La maldición de la dimensionalidad (o &lt;em&gt;Curse of dimensionality&lt;/em&gt;)&lt;/h2&gt;
+&lt;h2&gt;La maldición de la dimensionalidad (o &lt;em&gt;Curse of dimensionality&lt;/em&gt;)&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="curse-of-dimenzionality" src="https://diegoquintanav.github.io/images/curse-of-dimensionality.png" title="omgsocursed" /&gt;&lt;/p&gt;
 &lt;p&gt;(Kudos al &lt;a href="https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html"&gt;maravilloso ser humano que hizo la imagen.&lt;/a&gt;)&lt;/p&gt;
 &lt;p&gt;Básicamente se trata de lo siguiente: Mientras más características tengan los 
@@ -4617,25 +4466,12 @@ un dolor de estómago antes de poder decidir.&lt;/p&gt;
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</summary><category term="recsys"></category></entry><entry><title>Sistemas recomendadores, parte 1</title><link href="https://diegoquintanav.github.io/recsys-1-ES.html" rel="alternate"></link><published>2018-11-24T13:10:00-06:00</published><updated>2018-11-24T13:10:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-10-26:recsys-1-ES.html</id><summary type="html">&lt;div class="toc"&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="#por-que-esta-serie"&gt;Por qué esta serie&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#indice"&gt;Índice&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#sistemas-de-recomendacion"&gt;Sistemas de recomendación&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#modelando-la-confianza"&gt;Modelando la confianza&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#por-que-es-bueno-entender-los-sistemas-de-recomendacion"&gt;¿Por qué es bueno entender los sistemas de recomendación?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#definicion-formal-del-problema"&gt;Definición formal del problema&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#metricas-de-prediccion"&gt;Métricas de predicción&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#conclusiones"&gt;Conclusiones&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#a-continuacion"&gt;A continuación&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;h1 id="por-que-esta-serie"&gt;Por qué esta serie&lt;/h1&gt;
+&lt;/script&gt;</summary><category term="recsys"></category></entry><entry><title>Sistemas recomendadores, parte 1</title><link href="https://diegoquintanav.github.io/recsys-1-ES.html" rel="alternate"></link><published>2018-11-24T13:10:00-06:00</published><updated>2018-11-24T13:10:00-06:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2017-10-26:recsys-1-ES.html</id><summary type="html">&lt;h1&gt;Por qué esta serie&lt;/h1&gt;
 &lt;p&gt;Me encuentro tomando el módulo de sistemas de recomendación en la PUC
 (&lt;a href="https://educacionprofesional.ing.uc.cl/?diplomado=diplomado-big-data"&gt;programa&lt;/a&gt;)
 con el profesor &lt;a href="http://dparra.sitios.ing.uc.cl/"&gt;Dennis Parra&lt;/a&gt; y como tarea del
  módulo se solicitó crear un post por clase, a modo de resumen.&lt;/p&gt;
-&lt;h1 id="indice"&gt;Índice&lt;/h1&gt;
+&lt;h2&gt;Índice&lt;/h2&gt;
 &lt;p&gt;La serie consiste de cinco posts, los que se resumen de la siguiente manera&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-2-ES.html"&gt;parte 2&lt;/a&gt; se revisan las distintas
@@ -4650,7 +4486,7 @@ con el profesor &lt;a href="http://dparra.sitios.ing.uc.cl/"&gt;Dennis Parra&lt;
   de factorización, un tipo de implementación de máquinas de vectores de
   soporte que da excelentes resultados en aplicaciones de recomendación y es extensible a otras áreas.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1 id="sistemas-de-recomendacion"&gt;Sistemas de recomendación&lt;/h1&gt;
+&lt;h2&gt;Sistemas de recomendación&lt;/h2&gt;
 &lt;p&gt;Las recomendaciones son una parte importante de nuestra sociedad.
 Seguimos recomendaciones de nuestros padres, amigos y compañeros. Las
 seguimos porque de alguna forma, confiamos en ellos, su experiencia y
@@ -4670,7 +4506,7 @@ gente que tiene un interés especial sobre algún tema.&lt;/p&gt;
 resulta práctico leer todas las reseñas en internet. Debe existir algún tipo de
 &lt;em&gt;cuantificar&lt;/em&gt; las recomendaciones, y alguna estrategia para &lt;em&gt;validarlas&lt;/em&gt;. 
 No todas las recomendaciones son &lt;em&gt;buenas&lt;/em&gt; desde el punto de vista de cada uno.&lt;/p&gt;
-&lt;h1 id="modelando-la-confianza"&gt;Modelando la confianza&lt;/h1&gt;
+&lt;h2&gt;Modelando la confianza&lt;/h2&gt;
 &lt;p&gt;La forma más elemental de validar algo en internet a través de votaciones, &lt;em&gt;ratings&lt;/em&gt;
 o &lt;em&gt;likes&lt;/em&gt;. Esto nos permite tratar las opiniones de la gente como números, y permite
 además extraer promedios, varianzas, &lt;em&gt;y todas esas cosas&lt;/em&gt;.&lt;/p&gt;
@@ -4694,7 +4530,7 @@ anteriores,&lt;/p&gt;
  de ellas, al menos un 20% no había sido reproducida ni siquiera una vez. &lt;a href="https://open.spotify.com/album/0ke5cFySqu1XkaVM4RWUZk"&gt;Quizás algo commo esto&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;En el 2018 Facebook tiene alrededor de &lt;a href="https://www.statista.com/statistics/264810/number-of-monthly-active-facebook-users-worldwide/"&gt;2 billones de usuarios activos&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1 id="por-que-es-bueno-entender-los-sistemas-de-recomendacion"&gt;¿Por qué es bueno entender los sistemas de recomendación?&lt;/h1&gt;
+&lt;h2&gt;¿Por qué es bueno entender los sistemas de recomendación?&lt;/h2&gt;
 &lt;p&gt;En general estos servicios son gratuitos. Nadie paga por usar Facebook.
 Conocida es la frase &lt;a href="https://www.reddit.com/r/explainlikeimfive/comments/2m3f05/eli5_if_something_is_free_you_are_the_product/"&gt;&lt;em&gt;"If you are not paying, then &lt;strong&gt;you&lt;/strong&gt; are the product"&lt;/em&gt;&lt;/a&gt;,
 que se traduce como &lt;em&gt;"Si tú no estás pagando por el producto, es porque tú eres el producto"&lt;/em&gt;&lt;/p&gt;
@@ -4710,7 +4546,7 @@ que se traduce como &lt;em&gt;"Si tú no estás pagando por el producto, es porq
 &lt;p&gt;Finalmente, los sistemas de recomendación son una manifestación de
 inteligencia colectiva, lo que es bueno: Más gente involucrada en algo es mejor. 
 Lo importante es entender cómo funcionan estos modelos y así, eventualmente, poder crear modelos propios.&lt;/p&gt;
-&lt;h1 id="definicion-formal-del-problema"&gt;Definición formal del problema&lt;/h1&gt;
+&lt;h2&gt;Definición formal del problema&lt;/h2&gt;
 &lt;p&gt;Siguiendo la formalización presentada en &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&amp;amp;rep=rep1&amp;amp;type=pdf"&gt;este paper&lt;/a&gt;,
 para un conjunto de usuarios &lt;span class="math"&gt;\(U\)&lt;/span&gt; y un conjunto de items &lt;span class="math"&gt;\(I\)&lt;/span&gt;, se desea obtener un
  conjunto recomendado de items &lt;span class="math"&gt;\(R\)&lt;/span&gt;, tal que&lt;/p&gt;
@@ -4725,7 +4561,7 @@ para un conjunto de usuarios &lt;span class="math"&gt;\(U\)&lt;/span&gt; y un co
 &lt;li&gt;&lt;em&gt;Elegir el ítem o el conjunto de ítems tal que maximicen &lt;span class="math"&gt;\(R\)&lt;/span&gt; i.e.&lt;/em&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;div class="math"&gt;$$\forall u \in U, i = \mbox{argmax } R(i,u) \mbox{, }  i \in I$$&lt;/div&gt;
-&lt;h1 id="metricas-de-prediccion"&gt;Métricas de predicción&lt;/h1&gt;
+&lt;h2&gt;Métricas de predicción&lt;/h2&gt;
 &lt;p&gt;Podemos cuantificar el error entre el valor esperado &lt;span class="math"&gt;\(\hat{r}\)&lt;/span&gt; y la predicción &lt;span class="math"&gt;\(r\)&lt;/span&gt;, de las cuales se destacan&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;RMSE, o &lt;em&gt;root mean square error&lt;/em&gt; como&lt;/li&gt;
@@ -4741,7 +4577,7 @@ para un conjunto de usuarios &lt;span class="math"&gt;\(U\)&lt;/span&gt; y un co
 &lt;div class="math"&gt;$$\frac{\sum_{i=1}^{n}|\hat{r}_{ui}-r_{ui}|}{n}$$&lt;/div&gt;
 &lt;p&gt;Estas métricas basadas en el error son de uso frecuente en distintas áreas como
  la estadística y &lt;em&gt;machine learning&lt;/em&gt;.&lt;/p&gt;
-&lt;h1 id="conclusiones"&gt;Conclusiones&lt;/h1&gt;
+&lt;h2&gt;Conclusiones&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Los métodos de recomendación buscan lidiar con la sobrecarga de información,
 y reducen el espacio de búsqueda en grupos muy grandes de ítems.&lt;/li&gt;
@@ -4749,7 +4585,7 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.&lt;/li&gt;
 &lt;li&gt;Una forma de evaluar un sistema recomendador es a través del error en las
   predicciones realizadas&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1 id="a-continuacion"&gt;A continuación&lt;/h1&gt;
+&lt;h2&gt;A continuación&lt;/h2&gt;
 &lt;p&gt;En la &lt;a href="https://diegoquintanav.github.io/recsys-2-ES.html"&gt;parte 2&lt;/a&gt; se verán otras cosas, entre ellas, &lt;strong&gt;tipos de clasificadores.&lt;/strong&gt;&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -4811,9 +4647,9 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.&lt;/li&gt;
 
 &lt;p&gt;I've decided to start a blog, (again, for the &lt;em&gt;nth&lt;/em&gt; time) and this time I am giving a try on &lt;a href="https://jekyllrb.com/"&gt;jekyll&lt;/a&gt; and the &lt;a href="https://pages.github.com"&gt;github pages&lt;/a&gt;, since they seem to do quite a fine job.&lt;/p&gt;
 &lt;p&gt;Setting things up was easy. I'm not going to copy and paste the guides already present in both sites, since it won't add anything. Instead I will try to share a bit of the troubleshooting I had to do during the process.&lt;/p&gt;
-&lt;h1 id="first-steps"&gt;First steps&lt;/h1&gt;
+&lt;h1&gt;First steps&lt;/h1&gt;
 &lt;p&gt;Okay, it took me about nothing to have my site showing a humble &lt;em&gt;Hello World&lt;/em&gt; in my &lt;code&gt;index.html&lt;/code&gt; on my site.&lt;/p&gt;
-&lt;h2 id="creating-your-personal-page"&gt;Creating your personal page&lt;/h2&gt;
+&lt;h2&gt;Creating your personal page&lt;/h2&gt;
 &lt;p&gt;You can create a site for yourself or for some repo you own. I'm dealing with the first case for now: A site for myself.&lt;/p&gt;
 &lt;p&gt;Long story short, what I did was:&lt;/p&gt;
 &lt;ol&gt;
@@ -4827,11 +4663,10 @@ Before doing anything, I believe it's a good thing to understand &lt;em&gt;why&l
 &lt;p&gt;I tried using Wordpress, which has a lot of resources to get up and running right out of the box. It is also free, which is nice. In my case, I wanted to have more control over the stuff I was writing, namely be able to deploy my stuff whenever I want and to be able to change stuff from the very core, so to speak. Plus, this should work as a first experience running a site. Github pages may be too &lt;em&gt;vanilla&lt;/em&gt; for the hardcore developer, but is a very balanced solution for enthusiasts like me.&lt;/p&gt;
 &lt;p&gt;Now there are two ways it seems, to get started. The first one implies creating the folder structure manually, and this process is more or less explained in &lt;a href="http://jmcglone.com/guides/github-pages/"&gt;this fine post&lt;/a&gt; which is also referenced by the &lt;strong&gt;Jekyll&lt;/strong&gt; site.&lt;/p&gt;
 &lt;p&gt;What I didn't like about the post, though, is that doing things manually usually imply forgetting about things. I prefer to stick with the solution using &lt;strong&gt;Bundle&lt;/strong&gt; and &lt;strong&gt;Jekyll&lt;/strong&gt; from the terminal, which is more or less described &lt;a href="https://jekyllrb.com/docs/installation/"&gt;here&lt;/a&gt; and &lt;a href="https://jekyllrb.com/docs/quickstart/"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="issues"&gt;Issues&lt;/h2&gt;
-&lt;h3 id="new-posts-are-not-being-displayed"&gt;New posts are not being displayed&lt;/h3&gt;
+&lt;h2&gt;Issues&lt;/h2&gt;
+&lt;h3&gt;New posts are not being displayed&lt;/h3&gt;
 &lt;p&gt;If you deployed &lt;strong&gt;Jekyll&lt;/strong&gt; correctly, it should use the &lt;code&gt;minima&lt;/code&gt; template by default. You should be able to add more posts inside the folder &lt;code&gt;_posts&lt;/code&gt; and see them instantly on your &lt;code&gt;localhost&lt;/code&gt;. That didn't happen in my case. A short way to debug this issue that solved my problem required the &lt;code&gt;--verbose&lt;/code&gt; flag when firing up the service.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;bash
-$ sudo bundle exec jekyll serve --verbose
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo bundle &lt;span class="nb"&gt;exec&lt;/span&gt; jekyll serve --verbose
   Logging at level: debug
 Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
   Logging at level: debug
@@ -4846,11 +4681,14 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
            Reading: _posts/2017-10-27-on-jekyll.md
            Reading: _posts/2017-10-26-welcome-to-jekyll.markdown
           Skipping: _posts/2017-10-27-on-jekyll.md has a future date
-        Generating: JekyllFeed::Generator finished in 0.000744857 seconds.
-...&lt;/code&gt;&lt;/p&gt;
+        Generating: JekyllFeed::Generator finished in &lt;span class="m"&gt;0&lt;/span&gt;.000744857 seconds.
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;In line &lt;code&gt;15&lt;/code&gt; you can observe the &lt;code&gt;Skipping: _posts/2017-10-27-on-jekyll.md has a future date&lt;/code&gt;. Changing the date solved the problem. About the &lt;code&gt;sudo&lt;/code&gt; thing, consider it a malpractice. The ruby environment manager &lt;a href="https://github.com/rbenv/rbenv"&gt;&lt;code&gt;rbenv&lt;/code&gt;&lt;/a&gt; fought bravely against the &lt;a href="https://anaconda.org/"&gt;Anaconda's&lt;/a&gt; &lt;code&gt;gcc&lt;/code&gt; dependencies and I just could not manage to have a ruby instance outside of &lt;code&gt;root&lt;/code&gt;. &lt;em&gt;Sorry&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Other reasons may involve a bad filename formatting or the presence of colons &lt;code&gt;:&lt;/code&gt; in it. You can read more about this &lt;a href="https://stackoverflow.com/questions/30625044/jekyll-post-not-generated"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id="using-latex-equations"&gt;Using Latex equations&lt;/h3&gt;
+&lt;h3&gt;Using Latex equations&lt;/h3&gt;
 &lt;p&gt;This was not trivial for me. If you follow the &lt;a href="https://jekyllrb.com/docs/extras/"&gt;guidelines&lt;/a&gt; inside the documentation, you should end in the tutorial.&lt;/p&gt;
 &lt;p&gt;It should be something easy. Copying and pasting the CDN in the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; of the document. &lt;em&gt;But where is this file?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;This was not obvious to me.&lt;/p&gt;
@@ -4870,11 +4708,13 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;code&gt;latex
-$$\text{A } \LaTeX \text{ equation.}$$&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sb"&gt;$$&lt;/span&gt;&lt;span class="nv"&gt;\text&lt;/span&gt;&lt;span class="nb"&gt;{A } &lt;/span&gt;&lt;span class="nv"&gt;\LaTeX&lt;/span&gt;&lt;span class="nb"&gt; &lt;/span&gt;&lt;span class="nv"&gt;\text&lt;/span&gt;&lt;span class="nb"&gt;{ equation.}&lt;/span&gt;&lt;span class="s"&gt;$$&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;div class="math"&gt;$$\text{A } \LaTeX \text{ equation.}$$&lt;/div&gt;
 &lt;p&gt;Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using &lt;a href="https://kramdown.gettalong.org/syntax.html#math-blocks"&gt;kramdown&lt;/a&gt; which is set by default.&lt;/p&gt;
-&lt;h1 id="next-steps"&gt;Next Steps&lt;/h1&gt;
+&lt;h1&gt;Next Steps&lt;/h1&gt;
 &lt;p&gt;I think there are a lot of other things to play around, which I will document and comment in the future posts. Not yet. This is my &lt;em&gt;MVP&lt;/em&gt; for now. Next iteration should include:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Comments section. Might prove useful somewhere.&lt;/li&gt;

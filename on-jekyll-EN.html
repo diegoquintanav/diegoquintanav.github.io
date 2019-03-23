@@ -99,9 +99,9 @@
 
 <p>I've decided to start a blog, (again, for the <em>nth</em> time) and this time I am giving a try on <a href="https://jekyllrb.com/">jekyll</a> and the <a href="https://pages.github.com">github pages</a>, since they seem to do quite a fine job.</p>
 <p>Setting things up was easy. I'm not going to copy and paste the guides already present in both sites, since it won't add anything. Instead I will try to share a bit of the troubleshooting I had to do during the process.</p>
-<h1 id="first-steps">First steps</h1>
+<h1>First steps</h1>
 <p>Okay, it took me about nothing to have my site showing a humble <em>Hello World</em> in my <code>index.html</code> on my site.</p>
-<h2 id="creating-your-personal-page">Creating your personal page</h2>
+<h2>Creating your personal page</h2>
 <p>You can create a site for yourself or for some repo you own. I'm dealing with the first case for now: A site for myself.</p>
 <p>Long story short, what I did was:</p>
 <ol>
@@ -115,11 +115,10 @@ Before doing anything, I believe it's a good thing to understand <em>why</em> sh
 <p>I tried using Wordpress, which has a lot of resources to get up and running right out of the box. It is also free, which is nice. In my case, I wanted to have more control over the stuff I was writing, namely be able to deploy my stuff whenever I want and to be able to change stuff from the very core, so to speak. Plus, this should work as a first experience running a site. Github pages may be too <em>vanilla</em> for the hardcore developer, but is a very balanced solution for enthusiasts like me.</p>
 <p>Now there are two ways it seems, to get started. The first one implies creating the folder structure manually, and this process is more or less explained in <a href="http://jmcglone.com/guides/github-pages/">this fine post</a> which is also referenced by the <strong>Jekyll</strong> site.</p>
 <p>What I didn't like about the post, though, is that doing things manually usually imply forgetting about things. I prefer to stick with the solution using <strong>Bundle</strong> and <strong>Jekyll</strong> from the terminal, which is more or less described <a href="https://jekyllrb.com/docs/installation/">here</a> and <a href="https://jekyllrb.com/docs/quickstart/">here</a>.</p>
-<h2 id="issues">Issues</h2>
-<h3 id="new-posts-are-not-being-displayed">New posts are not being displayed</h3>
+<h2>Issues</h2>
+<h3>New posts are not being displayed</h3>
 <p>If you deployed <strong>Jekyll</strong> correctly, it should use the <code>minima</code> template by default. You should be able to add more posts inside the folder <code>_posts</code> and see them instantly on your <code>localhost</code>. That didn't happen in my case. A short way to debug this issue that solved my problem required the <code>--verbose</code> flag when firing up the service.</p>
-<p><code>bash
-$ sudo bundle exec jekyll serve --verbose
+<div class="highlight"><pre><span></span>$ sudo bundle <span class="nb">exec</span> jekyll serve --verbose
   Logging at level: debug
 Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
   Logging at level: debug
@@ -134,11 +133,14 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
            Reading: _posts/2017-10-27-on-jekyll.md
            Reading: _posts/2017-10-26-welcome-to-jekyll.markdown
           Skipping: _posts/2017-10-27-on-jekyll.md has a future date
-        Generating: JekyllFeed::Generator finished in 0.000744857 seconds.
-...</code></p>
+        Generating: JekyllFeed::Generator finished in <span class="m">0</span>.000744857 seconds.
+...
+</pre></div>
+
+
 <p>In line <code>15</code> you can observe the <code>Skipping: _posts/2017-10-27-on-jekyll.md has a future date</code>. Changing the date solved the problem. About the <code>sudo</code> thing, consider it a malpractice. The ruby environment manager <a href="https://github.com/rbenv/rbenv"><code>rbenv</code></a> fought bravely against the <a href="https://anaconda.org/">Anaconda's</a> <code>gcc</code> dependencies and I just could not manage to have a ruby instance outside of <code>root</code>. <em>Sorry</em>.</p>
 <p>Other reasons may involve a bad filename formatting or the presence of colons <code>:</code> in it. You can read more about this <a href="https://stackoverflow.com/questions/30625044/jekyll-post-not-generated">here</a>.</p>
-<h3 id="using-latex-equations">Using Latex equations</h3>
+<h3>Using Latex equations</h3>
 <p>This was not trivial for me. If you follow the <a href="https://jekyllrb.com/docs/extras/">guidelines</a> inside the documentation, you should end in the tutorial.</p>
 <p>It should be something easy. Copying and pasting the CDN in the <code>&lt;head&gt;</code> of the document. <em>But where is this file?</em></p>
 <p>This was not obvious to me.</p>
@@ -158,11 +160,13 @@ Configuration file: /home/diego/Documents/diegoquintanav.github.io/_config.yml
 </ul>
 </li>
 </ol>
-<p><code>latex
-$$\text{A } \LaTeX \text{ equation.}$$</code></p>
+<div class="highlight"><pre><span></span><span class="sb">$$</span><span class="nv">\text</span><span class="nb">{A } </span><span class="nv">\LaTeX</span><span class="nb"> </span><span class="nv">\text</span><span class="nb">{ equation.}</span><span class="s">$$</span>
+</pre></div>
+
+
 <div class="math">$$\text{A } \LaTeX \text{ equation.}$$</div>
 <p>Other implementation details depend on the Markdown compiler being used, in my case (and odds that yours too if you are starting with jekyll) I'm using <a href="https://kramdown.gettalong.org/syntax.html#math-blocks">kramdown</a> which is set by default.</p>
-<h1 id="next-steps">Next Steps</h1>
+<h1>Next Steps</h1>
 <p>I think there are a lot of other things to play around, which I will document and comment in the future posts. Not yet. This is my <em>MVP</em> for now. Next iteration should include:</p>
 <ul>
 <li>Comments section. Might prove useful somewhere.</li>

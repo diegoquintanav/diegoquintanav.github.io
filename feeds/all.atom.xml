@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>On the shoulders of giants</title><link href="https://diegoquintanav.github.io/" rel="alternate"></link><link href="https://diegoquintanav.github.io/feeds/all.atom.xml" rel="self"></link><id>https://diegoquintanav.github.io/</id><updated>2019-03-14T21:10:00+01:00</updated><entry><title>Dumping postgres databases with Docker</title><link href="https://diegoquintanav.github.io/dumping-postgres-db-with-docker.html" rel="alternate"></link><published>2019-03-14T21:10:00+01:00</published><updated>2019-03-14T21:10:00+01:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2019-03-14:dumping-postgres-db-with-docker.html</id><summary type="html">&lt;p&gt;&lt;em&gt;It's been a while&lt;/em&gt; since I posted something. I started living in another country,
-and time has become scarce. This is a short post from my &lt;em&gt;developer journal&lt;/em&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>On the shoulders of giants</title><link href="https://diegoquintanav.github.io/" rel="alternate"></link><link href="https://diegoquintanav.github.io/feeds/all.atom.xml" rel="self"></link><id>https://diegoquintanav.github.io/</id><updated>2019-03-14T21:10:00+01:00</updated><entry><title>Dumping postgres databases with Docker</title><link href="https://diegoquintanav.github.io/dumping-postgres-db-with-docker.html" rel="alternate"></link><published>2019-03-14T21:10:00+01:00</published><updated>2019-03-14T21:10:00+01:00</updated><author><name>Diego Quintana</name></author><id>tag:diegoquintanav.github.io,2019-03-14:dumping-postgres-db-with-docker.html</id><summary type="html">&lt;p&gt;&lt;em&gt;It's been a while&lt;/em&gt; since I posted something. I started living in another country, and time has become scarce. This is a short post from my &lt;em&gt;developer journal&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Docker&lt;/code&gt; and &lt;code&gt;postgres&lt;/code&gt; work really good together. If you don't believe me, check their image &lt;a href="https://hub.docker.com/_/postgres"&gt;documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Take for instance, the barebones example given there:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# Use postgres/example user/password credentials
@@ -37,8 +36,8 @@ file as the service &lt;code&gt;db&lt;/code&gt;, and stores the result in the ho
 &lt;li&gt;copying the file or mounting it in the container and importing it, from &lt;em&gt;inside the container&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;Pipe the file from the host to the container through &lt;code&gt;stdin&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;I like the second approach, as it don't require modifying the files inside the container:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gunzip -c path/to/db-backup.sql.gz &lt;span class="p"&gt;|&lt;/span&gt; docker-compose &lt;span class="nb"&gt;exec&lt;/span&gt; db -T psql -U postgres postgres
+&lt;p&gt;I personally like the second approach better, as it doesn't require modifying any files inside the container:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gunzip -c path/to/db-backup.sql.gz &lt;span class="p"&gt;|&lt;/span&gt; docker-compose &lt;span class="nb"&gt;exec&lt;/span&gt; -T db psql -U postgres postgres
 &lt;/pre&gt;&lt;/div&gt;
 
 

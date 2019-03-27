@@ -93,8 +93,7 @@
       </ul>
     </header>
     <div class="content">
-      <p><em>It's been a while</em> since I posted something. I started living in another country,
-and time has become scarce. This is a short post from my <em>developer journal</em>.</p>
+      <p><em>It's been a while</em> since I posted something. I started living in another country, and time has become scarce. This is a short post from my <em>developer journal</em>.</p>
 <p><code>Docker</code> and <code>postgres</code> work really good together. If you don't believe me, check their image <a href="https://hub.docker.com/_/postgres">documentation</a>.</p>
 <p>Take for instance, the barebones example given there:</p>
 <div class="highlight"><pre><span></span># Use postgres/example user/password credentials
@@ -131,8 +130,8 @@ file as the service <code>db</code>, and stores the result in the host as a <cod
 <li>copying the file or mounting it in the container and importing it, from <em>inside the container</em></li>
 <li>Pipe the file from the host to the container through <code>stdin</code></li>
 </ul>
-<p>I like the second approach, as it don't require modifying the files inside the container:</p>
-<div class="highlight"><pre><span></span>gunzip -c path/to/db-backup.sql.gz <span class="p">|</span> docker-compose <span class="nb">exec</span> db -T psql -U postgres postgres
+<p>I personally like the second approach better, as it doesn't require modifying any files inside the container:</p>
+<div class="highlight"><pre><span></span>gunzip -c path/to/db-backup.sql.gz <span class="p">|</span> docker-compose <span class="nb">exec</span> -T db psql -U postgres postgres
 </pre></div>
 
 

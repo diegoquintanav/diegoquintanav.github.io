@@ -8,39 +8,21 @@
 
   <title>  Sistemas recomendadores, parte 1 | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/recsys-1-ES.html">
+  <link rel="canonical" href="/recsys-1-ES.html">
 
-    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
-  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
-        href="https://diegoquintanav.github.io/feeds/recommender-systems.rss.xml">  
+  
   <meta name="description" content="Primera parte de sistemas recomendadores">
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      a.async = 1;
-      a.src = g;
-      m = s.getElementsByTagName(o)[0];
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-108898322-1', 'auto');
-    ga('send', 'pageview');
-  </script>
 
 
 </head>
@@ -50,17 +32,17 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="https://diegoquintanav.github.io/">
-        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/contact-EN.html">Contact</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/resume-EN.html">Resume</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -85,11 +67,11 @@
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="https://diegoquintanav.github.io/category/recommender-systems.html">Recommender Systems</a>
+          <a href="/category/recommender-systems.html">Recommender Systems</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
-              <a href="https://diegoquintanav.github.io/tag/recsys.html">#recsys</a>          </li>
+              <a href="/tag/recsys.html">#recsys</a>          </li>
       </ul>
     </header>
     <div class="content">
@@ -101,7 +83,7 @@ con el profesor <a href="http://dparra.sitios.ing.uc.cl/">Dennis Parra</a> y com
 <h2>Índice</h2>
 <p>La serie consiste de cinco posts, los que se resumen de la siguiente manera</p>
 <ul>
-<li>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se revisan las distintas
+<li>En la <a href="/recsys-2-ES.html">parte 2</a> se revisan las distintas
   clasificaciones de sistemas recomendadores o <em>SR</em>, con énfasis en el <em>filtrado colaborativo</em></li>
 <li>En la parte 3 continuamos con la clasificación
   de sistemas recomendadores, y revisamos los <em>SR</em> basados en contenido y el análisis de texto.</li>
@@ -213,7 +195,7 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
   predicciones realizadas</li>
 </ul>
 <h2>A continuación</h2>
-<p>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se verán otras cosas, entre ellas, <strong>tipos de clasificadores.</strong></p>
+<p>En la <a href="/recsys-2-ES.html">parte 2</a> se verán otras cosas, entre ellas, <strong>tipos de clasificadores.</strong></p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -271,24 +253,6 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
 </script>
     </div>
   </article>
-  <hr>
-  <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/recsys-1-ES.html';
-      this.page.identifier = 'recsys-1';
-    };
-    (function() {
-      var d = document;
-      var s = d.createElement('script');
-      s.src = '//bluesmonk.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript class="text-muted">
-    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
-  </noscript>
     </div>
   </div>
 
@@ -296,9 +260,9 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>

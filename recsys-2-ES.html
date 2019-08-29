@@ -8,39 +8,21 @@
 
   <title>  Sistemas recomendadores, parte 2 | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/recsys-2-ES.html">
+  <link rel="canonical" href="/recsys-2-ES.html">
 
-    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
-  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
-        href="https://diegoquintanav.github.io/feeds/recommender-systems.rss.xml">  
+  
   <meta name="description" content="Segunda parte de sistemas recomendadores">
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      a.async = 1;
-      a.src = g;
-      m = s.getElementsByTagName(o)[0];
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-108898322-1', 'auto');
-    ga('send', 'pageview');
-  </script>
 
 
 </head>
@@ -50,17 +32,17 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="https://diegoquintanav.github.io/">
-        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/resume-EN.html">Resume</a></li>
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/resume-EN.html">Resume</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -85,16 +67,16 @@
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="https://diegoquintanav.github.io/category/recommender-systems.html">Recommender Systems</a>
+          <a href="/category/recommender-systems.html">Recommender Systems</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
-              <a href="https://diegoquintanav.github.io/tag/recsys.html">#recsys</a>          </li>
+              <a href="/tag/recsys.html">#recsys</a>          </li>
       </ul>
     </header>
     <div class="content">
       <h1><em>Previously</em></h1>
-<p>En la <a href="https://diegoquintanav.github.io/recsys-1-ES.html">parte 1</a> se vieron varios aspectos elementales
+<p>En la <a href="/recsys-1-ES.html">parte 1</a> se vieron varios aspectos elementales
 de los sistemas recomendadores. El concepto del error, Un modelo inicial de una
 recomendación, y la necesidad que cubren estos sistemas. 
 Mencionamos <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&amp;rep=rep1&amp;type=pdf">este paper</a> 
@@ -146,12 +128,12 @@ implica entonces el cómo se completa inicialmente esta información. Esto tambi
 <p>Una métrica de similitud se obtiene a través de la correlación de Pearson. Esta permite aislar los casos donde ocurra <em>co-validación</em> i.e. aquellos casos en que el usuario ha validado ítems <span class="math">\(i\)</span> y <span class="math">\(j\)</span> (ver imagen, obtenida del paper).</p>
 <div class="math">$$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})(r_{u,j}-\bar{r}_{j}) }{ \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})^2} \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{j})^2} }$$</div>
 <p>Donde <span class="math">\(r_{u,j}\)</span> es el rating del usuario <span class="math">\(u\)</span> sobre el ítem <span class="math">\(j\)</span> y <span class="math">\(\bar{r}_{j}\)</span> es el <em>rating</em> promedio sobre el otro ítem.</p>
-<p><img alt="IB-CF1" src="https://diegoquintanav.github.io/images/CF-IB_1.png" title="IB-CF" /></p>
+<p><img alt="IB-CF1" src="/images/CF-IB_1.png" title="IB-CF" /></p>
 <h4>Similitud coseno ajustada</h4>
 <p>Se obtiene incorporando el promedio <span class="math">\(\bar{r}_{u}\)</span> de votos de cada usuario en el cálculo de similitud, es decir</p>
 <div class="math">$$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})(r_{u,j}-\bar{r}_{u}) }{ \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})^2} \sqrt{\sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})^2} }$$</div>
 <p>De los tres métodos indicados, es esta noción de similitud la que obtiene mejores resultados</p>
-<p><img alt="IB-CF2" src="https://diegoquintanav.github.io/images/similarities.png" title="Similarities comparison" /></p>
+<p><img alt="IB-CF2" src="/images/similarities.png" title="Similarities comparison" /></p>
 <h2>Otra propuesta de clasificación</h2>
 <p>También es posible dividir los <em>SR</em> en cuatro grandes grupos, con base en</p>
 <ul>
@@ -257,7 +239,7 @@ recomendaciones tienden a ser más estables en el tiempo.</p>
 <p>Los <em>SR</em> basados en contenido y en filtrado colaborativo presentan sus propios problemas. Los sistemas híbridos apuntan a resolver estas limitaciones a través de
 combinaciones de otros <em>SR</em></p>
 <h2>A continuación</h2>
-<p>En la <a href="https://diegoquintanav.github.io/recsys-3-ES.html">parte 3</a> se verán los sistemas de recomendación basados en contenido con mayor detalle.</p>
+<p>En la <a href="/recsys-3-ES.html">parte 3</a> se verán los sistemas de recomendación basados en contenido con mayor detalle.</p>
 <h2>Anexo: KNN y la maldición de la dimensionalidad</h2>
 <p>(o en inglés, <em>curse of dimensionality</em>)</p>
 <h3>K <em>Nearest neighbors</em> (KNN)</h3>
@@ -282,7 +264,7 @@ usuario sobre un item a predecir, es la suma ponderada de los <em>ratings</em> d
 - <span class="math">\((r_{j,i}-\bar{r}_j)\)</span> es el voto de cada usuario o vecino sobre el ítem <span class="math">\(i\)</span> menos el promedio de sus votos
 - <span class="math">\(w(u,j)\)</span> es una función que asigna un peso a cada una de estas valoraciones.</p>
 <h2>La maldición de la dimensionalidad (o <em>Curse of dimensionality</em>)</h2>
-<p><img alt="curse-of-dimenzionality" src="https://diegoquintanav.github.io/images/curse-of-dimensionality.png" title="omgsocursed" /></p>
+<p><img alt="curse-of-dimenzionality" src="/images/curse-of-dimensionality.png" title="omgsocursed" /></p>
 <p>(Kudos al <a href="https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html">maravilloso ser humano que hizo la imagen.</a>)</p>
 <p>Básicamente se trata de lo siguiente: Mientras más características tengan los 
 vectores usados en la modelación de un ítem o recomendación, la distancia entre dos 
@@ -310,7 +292,7 @@ un dolor de estómago antes de poder decidir.</p>
 <li><a href="https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html">Este blog</a> tiene más información aún ~~además de ahorrarme el tiempo de hacer mi propia imagen~~.</li>
 <li><a href="http://www.visiondummy.com/2014/04/curse-dimensionality-affect-classification/">Este otro post</a> presenta una explicación más detallada, <em>que también incluye perritos.</em></li>
 </ul>
-<p><img alt="curse-of-dimenzinality" src="https://diegoquintanav.github.io/images/3Dproblem_separated.png" title="omgin3D" /></p>
+<p><img alt="curse-of-dimenzinality" src="/images/3Dproblem_separated.png" title="omgin3D" /></p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -368,24 +350,6 @@ un dolor de estómago antes de poder decidir.</p>
 </script>
     </div>
   </article>
-  <hr>
-  <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/recsys-2-ES.html';
-      this.page.identifier = 'recsys-2';
-    };
-    (function() {
-      var d = document;
-      var s = d.createElement('script');
-      s.src = '//bluesmonk.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript class="text-muted">
-    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
-  </noscript>
     </div>
   </div>
 
@@ -393,9 +357,9 @@ un dolor de estómago antes de poder decidir.</p>
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>

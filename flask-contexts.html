@@ -8,39 +8,21 @@
 
   <title>  Flask contexts (And how to use them) | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/flask-contexts.html">
+  <link rel="canonical" href="/flask-contexts.html">
 
-    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
-  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
-        href="https://diegoquintanav.github.io/feeds/web-development.rss.xml">  
+  
   <meta name="description" content="How to test Flask applications with pytest">
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      a.async = 1;
-      a.src = g;
-      m = s.getElementsByTagName(o)[0];
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-108898322-1', 'auto');
-    ga('send', 'pageview');
-  </script>
 
 
 </head>
@@ -50,17 +32,17 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="https://diegoquintanav.github.io/">
-        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/resume-EN.html">Resume</a></li>
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/resume-EN.html">Resume</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -82,21 +64,21 @@
       <ul class="list-inline">
         <li class="list-inline-item text-muted" title="2018-11-24T13:14:00-06:00">
           <i class="fa fa-clock-o"></i>
-          sáb 24 noviembre 2018
+          Sat 24 November 2018
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="https://diegoquintanav.github.io/category/web-development.html">Web Development</a>
+          <a href="/category/web-development.html">Web Development</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
-              <a href="https://diegoquintanav.github.io/tag/flask.html">#flask</a>,               <a href="https://diegoquintanav.github.io/tag/python.html">#python</a>,               <a href="https://diegoquintanav.github.io/tag/pytest.html">#pytest</a>          </li>
+              <a href="/tag/flask.html">#flask</a>,               <a href="/tag/python.html">#python</a>,               <a href="/tag/pytest.html">#pytest</a>          </li>
       </ul>
     </header>
     <div class="content">
       <h1>Motivation</h1>
 <p>There's this thing going on with the <a href="http://flask.pocoo.org/docs/1.0/appcontext/#creating-an-application-context">flask context</a> and the <a href="http://flask.pocoo.org/docs/1.0/reqcontext/">request context</a>, that used to confuse me a lot. Before testing these two probably will never be used, but after reading <a href="http://flask.pocoo.org/docs/1.0/testing/">the documentation</a> and writing your first tests, it's probable that you run into something like</p>
-<div class="highlight"><pre><span></span>Flask.url_for() error: Attempted to generate a URL without the application context being pushed
+<div class="highlight"><pre><span></span><span class="err">Flask.url_for() error: Attempted to generate a URL without the application context being pushed</span>
 </pre></div>
 
 
@@ -148,51 +130,51 @@ information and encrypted with your <code>SECRET_KEY</code>.</p>
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, before first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to abc&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in app context, before first request context&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to abc&#39;</span><span class="p">)</span>
     <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
     <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
         <span class="c1"># this reuses g from the current context</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in first request context&#39;</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to xyz&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in first request context&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to xyz&#39;</span><span class="p">)</span>
         <span class="c1"># this is the same g, so it will be replaced</span>
         <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;xyz&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, after first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in app context, after first request context&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
     <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
         <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;pqr&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, after second request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in app context, after second request context&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 </pre></div>
 
 
 <p>And here's the output that it gives:</p>
-<div class="highlight"><pre><span></span>in app context, before first request context
-setting g.foo to abc
-g.foo should be abc, is: abc
-in first request context
-g.foo should be abc, is: abc
-setting g.foo to xyz
-g.foo should be xyz, is: xyz
-in app context, after first request context
-g.foo should be abc, is: xyz
-in second request context
-g.foo should be abc, is: xyz
-setting g.foo to pqr
-g.foo should be pqr, is: pqr
-in app context, after second request context
-g.foo should be abc, is: pqr
+<div class="highlight"><pre><span></span><span class="err">in app context, before first request context</span>
+<span class="err">setting g.foo to abc</span>
+<span class="err">g.foo should be abc, is: abc</span>
+<span class="err">in first request context</span>
+<span class="err">g.foo should be abc, is: abc</span>
+<span class="err">setting g.foo to xyz</span>
+<span class="err">g.foo should be xyz, is: xyz</span>
+<span class="err">in app context, after first request context</span>
+<span class="err">g.foo should be abc, is: xyz</span>
+<span class="err">in second request context</span>
+<span class="err">g.foo should be abc, is: xyz</span>
+<span class="err">setting g.foo to pqr</span>
+<span class="err">g.foo should be pqr, is: pqr</span>
+<span class="err">in app context, after second request context</span>
+<span class="err">g.foo should be abc, is: pqr</span>
 </pre></div>
 
 
@@ -206,39 +188,39 @@ context in <em>nested contexts</em>, and it's a <em>caveat</em> mentioned in the
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in app context, before first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to abc&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in app context, before first request context&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to abc&#39;</span><span class="p">)</span>
     <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
 <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in first request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be None, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)))</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to xyz&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in first request context&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be None, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to xyz&#39;</span><span class="p">)</span>
     <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;xyz&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be xyz, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 
 <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be None, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)))</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in second request context&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be None, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
     <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;pqr&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
 </pre></div>
 
 
 <p>Which will give the expected results:</p>
-<div class="highlight"><pre><span></span>in app context, before first request context
-setting g.foo to abc
-g.foo should be abc, is: abc
-in first request context
-g.foo should be None, is: None
-setting g.foo to xyz
-g.foo should be xyz, is: xyz
-in second request context
-g.foo should be None, is: None
-setting g.foo to pqr
-g.foo should be pqr, is: pqr
+<div class="highlight"><pre><span></span><span class="err">in app context, before first request context</span>
+<span class="err">setting g.foo to abc</span>
+<span class="err">g.foo should be abc, is: abc</span>
+<span class="err">in first request context</span>
+<span class="err">g.foo should be None, is: None</span>
+<span class="err">setting g.foo to xyz</span>
+<span class="err">g.foo should be xyz, is: xyz</span>
+<span class="err">in second request context</span>
+<span class="err">g.foo should be None, is: None</span>
+<span class="err">setting g.foo to pqr</span>
+<span class="err">g.foo should be pqr, is: pqr</span>
 </pre></div>
 
 
@@ -249,21 +231,21 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 <p>This <a href="https://stackoverflow.com/a/17377101/5819113">SO answer</a> summarizes the differences in the best way I've found so far.</p>
 <blockquote>
 <p>If you want to make a request to your application, use the <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_client"><code>test_client</code></a>.</p>
-<div class="highlight"><pre><span></span>c = app.test_client()
-response = c.get(&#39;/test/url&#39;)
-# test response
+<div class="highlight"><pre><span></span><span class="err">c = app.test_client()</span>
+<span class="err">response = c.get(&#39;/test/url&#39;)</span>
+<span class="err"># test response</span>
 </pre></div>
 
 
 <p>If you want to test code which uses an application context (<code>current_app</code>, <code>g</code>, <code>url_for</code>), push an <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.app_context"><code>app_context</code></a>.</p>
-<div class="highlight"><pre><span></span>with app.app_context():
-    # test your app context code
+<div class="highlight"><pre><span></span><span class="err">with app.app_context():</span>
+<span class="err">    # test your app context code</span>
 </pre></div>
 
 
 <p>If you want test code which uses a request context (<code>request</code>, <code>session</code>), push a <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_request_context"><code>test_request_context</code></a>.</p>
-<div class="highlight"><pre><span></span>with current_app.test_request_context():
-    # test your request context code
+<div class="highlight"><pre><span></span><span class="err">with current_app.test_request_context():</span>
+<span class="err">    # test your request context code</span>
 </pre></div>
 
 
@@ -271,8 +253,8 @@ response = c.get(&#39;/test/url&#39;)
 <p>It's also important to note that</p>
 <blockquote>
 <p>Both app and request contexts can also be pushed manually, which is useful when using the interpreter.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; ctx = app.app_context()
-&gt;&gt;&gt; ctx.push()
+<div class="highlight"><pre><span></span><span class="err">&gt;&gt;&gt; ctx = app.app_context()</span>
+<span class="err">&gt;&gt;&gt; ctx.push()</span>
 </pre></div>
 
 
@@ -287,7 +269,7 @@ response = c.get(&#39;/test/url&#39;)
 <p><a href="http://lucumr.pocoo.org/about/">Armin Ronacher</a> suggests a pytest fixture pattern in <a href="https://youtu.be/1ByQhAM5c1I?t=2285">this presentation</a> (<a href="https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52">slides</a>), which relies in the first approach. The code is as follows:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 
     <span class="c1"># import app factory pattern</span>
@@ -302,14 +284,14 @@ response = c.get(&#39;/test/url&#39;)
     <span class="n">request</span><span class="o">.</span><span class="n">addfinalizer</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">pop</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">app</span>
 
-<span class="nd">@pytest.fixture</span><span class="p">()</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">test_client</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
 
     <span class="n">client</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span>
     <span class="n">client</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
 
     <span class="n">request</span><span class="o">.</span><span class="n">addfinalizer</span><span class="p">(</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">client</span>
 </pre></div>
 
@@ -320,38 +302,38 @@ response = c.get(&#39;/test/url&#39;)
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
 
 
-<span class="nd">@pytest.fixture</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">runner</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A test runner for the app&#39;s Click commands.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">test_cli_runner</span><span class="p">()</span>
 
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">yourapp</span> <span class="kn">import</span> <span class="n">create_app</span>
     <span class="k">return</span> <span class="n">create_app</span><span class="p">(</span><span class="s1">&#39;testing&#39;</span><span class="p">)</span>
 
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">app_context</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a flask app context&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
         <span class="k">yield</span> <span class="n">app</span>
 
 
-<span class="nd">@pytest.fixture</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">request_context</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a flask request context&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">app_context</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
         <span class="k">yield</span>
 
 
-<span class="nd">@pytest.fixture</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">app_context</span><span class="o">.</span><span class="n">test_client</span><span class="p">(</span><span class="n">use_cookies</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app_context</span><span class="o">.</span><span class="n">test_client</span><span class="p">(</span><span class="n">use_cookies</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
 
     <span class="c1"># extensions pattern explained in here https://stackoverflow.com/a/42910185/5819113</span>
@@ -373,7 +355,7 @@ response = c.get(&#39;/test/url&#39;)
 
 <span class="k">def</span> <span class="nf">seed_db</span><span class="p">():</span>
     <span class="c1"># insert default users and roles</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Seeding the database or something&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Seeding the database or something&quot;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -390,7 +372,7 @@ response = c.get(&#39;/test/url&#39;)
                     <span class="n">data</span><span class="o">=</span><span class="p">{</span>
                         <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
                         <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">},</span>
-                    <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="n">follow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">test_with_logged_in_user</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
@@ -406,7 +388,7 @@ response = c.get(&#39;/test/url&#39;)
 
         <span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s1">&#39;/restricted_view/&#39;</span><span class="p">,</span>
-            <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">follow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
         <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;Stuff that should appear in your view&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
@@ -416,24 +398,6 @@ response = c.get(&#39;/test/url&#39;)
 <p>That's all I have to say about it.</p>
     </div>
   </article>
-  <hr>
-  <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/flask-contexts.html';
-      this.page.identifier = 'flask-contexts';
-    };
-    (function() {
-      var d = document;
-      var s = d.createElement('script');
-      s.src = '//bluesmonk.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript class="text-muted">
-    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
-  </noscript>
     </div>
   </div>
 
@@ -441,9 +405,9 @@ response = c.get(&#39;/test/url&#39;)
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>

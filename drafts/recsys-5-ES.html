@@ -8,39 +8,21 @@
 
   <title>  Sistemas recomendadores, parte 5 | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/drafts/recsys-5-ES.html">
+  <link rel="canonical" href="/drafts/recsys-5-ES.html">
 
-    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
-  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
-        href="https://diegoquintanav.github.io/feeds/recommender-systems.rss.xml">  
+  
   <meta name="description" content="Quinta parte de sistemas recomendadores">
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      a.async = 1;
-      a.src = g;
-      m = s.getElementsByTagName(o)[0];
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-108898322-1', 'auto');
-    ga('send', 'pageview');
-  </script>
 
 
 </head>
@@ -50,17 +32,17 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="https://diegoquintanav.github.io/">
-        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/resume-EN.html">Resume</a></li>
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/resume-EN.html">Resume</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -82,29 +64,29 @@
       <ul class="list-inline">
         <li class="list-inline-item text-muted" title="2017-11-15T18:01:00-06:00">
           <i class="fa fa-clock-o"></i>
-          mié 15 noviembre 2017
+          Wed 15 November 2017
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="https://diegoquintanav.github.io/category/recommender-systems.html">Recommender Systems</a>
+          <a href="/category/recommender-systems.html">Recommender Systems</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
-              <a href="https://diegoquintanav.github.io/tag/recsys.html">#recsys</a>          </li>
+              <a href="/tag/recsys.html">#recsys</a>          </li>
       </ul>
     </header>
     <div class="content">
       <!-- entry 5, clase al 15.11 -->
 
 <h1><em>Previously</em></h1>
-<p>En el <a href="https://diegoquintanav.github.io/drafts/recsys-4.html">post anterior</a> se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, <em>support vector machines</em>), utilizando con un kernel polinomial. </p>
+<p>En el <a href="/drafts/recsys-4.html">post anterior</a> se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, <em>support vector machines</em>), utilizando con un kernel polinomial. </p>
 <p>Pero antes, ¿Qué es una máquina de vectores de soporte?</p>
 <h2>Máquinas de vectores de soporte</h2>
 <p>Es uno de los clasificadores clásicos usados en machine learning. Dado que no es la idea profundizar en este algoritmo, se podría resumir en lo siguiente</p>
 <p>Dadas dos clases <strong>A</strong> y <strong>B</strong>, una SVM es un clasificador <span class="math">\(\mathcal{C}\)</span> que encuentra un plano de decisión <span class="math">\(h\)</span>, tal que la distancia de tal plano a dos vectores llamados de soporte sea máxima. Estos vectores de soporte son obtenidos a través de un proceso de optimización, y los planos de decisión pueden extenderse a otras superficies más complejas a través de lo que se conoce como <em>the kernel trick</em> (Explicado muy bien <a href="http://www.eric-kim.net/eric-kim-net/posts/1/kernel_trick.html">aquí</a>).</p>
 <p><img alt="svm1" src="https://ml.berkeley.edu/blog/assets/tutorials/2/image_2.png" /></p>
 <p>Un <em>kernel</em> resuelve un problema donde para algún conjunto de datos, no existe un plano de decisión <span class="math">\(h\)</span> o en otras palabras las clases no son separables. El kernel actúa como una transformación que en ciertas condiciones, permite operar sobre una representación de <span class="math">\(\mathcal{C}\)</span> donde sí existe la separación <span class="math">\(h\)</span>.</p>
-<p><img alt="kernel1" src="https://diegoquintanav.github.io/images/data_2d_to_3d.png" /></p>
+<p><img alt="kernel1" src="/images/data_2d_to_3d.png" /></p>
 <p>Un kernel se escribe matemáticamente como</p>
 <div class="math">$$
 K: \mathbb{R}^M \times \mathbb{R}^M \rightarrow \mathbb{R}^N
@@ -195,24 +177,6 @@ $$</div>
 </script>
     </div>
   </article>
-  <hr>
-  <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/drafts/recsys-5-ES.html';
-      this.page.identifier = 'recsys-5';
-    };
-    (function() {
-      var d = document;
-      var s = d.createElement('script');
-      s.src = '//bluesmonk.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript class="text-muted">
-    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
-  </noscript>
     </div>
   </div>
 
@@ -220,9 +184,9 @@ $$</div>
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>

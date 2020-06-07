@@ -20,7 +20,7 @@ con el profesor [Dennis Parra](http://dparra.sitios.ing.uc.cl/) y como tarea del
 
 La serie consiste de cinco posts, los que se resumen de la siguiente manera
 
-- En la [parte 2]({filename}/blog/sysrec-2.md) se revisan las distintas
+- En la [parte 2]({filename}/blog/02_sysrec-2.md) se revisan las distintas
   clasificaciones de sistemas recomendadores o _SR_, con énfasis en el _filtrado colaborativo_
 - En la parte 3 continuamos con la clasificación
   de sistemas recomendadores, y revisamos los _SR_ basados en contenido y el análisis de texto.
@@ -154,4 +154,4 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.
 
 ## A continuación
 
-En la [parte 2]({filename}/blog/sysrec-2.md) se verán otras cosas, entre ellas, **tipos de clasificadores.**
+En la [parte 2]({filename}/blog/02_sysrec-2.md) se verán otras cosas, entre ellas, **tipos de clasificadores.**

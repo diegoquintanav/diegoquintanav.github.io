@@ -12,7 +12,7 @@ Status: draft
 
 # _Previously_
 
-En el [post anterior]({filename}/blog/sysrec-4.md) se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, _support vector machines_), utilizando con un kernel polinomial. 
+En el [post anterior]({filename}/blog/04_sysrec-4.md) se hizo una revisión de los Sistemas recomendadores híbridos y se revisaron algunas métricas usadas en su evaluación. Lo que queda como última parte de esta serie, es hablar sobre Máquinas de factorización. Las máquinas de factorización pueden verse como máquinas de vectores de soporte (SVM, _support vector machines_), utilizando con un kernel polinomial. 
 
 Pero antes, ¿Qué es una máquina de vectores de soporte?
 

@@ -19,7 +19,7 @@ Status: draft
 
 # _Previously_
 
-En la [parte 3]({filename}/blog/sysrec-3.md) se comentaron algunos _SR_ basados en contenido, quedando para esta parte comentar un poco sobre sistemas _híbridos_ y sobre métricas usadas en la evaluación de un _SR_.
+En la [parte 3]({filename}/blog/03_sysrec-3.md) se comentaron algunos _SR_ basados en contenido, quedando para esta parte comentar un poco sobre sistemas _híbridos_ y sobre métricas usadas en la evaluación de un _SR_.
 
 ## Sistemas de recomendación híbridos
 
@@ -141,4 +141,4 @@ Si alguien le gusta el *colo colo*, y le recomiendo sólo noticias del mismo equ
 
 ## A continuación
 
-En la [parte 5 y final]({filename}/blog/sysrec-5.md) se verán las _Máquinas de Factorización_
+En la [parte 5 y final]({filename}/blog/05_sysrec-5.md) se verán las _Máquinas de Factorización_

@@ -11,7 +11,7 @@ Lang: ES
 
 # _Previously_
 
-En la [parte 1]({filename}/blog/sysrec-1.md) se vieron varios aspectos elementales
+En la [parte 1]({filename}/blog/01_sysrec-1.md) se vieron varios aspectos elementales
 de los sistemas recomendadores. El concepto del error, Un modelo inicial de una
 recomendación, y la necesidad que cubren estos sistemas. 
 Mencionamos [este paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&rep=rep1&type=pdf) 
@@ -226,7 +226,7 @@ combinaciones de otros _SR_
 
 ## A continuación
 
-En la [parte 3]({filename}/blog/sysrec-3.md) se verán los sistemas de recomendación basados en contenido con mayor detalle.
+En la [parte 3]({filename}/blog/03_sysrec-3.md) se verán los sistemas de recomendación basados en contenido con mayor detalle.
 
 ## Anexo: KNN y la maldición de la dimensionalidad
 

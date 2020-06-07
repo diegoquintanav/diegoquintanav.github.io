@@ -11,7 +11,7 @@ Lang: ES
 
 # _previously_
 
-En la [parte 2]({filename}/blog/sysrec-2.md) se vieron algunas clasificaciones de _SR_, y mencionamos aquellos basados en _memoria_ y basados en _modelos_. 
+En la [parte 2]({filename}/blog/02_sysrec-2.md) se vieron algunas clasificaciones de _SR_, y mencionamos aquellos basados en _memoria_ y basados en _modelos_. 
 
 Otra clasificación que se mencionó se refiere a _SR_ basados en __contenido__, o _content-based_.
 
@@ -167,7 +167,7 @@ Esto se podría traducir como un diseño _dogmático_, aunque esta traducción n
 ## A continuación
 
 En la parte 4 se verán
-<!-- En la [parte 4]({filename}/blog/sysrec-4.md) se verán -->
+<!-- En la [parte 4]({filename}/blog/04_sysrec-4.md) se verán -->
 
 - Sistemas recomendadores híbridos
 - Métricas de calidad en sistemas recomendadores

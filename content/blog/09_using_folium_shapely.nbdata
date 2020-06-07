@@ -1,0 +1,9 @@
+Title: Plotting tram maps in Barcelona 
+Slug: folium-barcelona
+Date: 2019-08-28 23:00
+Category: Data Science
+Tags: python, data-science
+author: Diego Quintana
+Summary: How to manipulate and plot geocoded data using GeoPandas, shapely and Folium
+Status: published
+Lang: EN

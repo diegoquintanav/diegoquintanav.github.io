@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>  Plotting tram maps in Barcelona | On the shoulders of giants
+  <title>  Plotting traffic maps in Barcelona | On the shoulders of giants
 </title>
   <link rel="canonical" href="/folium-barcelona-EN.html">
 
@@ -56,7 +56,7 @@
 
   <div class="main">
     <div class="container">
-      <h1>  Plotting tram maps in Barcelona
+      <h1>  Plotting traffic maps in Barcelona
 </h1>
       <hr>
   <article class="article">
@@ -1211,6 +1211,7 @@ h6:hover .anchor-link {
 <blockquote><p><a href="https://opendata-ajuntament.barcelona.cat/data/en/dataset/transit-relacio-trams">https://opendata-ajuntament.barcelona.cat/data/en/dataset/transit-relacio-trams</a></p>
 </blockquote>
 <p>The final goal is to have a static (e.g. an image) or interactive map, which displays the traffic state intensity by street sections, over a context background map (e.g.: OpenStreetMap).</p>
+<p>A short disclaimer before we begin: In catalan, <em>tram</em> means something like <em>segment</em> (of a street, in this context *ahem*). It's not a rail tram.</p>
 
 </div>
 </div>
@@ -4788,15 +4789,15 @@ memory usage: 113.5+ MB
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Final-words">Final words<a class="anchor-link" href="#Final-words">&#182;</a></h1><p>Regarding the data, I've explored manually isolated cases, so my conclusions need a bit of work. I'll refer only to the last map being shown (May 27).</p>
+<h1 id="Final-words">Final words<a class="anchor-link" href="#Final-words">&#182;</a></h1><p>Thanks for reading until here! Regarding the data, I've explored manually isolated cases, so my conclusions need a bit of work. I'll refer only to the last map being shown (May 27).</p>
 <ul>
 <li>It's not common to observe capacity levels over 3</li>
-<li>Tram loads range from 90 to 110%. Forecasts are really tight but it seems there's no need for accounting for more.</li>
+<li>Traffic loads range from 90 to 110%. Forecasts are really tight but it seems there's no need for accounting for more.</li>
 <li>It may be worth exploring plots of <code>diff_perc</code> and other error measurements.</li>
 </ul>
 <p>It's easy to extend these maps to any time of the day, using the <code>dt</code> accessor and using the <code>data_datetime</code> as a pivot for indexing.</p>
-<p>My intention with this notebook is to show the power of leaflet and python, and the libraries available  to manipulate geocoded data like geopandas and shapely.</p>
-<p>Now get back to work.</p>
+<p>My intention with this notebook is to show the power of leaflet and python, and the libraries available  to manipulate geocoded data like geopandas and shapely. I've found that there is an application that uses this data, check <a href="https://com-shi-va.barcelona.cat/en/transit-">https://com-shi-va.barcelona.cat/en/transit-</a></p>
+<p>Until next time.</p>
 
 </div>
 </div>

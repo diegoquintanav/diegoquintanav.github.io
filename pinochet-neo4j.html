@@ -8,21 +8,39 @@
 
   <title>  Modeling the Pinochet Dataset using Neo4j | On the shoulders of giants
 </title>
-  <link rel="canonical" href="/pinochet-neo4j.html">
+  <link rel="canonical" href="https://diegoquintanav.github.io/pinochet-neo4j.html">
 
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
 
-  
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
+        href="https://diegoquintanav.github.io/feeds/data-science.rss.xml">  
   <meta name="description" content="Visualizing the victims of the Chile's 1973 dictatorship as a graph">
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      a.async = 1;
+      a.src = g;
+      m = s.getElementsByTagName(o)[0];
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-108898322-1', 'auto');
+    ga('send', 'pageview');
+  </script>
 
 
 </head>
@@ -32,17 +50,17 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="/">
-        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="https://diegoquintanav.github.io/">
+        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
-            <li class="list-inline-item"><a href="/pages/resume-EN.html">Resume</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/resume-EN.html">Resume</a></li>
             <li class=" list-inline-item text-muted">|</li>
           <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
           <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
@@ -68,11 +86,11 @@
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="/category/data-science.html">Data Science</a>
+          <a href="https://diegoquintanav.github.io/category/data-science.html">Data Science</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
-              <a href="/tag/neo4j.html">#neo4j</a>          </li>
+              <a href="https://diegoquintanav.github.io/tag/neo4j.html">#neo4j</a>          </li>
       </ul>
     </header>
     <div class="content">
@@ -91,7 +109,7 @@
 <blockquote>
 <p><em>This Github repository contains data and documented R code for Deaths and Disappearances in the Pinochet Regime: A New Dataset by Freire et al (2019). We coded the personal details of 2,398 victims named in the Chilean Truth Commission Report along with information about the perpetrators and geographical coordinates for all identifiable atrocity locations. The dataset covers from 1973 to 1990 and includes 59 indicators. Please refer to our accompanying article and our online appendix for more details.</em></p>
 </blockquote>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" /></p>
 <p>map of events from the pinochet repository</p>
 <p>I wanted to model this dataset as a graph, with the intention to explore the data as what it is, a network that links victims to places and events. This an attempt to learn, and to remember.</p>
 <h1>Roadmap</h1>
@@ -204,7 +222,7 @@
 <li><code>end_date_monthly</code>, date or string</li>
 </ul>
 <p>There are up to 6 locations per event, according to the codebook. We will associate a violent event to a series of locations, like</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png" /></p>
 <p>series of locations associated to one violent event</p>
 <p>Where <code>location_n</code> describes the n-th location from a series of events. From the codebook, we observe that</p>
 <ul>
@@ -219,7 +237,7 @@
   from 1 to 6 places).</em> - Categories: <em>Home; Work; University; In custody; In public; In hospital; Unknown</em></li>
 </ul>
 <p>These locations look like this in the original dataset</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 1.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 1.png" /></p>
 <p>head of the dataset, slicing on the location related attributes</p>
 <h3>More on modeling series of events</h3>
 <ul>
@@ -258,7 +276,7 @@
 
 
 <p>From the rules mentioned above, we end up with a graph that has this shape</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png" /></p>
 <p>shape of the final graph</p>
 <h1>Polishing things</h1>
 <p>The first approach is a bit flaky. We observe that we don't have a proper <code>id</code> or primary keys. These are not explicitly provided in the dataset, so we have to either create them artificially or pick one attribute from each node that will act as one. We can observe how this affect our final graph if we query entities with the same attributes.</p>
@@ -266,7 +284,7 @@
 <blockquote>
 <p>La Legua has likely consolidated as a recognizable entity within the urban weave of Santiago because of the superposition of segregation, political conflicts and a disciplined culture. The structure of its community and its culture have been what have marked its boundaries with precision, rather than its spatial reality</p>
 </blockquote>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 2.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 2.png" /></p>
 <p><a href="http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693">http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693</a></p>
 <p><em>La Legua</em> is known for being one of the places that <a href="https://www.archivochile.com/Experiencias/exp_popu/EXPpopulares0002.pdf">presented resistance from the first day to the militar strike</a>, which along with its history made it a target during the dictatorship. In our graph database, we can observe that some events have their location in <em>La Legua</em>.</p>
 <div class="highlight"><pre><span></span><span class="err">$</span> <span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span> <span class="k">where</span> <span class="n">n</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="s1">&#39;.*Legua.*&#39;</span> <span class="k">return</span> <span class="n">n</span> <span class="k">LIMIT</span> <span class="mi">25</span>
@@ -293,7 +311,7 @@
 
 
 <p>We observe that although these are different nodes, they have the same attributes. The problem here is that we end up with repeated nodes in our database. We want to resolve these entities as equal at insertion time, into one single node.</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 3.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 3.png" /></p>
 <p>Five nodes representing the same thing. We can merge them into one node.</p>
 <p>From the py2neo <a href="https://py2neo.org/v4/ogm.html#py2neo.ogm.GraphObject">documentation</a>, we could achieve this by doing</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -544,7 +562,7 @@
 
 
 <p>We could have done something using Cypher, the neo4j schema and APOC, a library for many kinds of tasks within neo4j. At some point though Cypher's capabilities fell short so I had to rely on python. After we've done this, we can start querying the graph, with things like</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 4.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 4.png" /></p>
 <h2>General statistics</h2>
 <p>from <a href="https://neo4j.com/developer/kb/how-do-i-produce-an-inventory-of-statistics-on-nodes-relationships-properties/">https://neo4j.com/developer/kb/how-do-i-produce-an-inventory-of-statistics-on-nodes-relationships-properties/</a> we can create an inventory of miscellaneous statistics of the graph.</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -666,9 +684,9 @@
 
 
 <p>This is approximatedly 9 kilometers</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 5.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 5.png" /></p>
 <p>From "Ñuble 1034" to the main clinica, 3km approx.</p>
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 6.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 6.png" /></p>
 <h3>Which type of events are linked to more locations?</h3>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
 <span class="k">WITH</span> <span class="n">e</span>
@@ -760,7 +778,7 @@
 </pre></div>
 
 
-<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 7.png" /></p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 7.png" /></p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
 <span class="k">where</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="ss">&quot;.*Londres.*&quot;</span>
 <span class="k">return</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">last_name</span>
@@ -893,6 +911,24 @@
 <p>It's better to look at this data using a map. For this purpose, we will expose this graph through a graphql service layer, and we will deploy a leaflet map that consumes it.</p>
     </div>
   </article>
+  <hr>
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function() {
+      this.page.url = 'https://diegoquintanav.github.io/pinochet-neo4j.html';
+      this.page.identifier = 'pinochet-neo4j';
+    };
+    (function() {
+      var d = document;
+      var s = d.createElement('script');
+      s.src = '//bluesmonk.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript class="text-muted">
+    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+  </noscript>
     </div>
   </div>
 
@@ -900,9 +936,9 @@
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>

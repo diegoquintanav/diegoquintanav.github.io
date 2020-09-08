@@ -96,8 +96,8 @@
     <div class="content">
       <h1>Introduction</h1>
 <p>On September 11, 1973, Chile faced a military coup lead by Augusto Pinochet <a href="https://nsarchive2.gwu.edu/NSAEBB/NSAEBB8/nsaebb8i.htm">and the US agenda</a>. Pinochet would be then dictator and leader of the military regime until 1989. During the regime, thousands of people were kidnapped, tortured and killed. The atrocities committed by the regime are a scar that defines what Chile is today, and there are families that are still looking for their relatives.</p>
-<p>"Nostalgia for the light" is a nice documentary portraying people looking for their relatives, comparing it to the way astronomers look for stars in the sky.</p>
-<p><a href="https://www.youtube.com/watch?v=Z6x9tA_g7c8">https://www.youtube.com/watch?v=Z6x9tA_g7c8</a></p>
+<p><a href="https://www.youtube.com/watch?v=Z6x9tA_g7c8">"Nostalgia for the light"</a>
+is a relevant documentary portraying people looking for their relatives, comparing it to the way astronomers look for stars in the sky.</p>
 <p>As part of the efforts to shed light on the truth about what happened, two official reports were can be mentioned: The first one was issued under the presidency of Patricio Alwyin in the year 1991, shortly after the military dictatorship ended. This document is known as the <em><a href="https://en.wikipedia.org/wiki/Rettig_Report">Rettig Report</a></em>. The second report was during the first presidency of Michelle Bachelet, and it attempts to extend these efforts in what is known as the <em><a href="https://en.wikipedia.org/wiki/Valech_Report">Valech Report</a>.</em></p>
 <p>It came to my knowledge that <em>some people,</em> more specifically, Danilo Freire and others, <a href="https://osf.io/vqnwu/">published a dataset and an article containing the information about the 903 pages of the report</a>, along with a <a href="https://github.com/danilofreire/pinochet">Github repository</a>.</p>
 <p>The proper citation is</p>
@@ -620,39 +620,23 @@
 
 
 <p>In other words, a victim visits 1.43 places on average before <em>ending its journey</em> (either by getting killed, dissapeared, or suicide, for example).</p>
-<ul>
-<li>didn't work</li>
-</ul>
-<p>```sql
-  # this is the same as above, but with substracting -2 to the length because this path contains the event twice each time
-  match (e:ViolentEvent)
-  with e
-  match path=(e)-[:FIRST_LOCATION]-&gt;(fl:Location)-[:NEXT_LOCATION*]-&gt;(ll:Location)&lt;-[:LAST_LOCATION]-(e)
-  with length(path) - 2 as pathSize
-  return avg(pathSize)</p>
-<p>╒══════════════════╕
-  │"avg(pathSize)"   │
-  ╞══════════════════╡
-  │1.4383708467309761│
-  └──────────────────┘
-  ```</p>
-<p>```sql
-  # this query should be equivalent but it yields a different value for some reason
-  MATCH (v:Victim)-[:VICTIM_OF]-&gt;(e:ViolentEvent)
-  WITH e
-  MATCH path=(e)-[r:IN_LOCATION]-&gt;(l:Location)
-  WITH e, count(r) as degree
-  RETURN avg(degree)</p>
-<p>╒════════════════╕
-  │"avg(degree)"   │
-  ╞════════════════╡
-  │1.80672268907563│
-  └────────────────┘
-  ```</p>
+<p>This is the same as above, but with substracting -2 to the length because this path contains the event twice each time</p>
+<div class="highlight"><pre><span></span><span class="k">match</span> <span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">e</span>
+<span class="k">match</span> <span class="n">path</span><span class="o">=</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">FIRST_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">fl</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">NEXT_LOCATION</span><span class="o">*</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span><span class="o">&lt;-</span><span class="p">[:</span><span class="n">LAST_LOCATION</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="k">with</span> <span class="k">length</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">as</span> <span class="n">pathSize</span>
+<span class="k">return</span> <span class="k">avg</span><span class="p">(</span><span class="n">pathSize</span><span class="p">)</span>
+
+<span class="err">╒══════════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;avg(pathSize)&quot;</span>   <span class="err">│</span>
+<span class="err">╞══════════════════╡</span>
+<span class="err">│</span><span class="mi">1</span><span class="p">.</span><span class="mi">4383708467309761</span><span class="err">│</span>
+<span class="err">└──────────────────┘</span>
+</pre></div>
+
+
 <h2>Using the geospatial module of neo4j</h2>
-<p><a href="https://towardsdatascience.com/part-2-exploring-pathfinding-graph-algorithms-e194ffb7f569">https://towardsdatascience.com/part-2-exploring-pathfinding-graph-algorithms-e194ffb7f569</a></p>
-<p><a href="https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/">https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/</a></p>
-<p>update relationships with geodesic distance</p>
+<p>From <a href="https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/">https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/</a>, we could update relationships with their geodesic distance. For now we just want to see it.</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
 <span class="k">WITH</span> <span class="n">e</span>
 <span class="k">MATCH</span> <span class="n">pathA</span><span class="o">=</span><span class="p">(</span><span class="n">fl</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span><span class="o">&lt;-</span><span class="p">[:</span><span class="n">FIRST_LOCATION</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">LAST_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
@@ -685,7 +669,7 @@
 
 <p>This is approximatedly 9 kilometers</p>
 <p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 5.png" /></p>
-<p>From "Ñuble 1034" to the main clinica, 3km approx.</p>
+<p>From "Ñuble 1034" to the main clinica it is 3km approximately.</p>
 <p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 6.png" /></p>
 <h3>Which type of events are linked to more locations?</h3>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
@@ -712,7 +696,7 @@
 </pre></div>
 
 
-<p>but when we analyze the average number of locations, we get a different perspective</p>
+<p>If we analyze the average number of locations, we get a different perspective</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
 <span class="k">WITH</span> <span class="n">e</span>
 <span class="k">MATCH</span> <span class="n">path</span><span class="o">=</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[</span><span class="n">r</span><span class="p">:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
@@ -738,7 +722,7 @@
 </pre></div>
 
 
-<p>On average, people that died because of suicide visited more locations than those that were killed or dissapeared.</p>
+<p>On average, people that died because of suicide visited more locations than those that were killed or dissapeared. It's hard to consider this fact as final, since there is that "NA" messing with the data.</p>
 <h3>Number of people linked to a location</h3>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
 <span class="k">return</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">as</span> <span class="n">victimCount</span>
@@ -771,14 +755,16 @@
 </pre></div>
 
 
-<p>Ignoring the first three for being too ambiguous, we observe that in the fourth place is Londres 38, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and currently is acting as a <em>center for memory (my translation),</em> open to the community. There is an active group of people working on researching and exposing the activities that happened in this place, <a href="https://www.londres38.cl/1937/w3-channel.html">you can read more about them here</a> (in spanish only).</p>
+<p>Ignoring the first three, we observe that in the fourth place is Londres 38, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and currently is acting as a <em>center for memory (my translation),</em> open to the community. There is an active group of people working on researching and exposing the activities that happened in this place, <a href="https://www.londres38.cl/1937/w3-channel.html">you can read more about them here</a> (in spanish only).</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
 <span class="k">where</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="ss">&quot;.*Londres.*&quot;</span>
 <span class="k">return</span> <span class="n">p</span>
 </pre></div>
 
 
+<p>It is hard to represent all the names visually in one screenshot, and this is the best I could do for now.</p>
 <p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png" src="https://diegoquintanav.github.io/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 7.png" /></p>
+<p>However we can get the list of names with</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
 <span class="k">where</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="ss">&quot;.*Londres.*&quot;</span>
 <span class="k">return</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">last_name</span>
@@ -901,7 +887,7 @@
 </pre></div>
 
 
-<p>From the Londres38 site, we can more about some of these persons. For instance, <a href="https://www.londres38.cl/1937/w3-article-97854.html#ficha_completa">María Ines Alvarado Borgel</a> was taken with 21 years by national security agents (DINA). From the english version of the report (p. 690).</p>
+<p>From the Londres38 site, we can know more about some of these persons. For instance, <a href="https://www.londres38.cl/1937/w3-article-97854.html#ficha_completa">María Ines Alvarado Borgel</a> was taken with 21 years by national security agents (DINA). From the english version of the report (p. 690).</p>
 <blockquote>
 <p><em>On July 17, 1974, DINA agents arrested the MIR activist María Inés ALVARADO BORGEL in the Providencia district. Her captors later took her to the home of Martín ELGUETA PINTO, who was also arrested along with Juan Rosendo CHACON OLIVARES. These two were active in MIR. Other persons were arrested with them but were later released. During the days after her arrest, her captors took María Inés Alvarado to her family's house several times. All three disappeared from the Londres No. 38 site, where they had been seen by witnesses. The Commission is convinced that the disappearance of these three people was the work of government agents who thus violated their human rights.</em></p>
 </blockquote>

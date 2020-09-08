@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Modeling the Pinochet Dataset using Neo4j | On the shoulders of giants
+</title>
+  <link rel="canonical" href="/pinochet-neo4j.html">
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+
+  
+  <meta name="description" content="Modeling the victims of Pinochet's dictatorship as a graph">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
+      <p class="text-muted">Diego Quintana's blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/resume-EN.html">Resume</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-book" href="https://www.goodreads.com/user/show/67875829-diego-quintana" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-envelope" href="mailto:daquintanav@gmail.com" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Modeling the Pinochet Dataset using Neo4j
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2020-09-09T13:14:00-06:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 09 September 2020
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/data-science.html">Data Science</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="/tag/neo4j.html">#neo4j</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <h1>Introduction</h1>
+<p>On September 11, 1973, Chile faced a military coup lead by Augusto Pinochet <a href="https://nsarchive2.gwu.edu/NSAEBB/NSAEBB8/nsaebb8i.htm">and the US agenda</a>. Pinochet then would be then dictator and leader of the military regime until 1989. During the regime, thousands of people were kidnapped, tortured and killed. The atrocities committed by the regime are a scar that defines what Chile is today, and there are families that are still looking for their relatives.</p>
+<p>"Nostalgia for the light" is a nice documentary portraying people looking for their relatives, comparing it to the way astronomers look for stars in the sky.</p>
+<p><a href="https://www.youtube.com/watch?v=Z6x9tA_g7c8">https://www.youtube.com/watch?v=Z6x9tA_g7c8</a></p>
+<p>As part of the efforts to shed light on the truth about what happened, two official reports were can be mentioned: The first one was issued under the presidency of Patricio Alwyin in the year 1991, shortly after the military dictatorship ended. This document is known as the <em><a href="https://en.wikipedia.org/wiki/Rettig_Report">Rettig Report</a></em>. The second report was during the first presidency of Michelle Bachelet, and it attempts to extend these efforts in what is known as the <em><a href="https://en.wikipedia.org/wiki/Valech_Report">Valech Report</a>.</em></p>
+<p>It came to my knowledge that <em>some people,</em> more specifically, Danilo Freire and others, <a href="https://osf.io/vqnwu/">published a dataset and an article containing the information about the 903 pages of the report</a>, along with a <a href="https://github.com/danilofreire/pinochet">Github repository</a>.</p>
+<p>The proper citation is</p>
+<p><em>Freire, Danilo, David Skarbek, John Meadowcroft, and Eugenia Guerrero. 2019. “Deaths and Disappearances in the Pinochet Regime: A New Dataset.” SocArXiv. May 31. doi:10.31235/osf.io/vqnwu.</em></p>
+<blockquote>
+<p><em>Although the (Rettig) Report is a valuable source of information for scholars, quantitative researchers cannot readily use the rich data it contains. In this paper, we present a manually-coded dataset with all information from the Truth Commission Report plus new variables we collected to complement the original records. We transcribed every personal detail from the 903 pages of the English translation of the Report, assigned a unique identification number to each victim, then georeferenced the location of the human rights abuses. We added coordinates of latitude and longitude to every location mentioned in the report, such as places used to torture, interrogate or murder the victims.</em></p>
+</blockquote>
+<p>The repository explains this better</p>
+<blockquote>
+<p><em>This Github repository contains data and documented R code for Deaths and Disappearances in the Pinochet Regime: A New Dataset by Freire et al (2019). We coded the personal details of 2,398 victims named in the Chilean Truth Commission Report along with information about the perpetrators and geographical coordinates for all identifiable atrocity locations. The dataset covers from 1973 to 1990 and includes 59 indicators. Please refer to our accompanying article and our online appendix for more details.</em></p>
+</blockquote>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" /></p>
+<p>map of events from the pinochet repository</p>
+<p>I wanted to model this dataset as a graph, with the intention to explore the data as what it is, a network that links victims to places and events. This an attempt to learn, and to remember.</p>
+<h1>Roadmap</h1>
+<p>I will be first modeling the dataset as graph, using <a href="http://neo4j.com/">neo4j</a> and <a href="http://py2neo.org/">py2neo</a>. For this purpose I will be using <a href="https://www.docker.com/">docker</a>, as always. Next I will serve this graph to other clients using <a href="https://graphql.org/">graphql</a> through python's <a href="http://graphene-python.org/">graphene</a> library (although I recommend using <a href="https://www.apollographql.com/">apollo.js</a> instead), and finally I will consume this service using a <a href="https://leafletjs.com/">leaflet.js map</a>.</p>
+<p>I have other ideas, but I have to finish what I have right now. I would like to link this data to other information related to this dataset (e.g. the Valech report), perhaps through the graphql layer, or maybe using semantic technologies like <a href="https://ontop-vkg.org/">ontop</a> and <a href="https://protege.stanford.edu/">protege</a>. I learnt about these technologies the past semester and I've been itching to use them in something interesting.</p>
+<h1>Before starting</h1>
+<h2>Tabular form data exploration</h2>
+<p>You can see an analysis of the data in tabular form using Pandas and a map implementation using folium, in <a href="https://github.com/diegoquintanav/pinochet-analyze/blob/master/notebooks/pinochet-maps.ipynb">this notebook</a>. The notebooks is as of now in spanish only, and it will take a while to translate it. You can also see the analysis done in R in the original repository!</p>
+<h2>Related tutorials</h2>
+<p>I've used these tutorials up to some extent. Please check them if you wish to have more code examples!</p>
+<ul>
+<li><a href="https://github.com/neo4j-examples/neo4j-movies-template">https://github.com/neo4j-examples/neo4j-movies-template</a></li>
+<li><a href="https://medium.com/elements/diving-into-graphql-and-neo4j-with-python-244ec39ddd94">https://medium.com/elements/diving-into-graphql-and-neo4j-with-python-244ec39ddd94</a></li>
+<li><a href="https://github.com/elementsinteractive/flask-graphql-neo4j">https://github.com/elementsinteractive/flask-graphql-neo4j</a></li>
+<li><a href="https://gist.github.com/taiwotman/72d23977fd60ad5b017f43b33b42810d">https://gist.github.com/taiwotman/72d23977fd60ad5b017f43b33b42810d</a></li>
+<li><a href="https://www.youtube.com/watch?v=1JLs166lPcA&amp;list=PL9Hl4pk2FsvV_ojblDzXCg6gxdv437PGg">https://www.youtube.com/watch?v=1JLs166lPcA&amp;list=PL9Hl4pk2FsvV_ojblDzXCg6gxdv437PGg</a></li>
+<li><a href="https://dev.to/adamcowley/building-a-real-time-ui-on-top-of-neo4j-with-vue-js-and-kafka-152c">https://dev.to/adamcowley/building-a-real-time-ui-on-top-of-neo4j-with-vue-js-and-kafka-152c</a></li>
+</ul>
+<h3>On graphql</h3>
+<p>Check these resources if you don't know what is this graphql thing.</p>
+<ol>
+<li><a href="https://www.howtographql.com/advanced/1-server/">https://www.howtographql.com/</a>, a very good intro to graphql</li>
+<li><a href="https://dev.to/bogdanned/the-graph-in-graphql-1l99">https://dev.to/bogdanned/the-graph-in-graphql-1l99</a>, an in-depth article about the graphql specifications</li>
+<li><a href="https://www.apollographql.com/blog/graphql-explained-5844742f195e/">https://www.apollographql.com/blog/graphql-explained-5844742f195e/</a></li>
+</ol>
+<h3>On neo4j</h3>
+<ul>
+<li>I'm using docker version 3.5, for no reason in particular apart that I've used it before. I may update to 4.x in the future, if I find reasons to do so.</li>
+</ul>
+<h1>Modeling</h1>
+<h2>First approach: Don't change anything</h2>
+<p>The dataset contains informations about perpetrators, victims, violence events and event locations. We will develop models around these concepts, and we will stablish relationships between them afterwards. Items in bold are not in the dataset.</p>
+<h2>Concepts (or Nodes)</h2>
+<h3>Victims</h3>
+<ul>
+<li><code>individual_id</code>, integer</li>
+<li><code>group_id</code>, int</li>
+<li><code>first_name</code>, string</li>
+<li><code>last_name</code>, string</li>
+<li><code>age</code>, string: (this is to support NAs in the data, but they should be handled better e.g. with native nulls in neo4j, I agree. See <a href="https://stackoverflow.com/questions/40788440/neo4j-use-merge-with-null-values">https://stackoverflow.com/questions/40788440/neo4j-use-merge-with-null-values</a>)</li>
+<li><code>minor</code>, boolean</li>
+<li><code>male</code>, boolean</li>
+<li><code>number_previous_arrests</code>, string (same as in <code>age</code>)</li>
+<li><code>occupation</code>, string</li>
+<li><code>occupation_detail</code>, string</li>
+<li><code>victim_affiliation</code>, string</li>
+<li><code>victim_affiliation_detail</code>, string</li>
+<li><code>targeted</code>, string</li>
+</ul>
+<p>First we will extend the <code>GraphObject</code> used in py2neo to adapt it to our needs. W</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">GraphObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extends the GraphObject class with utility methods&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__node__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pk</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__primarykey__&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pk</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">fetch_by_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># https://py2neo.org/v4/ogm.html#object-matching</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span> <span class="k">if</span> <span class="n">exact</span> <span class="k">else</span> <span class="s2">&quot;=~&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_.</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;&quot;</span>  <span class="c1">#  e.g. _.name =~ &quot;.*K.*&quot; noqa</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
+</pre></div>
+
+
+<h3>Perpetrators</h3>
+<p>So let's start with the <code>Perpetrator</code> model. From the codebook we see that they have the following properties</p>
+<ul>
+<li><code>perpetrator_affiliation</code>, string</li>
+<li><code>perpetrator_affiliation_detail</code>, string</li>
+<li><code>war_tribunal</code>, boolean</li>
+</ul>
+<p>This is easily implemented as</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Perpetrator</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">perpetrator_affiliation</span> <span class="o">=</span> <span class="n">Property</span><span class="p">()</span>
+    <span class="n">perpetrator_affiliation_detail</span> <span class="o">=</span> <span class="n">Property</span><span class="p">()</span>
+    <span class="n">war_tribunal</span> <span class="o">=</span> <span class="n">Property</span><span class="p">()</span>
+</pre></div>
+
+
+<h3>ViolentEvent</h3>
+<p>Assuming each row describes a violent event, we say that a <code>ViolentEvent</code> develops in different <em>locations</em> specified by the <code>location_n</code> attribute.</p>
+<p>A <code>ViolentEvent</code> has thus the following node properties:</p>
+<ul>
+<li><code>violence</code>, string</li>
+<li><code>method</code>, string</li>
+<li><code>interrogation</code>, boolean</li>
+<li><code>torture</code>, boolean</li>
+<li><code>mistreatment</code>, boolean</li>
+<li><code>press</code>, boolean</li>
+<li><code>start_date_daily</code>, date or string</li>
+<li><code>end_date_daily</code>, date or string</li>
+<li><code>start_date_monthly</code>, date or string</li>
+<li><code>end_date_monthly</code>, date or string</li>
+</ul>
+<p>There are up to 6 locations per event, according to the codebook. We will associate a violent event to a series of locations, like</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png" /></p>
+<p>series of locations associated to one violent event</p>
+<p>Where <code>location_n</code> describes the n-th location from a series of events. From the codebook, we observe that</p>
+<ul>
+<li><code>exact_coordinates_n</code> : <em>We matched the event sites with coordinates of latitude and longitude.
+  As the report does not have the precise location of all events, we used the closest reference
+  available. This is a dummy variable stating whether coordinates are precise (street level) or
+  not. 1 = yes. There are six variables in the dataset, each pertaining to one location where the
+  individual was found or taken to.</em></li>
+<li><code>location_n</code> : <em>Where the individual was seen or found. There are up to 6 locations, so we coded them as location_1 to location_6 . The same pattern repeats in the variables below. The compilation of the location_n variable was based completely on information given in the Truth Report. However, since this information was in a string format (e.g. intersection
+  of Calle Grecia and Avenida Rosa), creating a new variable incorporating each location’s latitude and longitude was necessary to pursue further analysis of the trends in deaths and disappearances. The format chosen was decimal coordinates.</em></li>
+<li><code>place_n</code> : <em>Place where the individual was spotted/reported to be seen. (in chronological order,
+  from 1 to 6 places).</em> - Categories: <em>Home; Work; University; In custody; In public; In hospital; Unknown</em></li>
+</ul>
+<p>These locations look like this in the original dataset</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 1.png" /></p>
+<p>head of the dataset, slicing on the location related attributes</p>
+<h3>More on modeling series of events</h3>
+<ul>
+<li><a href="https://markhneedham.com/blog/2013/11/29/neo4j-modelling-series-of-events/">https://markhneedham.com/blog/2013/11/29/neo4j-modelling-series-of-events/</a></li>
+<li><a href="https://snowplowanalytics.com/blog/2018/03/26/building-a-model-for-atomic-event-data-as-a-graph/">https://snowplowanalytics.com/blog/2018/03/26/building-a-model-for-atomic-event-data-as-a-graph/</a></li>
+<li><a href="https://neo4j.com/news/relationship-thing-saving-evaluating-network-paths-neo4j/">https://neo4j.com/news/relationship-thing-saving-evaluating-network-paths-neo4j/</a></li>
+</ul>
+<h2>Relationships</h2>
+<p>We link nodes using <code>RelatedTo</code> and <code>RelatedFrom</code> from <code>py2neo</code>'s API. For example, we can link <code>Location</code> and <code>ViolentEvent</code> as follows</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="c1"># properties omitted</span>
+
+    <span class="c1"># outgoing relationships</span>
+    <span class="n">next_location</span> <span class="o">=</span> <span class="n">RelatedTo</span><span class="p">(</span><span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;NEXT_LOCATION&quot;</span><span class="p">)</span>
+
+    <span class="c1"># incoming relationships</span>
+    <span class="n">previous_locations</span> <span class="o">=</span> <span class="n">RelatedFrom</span><span class="p">(</span><span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;NEXT_LOCATION&quot;</span><span class="p">)</span>
+    <span class="n">first_violent_events</span> <span class="o">=</span> <span class="n">RelatedFrom</span><span class="p">(</span><span class="s2">&quot;ViolentEvent&quot;</span><span class="p">,</span> <span class="s2">&quot;FIRST_LOCATION&quot;</span><span class="p">)</span>
+    <span class="n">in_violent_events</span> <span class="o">=</span> <span class="n">RelatedFrom</span><span class="p">(</span><span class="s2">&quot;ViolentEvent&quot;</span><span class="p">,</span> <span class="s2">&quot;IN_LOCATION&quot;</span><span class="p">)</span>
+    <span class="n">last_violent_events</span> <span class="o">=</span> <span class="n">RelatedFrom</span><span class="p">(</span><span class="s2">&quot;ViolentEvent&quot;</span><span class="p">,</span> <span class="s2">&quot;LAST_LOCATION&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ViolentEvent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="c1"># properties omitted</span>
+
+    <span class="c1"># outgoing relationships</span>
+    <span class="n">first_location</span> <span class="o">=</span> <span class="n">RelatedTo</span><span class="p">(</span><span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;FIRST_LOCATION&quot;</span><span class="p">)</span>
+    <span class="n">in_location</span> <span class="o">=</span> <span class="n">RelatedTo</span><span class="p">(</span><span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;IN_LOCATION&quot;</span><span class="p">)</span>
+    <span class="n">last_location</span> <span class="o">=</span> <span class="n">RelatedTo</span><span class="p">(</span><span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;LAST_LOCATION&quot;</span><span class="p">)</span>
+
+    <span class="c1"># incoming relationships</span>
+    <span class="n">victims</span> <span class="o">=</span> <span class="n">RelatedFrom</span><span class="p">(</span><span class="s2">&quot;Victim&quot;</span><span class="p">,</span> <span class="s2">&quot;VICTIM_OF&quot;</span><span class="p">)</span>
+    <span class="n">perpetrators</span> <span class="o">=</span> <span class="n">RelatedFrom</span><span class="p">(</span><span class="s2">&quot;perpetrator&quot;</span><span class="p">,</span> <span class="s2">&quot;PERPETRATOR_OF&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>From the rules mentioned above, we end up with a graph that has this shape</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png" /></p>
+<p>shape of the final graph</p>
+<h1>Polishing things</h1>
+<p>The first approach is a bit flaky. We observe that we don't have a proper <code>id</code> or primary keys. These are not explicitly provided in the dataset, so we have to either create them artificially or pick one attribute from each node that will act as one. We can observe how this affect our final graph if we query entities with the same attributes.</p>
+<p>Take for example all the locations that refer to the <em>La Legua,</em> a <em>Población</em> or shantytown **in the south of Santiago that has a powerful history of struggle linked to political conflicts and lately to drug trafficking and crime, as in the words of <a href="https://scielo.conicyt.cl/scielo.php?script=sci_arttext&amp;pid=S0717-69962007000100005&amp;lng=es&amp;nrm=iso">Rodrigo Ganter (2007, in spanish only)</a>.</p>
+<blockquote>
+<p>La Legua has likely consolidated as a recognizable entity within the urban weave of Santiago because of the superposition of segregation, political conflicts and a disciplined culture. The structure of its community and its culture have been what have marked its boundaries with precision, rather than its spatial reality</p>
+</blockquote>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 2.png" /></p>
+<p><a href="http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693">http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693</a></p>
+<p><em>La Legua</em> is known for being one of the places that <a href="https://www.archivochile.com/Experiencias/exp_popu/EXPpopulares0002.pdf">presented resistance from the first day to the militar strike</a>, which along with its history made it a target during the dictatorship. In our graph database, we can observe that some events have their location in <em>La Legua</em>.</p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span> <span class="k">where</span> <span class="n">n</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="s1">&#39;.*Legua.*&#39;</span> <span class="k">return</span> <span class="n">n</span> <span class="k">LIMIT</span> <span class="mi">25</span>
+
+<span class="err">╒══════════════════════════════════════════════════════════════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;n&quot;</span>                                                                   <span class="err">│</span>
+<span class="err">╞══════════════════════════════════════════════════════════════════════╡</span>
+<span class="err">│{</span><span class="ss">&quot;location&quot;</span><span class="p">:</span><span class="ss">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="ss">&quot;place&quot;</span><span class="p">:</span><span class="ss">&quot;In Public&quot;</span><span class="p">,</span><span class="ss">&quot;location_order&quot;</span><span class="err">│</span>
+<span class="err">│</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="p">,</span><span class="ss">&quot;latitude&quot;</span><span class="p">:</span><span class="ss">&quot;-33.48722&quot;</span><span class="p">,</span><span class="ss">&quot;longitude&quot;</span><span class="p">:</span><span class="ss">&quot;-70.63556&quot;</span><span class="err">}</span>                  <span class="err">│</span>
+<span class="err">├──────────────────────────────────────────────────────────────────────┤</span>
+<span class="err">│{</span><span class="ss">&quot;location&quot;</span><span class="p">:</span><span class="ss">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="ss">&quot;place&quot;</span><span class="p">:</span><span class="ss">&quot;In Public&quot;</span><span class="p">,</span><span class="ss">&quot;location_order&quot;</span><span class="err">│</span>
+<span class="err">│</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="p">,</span><span class="ss">&quot;latitude&quot;</span><span class="p">:</span><span class="ss">&quot;-33.48722&quot;</span><span class="p">,</span><span class="ss">&quot;longitude&quot;</span><span class="p">:</span><span class="ss">&quot;-70.63556&quot;</span><span class="err">}</span>                  <span class="err">│</span>
+<span class="err">├──────────────────────────────────────────────────────────────────────┤</span>
+<span class="err">│{</span><span class="ss">&quot;location&quot;</span><span class="p">:</span><span class="ss">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="ss">&quot;place&quot;</span><span class="p">:</span><span class="ss">&quot;In Public&quot;</span><span class="p">,</span><span class="ss">&quot;location_order&quot;</span><span class="err">│</span>
+<span class="err">│</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="p">,</span><span class="ss">&quot;latitude&quot;</span><span class="p">:</span><span class="ss">&quot;-33.48722&quot;</span><span class="p">,</span><span class="ss">&quot;longitude&quot;</span><span class="p">:</span><span class="ss">&quot;-70.63556&quot;</span><span class="err">}</span>                  <span class="err">│</span>
+<span class="err">├──────────────────────────────────────────────────────────────────────┤</span>
+<span class="err">│{</span><span class="ss">&quot;location&quot;</span><span class="p">:</span><span class="ss">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="ss">&quot;place&quot;</span><span class="p">:</span><span class="ss">&quot;In Public&quot;</span><span class="p">,</span><span class="ss">&quot;location_order&quot;</span><span class="err">│</span>
+<span class="err">│</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="p">,</span><span class="ss">&quot;latitude&quot;</span><span class="p">:</span><span class="ss">&quot;-33.48722&quot;</span><span class="p">,</span><span class="ss">&quot;longitude&quot;</span><span class="p">:</span><span class="ss">&quot;-70.63556&quot;</span><span class="err">}</span>                  <span class="err">│</span>
+<span class="err">├──────────────────────────────────────────────────────────────────────┤</span>
+<span class="err">│{</span><span class="ss">&quot;location&quot;</span><span class="p">:</span><span class="ss">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="ss">&quot;place&quot;</span><span class="p">:</span><span class="ss">&quot;In Public&quot;</span><span class="p">,</span><span class="ss">&quot;location_order&quot;</span><span class="err">│</span>
+<span class="err">│</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="p">,</span><span class="ss">&quot;latitude&quot;</span><span class="p">:</span><span class="ss">&quot;-33.48722&quot;</span><span class="p">,</span><span class="ss">&quot;longitude&quot;</span><span class="p">:</span><span class="ss">&quot;-70.63556&quot;</span><span class="err">}</span>                  <span class="err">│</span>
+<span class="err">└──────────────────────────────────────────────────────────────────────┘</span>
+</pre></div>
+
+
+<p>We observe that although these are different nodes, they have the same attributes. The problem here is that we end up with repeated nodes in our database. We want to resolve these entities as equal at insertion time, into one single node.</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 3.png" /></p>
+<p>Five nodes representing the same thing. We can merge them into one node.</p>
+<p>From the py2neo <a href="https://py2neo.org/v4/ogm.html#py2neo.ogm.GraphObject">documentation</a>, we could achieve this by doing</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__primarykey__</span> <span class="o">=</span> <span class="s2">&quot;location&quot;</span>  <span class="c1"># newline</span>
+    <span class="c1"># rest of model below</span>
+</pre></div>
+
+
+<p>But we will soon realize that we may be ignoring those locations that have equal <em>location</em> attribute but are different in other attributes. Take for instance the following query.</p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">Location</span><span class="p">)</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">location</span><span class="w"> </span><span class="p">=</span><span class="err">~</span><span class="w"> </span><span class="err">&#39;</span><span class="p">.*</span><span class="n">Legua</span><span class="p">.*</span><span class="err">&#39;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">location</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">exact_location</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">place</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">location_order</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="m">25</span><span class="w"></span>
+
+
+<span class="err">╒═════════════════════╤══════════════════╤═══════════╤════════════╤═════════════╤══════════════════╕</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;n.location&quot;</span><span class="w">         </span><span class="err">│</span><span class="s">&quot;n.exact_location&quot;</span><span class="err">│</span><span class="s">&quot;n.place&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;n.latitude&quot;</span><span class="err">│</span><span class="s">&quot;n.longitude&quot;</span><span class="err">│</span><span class="s">&quot;n.location_order&quot;</span><span class="err">│</span><span class="w"></span>
+<span class="err">╞═════════════════════╪══════════════════╪═══════════╪════════════╪═════════════╪══════════════════╡</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;Home&quot;</span><span class="w">     </span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;Home&quot;</span><span class="w">     </span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;In Public&quot;</span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">├─────────────────────┼──────────────────┼───────────┼────────────┼─────────────┼──────────────────┤</span><span class="w"></span>
+<span class="err">│</span><span class="s">&quot;La Legua shantytown&quot;</span><span class="err">│</span><span class="k">null</span><span class="w">              </span><span class="err">│</span><span class="s">&quot;Home&quot;</span><span class="w">     </span><span class="err">│</span><span class="s">&quot;-33.48722&quot;</span><span class="w"> </span><span class="err">│</span><span class="s">&quot;-70.63556&quot;</span><span class="w">  </span><span class="err">│</span><span class="s">&quot;1&quot;</span><span class="w">               </span><span class="err">│</span><span class="w"></span>
+<span class="err">└─────────────────────┴──────────────────┴───────────┴────────────┴─────────────┴──────────────────┘</span><span class="w"></span>
+</pre></div>
+
+
+<p>We see that although with the same latitude and longitude, some events occured <em>In public</em> where as other events occured at the victim's home. We will hash these attributes and use the result as a key to avoid redundant data. In other words, we will use and MD5 hash function from python's <code>hashlib</code></p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+<span class="s1">&#39;acbd18db4cc2f85cedef654fccc4a4d8&#39;</span>
+</pre></div>
+
+
+<p>In code, this would be something like</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="k">def</span> <span class="nf">to_md5</span><span class="p">(</span><span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="o">.</span><span class="n">List</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;calculates the MD5 hash of the string of concatenated elements&quot;&quot;&quot;</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">pre</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</pre></div>
+
+
+<p>I'm not thinking too much into this: I will produce at least 2398 different keys, and considering this is not for cryptographic purposes, MD5 gives me plenty of room for that.</p>
+<p>For tables and graphs that are intended to grow over time, you should think more about using this approach. One common caveat is that MD5 is not secure for storing passwords (its initial purpose), and it <a href="https://www.kb.cert.org/vuls/id/836068">has known collision issues</a>.</p>
+<p>For the case of <code>Perpetrator</code> we note that from 2398 total instances in the db, we have these unique entities</p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">Perpetrator</span><span class="p">)</span>  <span class="k">RETURN</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="n">n</span><span class="p">.</span><span class="n">perpetrator_affiliation_detail</span><span class="p">)</span>
+<span class="mi">228</span>
+<span class="err">$</span> <span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">Perpetrator</span><span class="p">)</span>  <span class="k">RETURN</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">n</span><span class="p">.</span><span class="n">perpetrator_affiliation</span><span class="p">)</span>
+<span class="mi">3</span>
+<span class="err">$</span> <span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">Perpetrator</span><span class="p">)</span>  <span class="k">RETURN</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">n</span><span class="p">.</span><span class="n">war_tribunal</span><span class="p">)</span>
+<span class="mi">2</span>
+</pre></div>
+
+
+<p>with these, we can create 228<em>3</em>2 = 1392 unique <em>ids</em> if we concatenate attribute values. We can compress this index to have some meaning, like a hash of (attr1 + attr2 + attr3). As it is, <code>Perpetrator</code> is sort of a <a href="https://key2consulting.com/building-a-data-warehouse-populating-and-using-a-junk-dimension/">junk dimension in the Data Warehousing jargon.</a></p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Perpetrator</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__primarykey__</span> <span class="o">=</span> <span class="s2">&quot;perpetrator_id&quot;</span>
+
+    <span class="n">perpetrator_id</span> <span class="o">=</span> <span class="n">CustomProperty</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="c1"># rest of model below</span>
+</pre></div>
+
+
+<p>For the case of <code>ViolentEvents</code> it is more difficult. We also have 2398 instances. Let's have a look at the dates, which seem promising as primary keys.</p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span> <span class="k">RETURN</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">n</span><span class="p">.</span><span class="n">start_date_daily</span><span class="p">),</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">n</span><span class="p">.</span><span class="n">end_date_daily</span><span class="p">),</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">n</span><span class="p">.</span><span class="n">start_date_monthly</span><span class="p">),</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">n</span><span class="p">.</span><span class="n">end_date_monthly</span><span class="p">)</span>
+
+<span class="err">╒═════════╤═════════╤═════════╤═════════╕</span>
+<span class="err">│</span><span class="ss">&quot;count(di│&quot;</span><span class="k">count</span><span class="p">(</span><span class="n">di</span><span class="err">│</span><span class="ss">&quot;count(di│&quot;</span><span class="k">count</span><span class="p">(</span><span class="n">di</span><span class="err">│</span>
+<span class="err">│</span><span class="n">stinct</span> <span class="n">n</span><span class="p">.</span><span class="err">│</span><span class="n">stinct</span> <span class="n">n</span><span class="p">.</span><span class="err">│</span><span class="n">stinct</span> <span class="n">n</span><span class="p">.</span><span class="err">│</span><span class="n">stinct</span> <span class="n">n</span><span class="p">.</span><span class="err">│</span>
+<span class="err">│</span><span class="n">start_dat</span><span class="err">│</span><span class="n">end_date_</span><span class="err">│</span><span class="n">start_dat</span><span class="err">│</span><span class="n">end_date_</span><span class="err">│</span>
+<span class="err">│</span><span class="n">e_daily</span><span class="p">)</span><span class="ss">&quot;│daily)&quot;</span>  <span class="err">│</span><span class="n">e_monthly</span><span class="err">│</span><span class="n">monthly</span><span class="p">)</span><span class="ss">&quot;│</span>
+<span class="ss">│         │         │)&quot;</span>       <span class="err">│</span>         <span class="err">│</span>
+<span class="err">╞═════════╪═════════╪═════════╪═════════╡</span>
+<span class="err">│</span><span class="mi">652</span>      <span class="err">│</span><span class="mi">658</span>      <span class="err">│</span><span class="mi">151</span>      <span class="err">│</span><span class="mi">155</span>      <span class="err">│</span>
+<span class="err">└─────────┴─────────┴─────────┴─────────┘</span>
+</pre></div>
+
+
+<p>The main difficulty is with the data as we know it right now, <em>we have no way to know that two violent events refer to the same instance</em>. We will then assume that all instances in this table are unique i.e. all violent events are unique, and we will give them a UUID accordingly.</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ViolentEvent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__primarykey__</span> <span class="o">=</span> <span class="s2">&quot;event_uuid&quot;</span>
+
+    <span class="n">event_uuid</span> <span class="o">=</span> <span class="n">Property</span><span class="p">()</span>
+    <span class="c1"># rest of model goes here</span>
+</pre></div>
+
+
+<hr />
+<p>With these keys in place, we recreate the graph and repeat the first query, and see that now there are three instances in total. We removed a lot of redundant data this way!</p>
+<div class="highlight"><pre><span></span><span class="n">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">Location</span><span class="p">)</span> <span class="n">where</span> <span class="n">n</span><span class="o">.</span><span class="n">location</span> <span class="o">=~</span> <span class="s1">&#39;.*Legua.*&#39;</span> <span class="k">return</span> <span class="n">n</span> <span class="n">LIMIT</span> <span class="mi">25</span>
+
+<span class="err">╒══════════════════════════════════════════════════════════════════════╕</span>
+<span class="err">│</span><span class="s2">&quot;n&quot;</span>                                                                   <span class="err">│</span>
+<span class="err">╞══════════════════════════════════════════════════════════════════════╡</span>
+<span class="err">│</span><span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="s2">&quot;place&quot;</span><span class="p">:</span><span class="s2">&quot;In Public&quot;</span><span class="p">,</span><span class="s2">&quot;location_order&quot;</span><span class="err">│</span>
+<span class="err">│</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;location_id&quot;</span><span class="p">:</span><span class="s2">&quot;cb95da6b208a47984cb25051d4ec9561&quot;</span><span class="p">,</span><span class="s2">&quot;latitude&quot;</span><span class="p">:</span><span class="s2">&quot;-33.│</span>
+<span class="err">│</span><span class="mi">48722</span><span class="s2">&quot;,&quot;</span><span class="n">longitude</span><span class="s2">&quot;:&quot;</span><span class="o">-</span><span class="mf">70.63556</span><span class="s2">&quot;}                                       │</span>
+<span class="err">├──────────────────────────────────────────────────────────────────────┤</span>
+<span class="err">│</span><span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;La Legua&quot;</span><span class="p">,</span><span class="s2">&quot;place&quot;</span><span class="p">:</span><span class="s2">&quot;In Public&quot;</span><span class="p">,</span><span class="s2">&quot;location_order&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;locat│</span>
+<span class="err">│</span><span class="n">ion_id</span><span class="s2">&quot;:&quot;</span><span class="n">a25c89cb84f42e76be3c60c34d536abd</span><span class="s2">&quot;,&quot;</span><span class="n">latitude</span><span class="s2">&quot;:&quot;</span><span class="o">-</span><span class="mf">33.48722</span><span class="s2">&quot;,&quot;</span><span class="n">lon</span><span class="err">│</span>
+<span class="err">│</span><span class="n">gitude</span><span class="s2">&quot;:&quot;</span><span class="o">-</span><span class="mf">70.63556</span><span class="s2">&quot;}                                                  │</span>
+<span class="err">├──────────────────────────────────────────────────────────────────────┤</span>
+<span class="err">│</span><span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;La Legua shantytown&quot;</span><span class="p">,</span><span class="s2">&quot;place&quot;</span><span class="p">:</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span><span class="s2">&quot;location_order&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="err">│</span>
+<span class="err">│</span><span class="s2">&quot;location_id&quot;</span><span class="p">:</span><span class="s2">&quot;8a0bf7de20dd6ed6c3f76aab95d942bb&quot;</span><span class="p">,</span><span class="s2">&quot;latitude&quot;</span><span class="p">:</span><span class="s2">&quot;-33.48722│</span>
+<span class="err">│</span><span class="s2">&quot;,&quot;</span><span class="n">longitude</span><span class="s2">&quot;:&quot;</span><span class="o">-</span><span class="mf">70.63556</span><span class="s2">&quot;}                                            │</span>
+<span class="err">└──────────────────────────────────────────────────────────────────────┘</span>
+</pre></div>
+
+
+<p>In the same way, we see that</p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="n">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">Perpetrator</span><span class="p">)</span>  <span class="n">RETURN</span> <span class="n">COUNT</span><span class="p">(</span><span class="n">DISTINCT</span> <span class="n">n</span><span class="p">)</span>
+<span class="mi">244</span>
+</pre></div>
+
+
+<h1>Loading the dataset into a graph</h1>
+<p>We are loading the dataset with one script, it's long so please bear with me. You can check the <a href="https://github.com/diegoquintanav/pinochet-analyze/blob/master/services/graph-api/project/db/__init__.py">full script in github</a></p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">T</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEO4J_HOST&quot;</span><span class="p">),</span>
+    <span class="n">port</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEO4J_PORT&quot;</span><span class="p">),</span>
+    <span class="n">user</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEO4J_USER&quot;</span><span class="p">),</span>
+    <span class="n">password</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NEO4J_PASSWORD&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">clear_graph</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;MATCH (n) DETACH DELETE n&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">stats</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">__create_node</span><span class="p">(</span><span class="n">graph_object</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">current_app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating </span><span class="si">{</span><span class="n">graph_object</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">graph_object</span><span class="p">)</span>
+    <span class="n">current_app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_locations</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Location</span><span class="p">]:</span>
+    <span class="n">locations</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># there are 6 locations max in the dataset. We will fetch those that are not empty</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+        <span class="n">location_name</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;location_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">location_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">location_name</span> <span class="o">!=</span> <span class="s2">&quot;NA&quot;</span><span class="p">:</span>
+            <span class="n">loc_mapping</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;exact_location&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;exact_coordinates_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location_name</span><span class="p">,</span>
+                <span class="s2">&quot;place&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;place_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;latitude_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;longitude_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;location_order&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="n">loc</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span>
+                <span class="n">location_id</span><span class="o">=</span><span class="n">to_md5</span><span class="p">(</span><span class="n">loc_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="o">**</span><span class="n">loc_mapping</span>
+            <span class="p">)</span>
+
+            <span class="n">locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">locations</span>
+
+<span class="k">def</span> <span class="nf">seed_graph</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">csv_reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">fp</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="c1"># create victims</span>
+            <span class="n">victim</span> <span class="o">=</span> <span class="n">Victim</span><span class="p">(</span>
+                <span class="n">individual_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;individual_id&quot;</span><span class="p">],</span>  <span class="c1"># pk</span>
+                <span class="n">group_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;group_id&quot;</span><span class="p">],</span>
+                <span class="n">first_name</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">],</span>
+                <span class="n">last_name</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;last_name&quot;</span><span class="p">],</span>
+                <span class="n">age</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">],</span>
+                <span class="n">minor</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;minor&quot;</span><span class="p">],</span>
+                <span class="n">male</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;male&quot;</span><span class="p">],</span>
+                <span class="n">nationality</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;nationality&quot;</span><span class="p">],</span>
+                <span class="n">number_previous_arrests</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;number_previous_arrests&quot;</span><span class="p">],</span>
+                <span class="n">occupation</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;occupation&quot;</span><span class="p">],</span>
+                <span class="n">occupation_detail</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;occupation_detail&quot;</span><span class="p">],</span>
+                <span class="n">victim_affiliation</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;victim_affiliation&quot;</span><span class="p">],</span>
+                <span class="n">victim_affiliation_detail</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;victim_affiliation_detail&quot;</span><span class="p">],</span>
+                <span class="n">targeted</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;targeted&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="n">perp_mapping</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;perpetrator_affiliation&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;perpetrator_affiliation&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;perpetrator_affiliation_detail&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span>
+                    <span class="s2">&quot;perpetrator_affiliation_detail&quot;</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;war_tribunal&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;war_tribunal&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+
+            <span class="c1"># obtain the md5 as PK</span>
+            <span class="n">perp</span> <span class="o">=</span> <span class="n">Perpetrator</span><span class="p">(</span>
+                <span class="n">perpetrator_id</span><span class="o">=</span><span class="n">to_md5</span><span class="p">(</span><span class="n">perp_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="o">**</span><span class="n">perp_mapping</span>
+            <span class="p">)</span>
+
+            <span class="n">locations</span> <span class="o">=</span> <span class="n">get_locations</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+            <span class="n">event</span> <span class="o">=</span> <span class="n">ViolentEvent</span><span class="p">(</span>
+                <span class="n">event_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>  <span class="c1"># pk</span>
+                <span class="n">violence</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;violence&quot;</span><span class="p">],</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">],</span>
+                <span class="n">interrogation</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;interrogation&quot;</span><span class="p">],</span>
+                <span class="n">torture</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;torture&quot;</span><span class="p">],</span>
+                <span class="n">mistreatment</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;mistreatment&quot;</span><span class="p">],</span>
+                <span class="n">press</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;press&quot;</span><span class="p">],</span>
+                <span class="n">start_date_daily</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;start_date_daily&quot;</span><span class="p">],</span>
+                <span class="n">end_date_daily</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;end_date_daily&quot;</span><span class="p">],</span>
+                <span class="n">start_date_monthly</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;start_date_monthly&quot;</span><span class="p">],</span>
+                <span class="n">end_date_monthly</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;end_date_monthly&quot;</span><span class="p">],</span>
+                <span class="n">page</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">],</span>
+                <span class="n">additional_comments</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;additional_comments&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="c1"># create relationships</span>
+            <span class="k">if</span> <span class="n">locations</span><span class="p">:</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">first_location</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">locations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">last_location</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">locations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">locations</span><span class="p">):</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">in_location</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">locations</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">next_location</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+            <span class="n">victim</span><span class="o">.</span><span class="n">victim_of</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="n">perp</span><span class="o">.</span><span class="n">perpetrator_of</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+            <span class="c1"># create nodes</span>
+            <span class="n">__create_node</span><span class="p">(</span><span class="n">victim</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">)</span>
+            <span class="n">__create_node</span><span class="p">(</span><span class="n">perp</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">)</span>
+            <span class="n">__create_node</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
+                <span class="n">__create_node</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We could have done something using Cypher, the neo4j schema and APOC, a library for many kinds of tasks within neo4j. At some point though Cypher's capabilities fell short so I had to rely on python. After we've done this, we can start querying the graph, with things like</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 4.png" /></p>
+<h2>General statistics</h2>
+<p>from <a href="https://neo4j.com/developer/kb/how-do-i-produce-an-inventory-of-statistics-on-nodes-relationships-properties/">https://neo4j.com/developer/kb/how-do-i-produce-an-inventory-of-statistics-on-nodes-relationships-properties/</a> we can create an inventory of miscellaneous statistics of the graph.</p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">labels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">as</span> <span class="n">labels</span><span class="p">,</span> <span class="k">size</span><span class="p">(</span><span class="n">keys</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="k">as</span> <span class="n">props</span><span class="p">,</span> <span class="k">size</span><span class="p">((</span><span class="n">n</span><span class="p">)</span><span class="c1">--()) as degree</span>
+<span class="k">RETURN</span>
+<span class="k">DISTINCT</span> <span class="n">labels</span><span class="p">,</span>
+<span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">NumofNodes</span><span class="p">,</span>
+<span class="k">avg</span><span class="p">(</span><span class="n">props</span><span class="p">)</span> <span class="k">AS</span> <span class="n">AvgNumOfPropPerNode</span><span class="p">,</span>
+<span class="k">min</span><span class="p">(</span><span class="n">props</span><span class="p">)</span> <span class="k">AS</span> <span class="n">MinNumPropPerNode</span><span class="p">,</span>
+<span class="k">max</span><span class="p">(</span><span class="n">props</span><span class="p">)</span> <span class="k">AS</span> <span class="n">MaxNumPropPerNode</span><span class="p">,</span>
+<span class="k">avg</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span> <span class="k">AS</span> <span class="n">AvgNumOfRelationships</span><span class="p">,</span>
+<span class="k">min</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span> <span class="k">AS</span> <span class="n">MinNumOfRelationships</span><span class="p">,</span>
+<span class="k">max</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span> <span class="k">AS</span> <span class="n">MaxNumOfRelationships</span>
+
+<span class="o">#</span> <span class="k">result</span>
+
+<span class="err">╒════════╤════════╤════════╤════════╤════════╤════════╤════════╤════════╕</span>
+<span class="err">│</span><span class="ss">&quot;labels&quot;</span><span class="err">│</span><span class="ss">&quot;NumofNo│&quot;</span><span class="n">AvgNumO</span><span class="err">│</span><span class="ss">&quot;MinNumP│&quot;</span><span class="n">MaxNumP</span><span class="err">│</span><span class="ss">&quot;AvgNumO│&quot;</span><span class="n">MinNumO</span><span class="err">│</span><span class="ss">&quot;MaxNumO│</span>
+<span class="ss">│        │des&quot;</span>    <span class="err">│</span><span class="n">fPropPer</span><span class="err">│</span><span class="n">ropPerNo</span><span class="err">│</span><span class="n">ropPerNo</span><span class="err">│</span><span class="n">fRelatio</span><span class="err">│</span><span class="n">fRelatio</span><span class="err">│</span><span class="n">fRelatio</span><span class="err">│</span>
+<span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span><span class="n">Node</span><span class="ss">&quot;   │de&quot;</span>     <span class="err">│</span><span class="n">de</span><span class="ss">&quot;     │nships&quot;</span> <span class="err">│</span><span class="n">nships</span><span class="ss">&quot; │nships&quot;</span> <span class="err">│</span>
+<span class="err">╞════════╪════════╪════════╪════════╪════════╪════════╪════════╪════════╡</span>
+<span class="err">│</span><span class="p">[</span><span class="ss">&quot;Victim│2398    │13.0    │13      │13      │1.0     │1       │1       │</span>
+<span class="ss">│&quot;</span><span class="p">]</span>      <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>
+<span class="err">├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤</span>
+<span class="err">│</span><span class="p">[</span><span class="ss">&quot;Violen│2398    │13.0    │13      │13      │4.690992│1       │9       │</span>
+<span class="ss">│tEvent&quot;</span><span class="p">]</span><span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span><span class="mi">49374478</span><span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>
+<span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span><span class="mi">1</span>       <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>
+<span class="err">├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤</span>
+<span class="err">│</span><span class="p">[</span><span class="ss">&quot;Locati│1841    │6.0     │6       │6       │5.652906│2       │227     │</span>
+<span class="ss">│on&quot;</span><span class="p">]</span>    <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span><span class="mi">02933188</span><span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>
+<span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span><span class="mi">8</span>       <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>
+<span class="err">├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤</span>
+<span class="err">│</span><span class="p">[</span><span class="ss">&quot;Perpet│244     │4.0     │4       │4       │1.0     │1       │1       │</span>
+<span class="ss">│rator&quot;</span><span class="p">]</span> <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>        <span class="err">│</span>
+<span class="err">└────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┘</span>
+</pre></div>
+
+
+<p>We observe right away that on average, a violent event is linked to ~4.7 nodes. We would like to be more specific, and for this we will craft the subgraph that we would like to match, and then we will get the outgoing degree of the event for all victims.</p>
+<p>This is equivalent to asking for the length on average of the paths walked for a victim. This boils down to fetch the <em>initial</em> and the <em>last</em> location of each event, and count how many locations are in the path formed by those locations.</p>
+<div class="highlight"><pre><span></span><span class="k">match</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">e</span>
+<span class="k">match</span> <span class="n">pathA</span><span class="o">=</span><span class="p">(</span><span class="n">fl</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span><span class="o">&lt;-</span><span class="p">[:</span><span class="n">FIRST_LOCATION</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">LAST_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fl</span><span class="p">,</span> <span class="n">ll</span>
+<span class="k">match</span> <span class="n">pathB</span><span class="o">=</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">NEXT_LOCATION</span><span class="o">*</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">)</span>
+<span class="k">with</span> <span class="k">length</span><span class="p">(</span><span class="n">pathB</span><span class="p">)</span> <span class="k">as</span> <span class="n">pathLength</span>
+<span class="k">return</span> <span class="k">avg</span><span class="p">(</span><span class="n">pathLength</span><span class="p">)</span>
+
+<span class="err">╒══════════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;avg(pathLength)&quot;</span> <span class="err">│</span>
+<span class="err">╞══════════════════╡</span>
+<span class="err">│</span><span class="mi">1</span><span class="p">.</span><span class="mi">4383708467309761</span><span class="err">│</span>
+<span class="err">└──────────────────┘</span>
+</pre></div>
+
+
+<p>In other words, a victim visits 1.43 places on average before <em>ending its journey</em> (either by getting killed, dissapeared, or suicide, for example).</p>
+<ul>
+<li>didn't work</li>
+</ul>
+<p>```sql
+  # this is the same as above, but with substracting -2 to the length because this path contains the event twice each time
+  match (e:ViolentEvent)
+  with e
+  match path=(e)-[:FIRST_LOCATION]-&gt;(fl:Location)-[:NEXT_LOCATION*]-&gt;(ll:Location)&lt;-[:LAST_LOCATION]-(e)
+  with length(path) - 2 as pathSize
+  return avg(pathSize)</p>
+<p>╒══════════════════╕
+  │"avg(pathSize)"   │
+  ╞══════════════════╡
+  │1.4383708467309761│
+  └──────────────────┘
+  ```</p>
+<p>```sql
+  # this query should be equivalent but it yields a different value for some reason
+  MATCH (v:Victim)-[:VICTIM_OF]-&gt;(e:ViolentEvent)
+  WITH e
+  MATCH path=(e)-[r:IN_LOCATION]-&gt;(l:Location)
+  WITH e, count(r) as degree
+  RETURN avg(degree)</p>
+<p>╒════════════════╕
+  │"avg(degree)"   │
+  ╞════════════════╡
+  │1.80672268907563│
+  └────────────────┘
+  ```</p>
+<h2>Using the geospatial module of neo4j</h2>
+<p><a href="https://towardsdatascience.com/part-2-exploring-pathfinding-graph-algorithms-e194ffb7f569">https://towardsdatascience.com/part-2-exploring-pathfinding-graph-algorithms-e194ffb7f569</a></p>
+<p><a href="https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/">https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/</a></p>
+<p>update relationships with geodesic distance</p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">e</span>
+<span class="k">MATCH</span> <span class="n">pathA</span><span class="o">=</span><span class="p">(</span><span class="n">fl</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span><span class="o">&lt;-</span><span class="p">[:</span><span class="n">FIRST_LOCATION</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">LAST_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">fl</span><span class="p">,</span> <span class="n">ll</span>
+<span class="k">MATCH</span> <span class="n">pathB</span><span class="o">=</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">NEXT_LOCATION</span><span class="o">*</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">point</span><span class="p">(</span><span class="err">{</span><span class="n">x</span><span class="p">:</span> <span class="n">toFloat</span><span class="p">(</span><span class="n">fl</span><span class="p">.</span><span class="n">longitude</span><span class="p">)</span> <span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">toFloat</span><span class="p">(</span><span class="n">fl</span><span class="p">.</span><span class="n">latitude</span><span class="p">),</span> <span class="n">crs</span><span class="p">:</span><span class="s1">&#39;wgs-84&#39;</span><span class="err">}</span><span class="p">)</span> <span class="k">as</span> <span class="n">p1</span><span class="p">,</span> <span class="n">point</span><span class="p">(</span><span class="err">{</span><span class="n">x</span><span class="p">:</span> <span class="n">toFloat</span><span class="p">(</span><span class="n">ll</span><span class="p">.</span><span class="n">longitude</span><span class="p">),</span> <span class="n">y</span><span class="p">:</span> <span class="n">toFloat</span><span class="p">(</span><span class="n">ll</span><span class="p">.</span><span class="n">latitude</span><span class="p">),</span> <span class="n">crs</span><span class="p">:</span><span class="s1">&#39;wgs-84&#39;</span><span class="err">}</span><span class="p">)</span> <span class="k">as</span> <span class="n">p2</span><span class="p">,</span> <span class="n">fl</span><span class="p">,</span> <span class="n">ll</span>
+<span class="k">RETURN</span> <span class="n">fl</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="n">ll</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="n">distance</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+<span class="k">LIMIT</span> <span class="mi">5</span>
+
+<span class="err">╒═══════════════════╤═══════════════════╤══════════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;fl.location&quot;</span>      <span class="err">│</span><span class="ss">&quot;ll.location&quot;</span>      <span class="err">│</span><span class="ss">&quot;distance(p1, p2)&quot;</span><span class="err">│</span>
+<span class="err">╞═══════════════════╪═══════════════════╪══════════════════╡</span>
+<span class="err">│</span><span class="ss">&quot;Ochagavia Bridge o│&quot;</span><span class="n">Ochagavia</span> <span class="n">Bridge</span> <span class="n">o</span><span class="err">│</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span>               <span class="err">│</span>
+<span class="err">│</span><span class="n">ver</span> <span class="n">Callejón</span> <span class="n">Lo</span> <span class="n">Ova</span><span class="err">│</span><span class="n">ver</span> <span class="n">Callejón</span> <span class="n">Lo</span> <span class="n">Ova</span><span class="err">│</span>                  <span class="err">│</span>
+<span class="err">│</span><span class="n">lle</span><span class="ss">&quot;               │lle&quot;</span>               <span class="err">│</span>                  <span class="err">│</span>
+<span class="err">├───────────────────┼───────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Intersection of Lo│&quot;</span><span class="k">On</span> <span class="n">route</span> <span class="k">to</span> <span class="n">Barros</span><span class="err">│</span><span class="mi">7058</span><span class="p">.</span><span class="mi">819005808001</span> <span class="err">│</span>
+<span class="err">│</span> <span class="n">Sierra</span> <span class="k">and</span> <span class="n">Lo</span> <span class="n">Espe</span><span class="err">│</span> <span class="n">Lucas</span> <span class="n">Hospital</span> <span class="ss">&quot;  │                  │</span>
+<span class="ss">│jo&quot;</span>                <span class="err">│</span>                   <span class="err">│</span>                  <span class="err">│</span>
+<span class="err">├───────────────────┼───────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;downtown Santiago&quot;</span><span class="err">│</span><span class="ss">&quot;Villa Grimaldi&quot;</span>   <span class="err">│</span><span class="mi">12154</span><span class="p">.</span><span class="mi">56171338133</span> <span class="err">│</span>
+<span class="err">├───────────────────┼───────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;downtown Santiago&quot;</span><span class="err">│</span><span class="ss">&quot;Villa Grimaldi&quot;</span>   <span class="err">│</span><span class="mi">12154</span><span class="p">.</span><span class="mi">56171338133</span> <span class="err">│</span>
+<span class="err">├───────────────────┼───────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Calle Nuble, 1034&quot;</span><span class="err">│</span><span class="ss">&quot;Central Emergency │2995.4570977906865│</span>
+<span class="ss">│                   │Clinic&quot;</span>            <span class="err">│</span>                  <span class="err">│</span>
+<span class="err">└───────────────────┴───────────────────┴──────────────────┘</span>
+</pre></div>
+
+
+<p>This is approximatedly 9 kilometers</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 5.png" /></p>
+<p>From "Ñuble 1034" to the main clinica, 3km approx.</p>
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 6.png" /></p>
+<h3>Which type of events are linked to more locations?</h3>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">e</span>
+<span class="k">MATCH</span> <span class="n">path</span><span class="o">=</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[</span><span class="n">r</span><span class="p">:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">RETURN</span> <span class="n">e</span><span class="p">.</span><span class="n">violence</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">AS</span> <span class="n">degree</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">degree</span> <span class="k">DESC</span>
+
+<span class="err">╒═════════════════════════════════════╤════════╕</span>
+<span class="err">│</span><span class="ss">&quot;e.violence&quot;</span>                         <span class="err">│</span><span class="ss">&quot;degree&quot;</span><span class="err">│</span>
+<span class="err">╞═════════════════════════════════════╪════════╡</span>
+<span class="err">│</span><span class="ss">&quot;Killed&quot;</span>                             <span class="err">│</span><span class="mi">2331</span>    <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Disappearance&quot;</span>                      <span class="err">│</span><span class="mi">1438</span>    <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Disappearance, Information of Death&quot;</span><span class="err">│</span><span class="mi">212</span>     <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Unresolved&quot;</span>                         <span class="err">│</span><span class="mi">86</span>      <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Suicide&quot;</span>                            <span class="err">│</span><span class="mi">16</span>      <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼────────┤</span>
+<span class="err">│</span><span class="ss">&quot;NA&quot;</span>                                 <span class="err">│</span><span class="mi">2</span>       <span class="err">│</span>
+<span class="err">└─────────────────────────────────────┴────────┘</span>
+</pre></div>
+
+
+<p>but when we analyze the average number of locations, we get a different perspective</p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">e</span>
+<span class="k">MATCH</span> <span class="n">path</span><span class="o">=</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-</span><span class="p">[</span><span class="n">r</span><span class="p">:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">WITH</span> <span class="n">e</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">as</span> <span class="n">degree</span>
+<span class="k">RETURN</span> <span class="n">e</span><span class="p">.</span><span class="n">violence</span><span class="p">,</span> <span class="k">avg</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span> <span class="k">AS</span> <span class="n">avgDegree</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">avgDegree</span> <span class="k">DESC</span>
+
+<span class="err">╒═════════════════════════════════════╤══════════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;e.violence&quot;</span>                         <span class="err">│</span><span class="ss">&quot;avgDegree&quot;</span>       <span class="err">│</span>
+<span class="err">╞═════════════════════════════════════╪══════════════════╡</span>
+<span class="err">│</span><span class="ss">&quot;Suicide&quot;</span>                            <span class="err">│</span><span class="mi">2</span><span class="p">.</span><span class="mi">0</span>               <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;NA&quot;</span>                                 <span class="err">│</span><span class="mi">2</span><span class="p">.</span><span class="mi">0</span>               <span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Disappearance, Information of Death&quot;</span><span class="err">│</span><span class="mi">1</span><span class="p">.</span><span class="mi">9629629629629628</span><span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Killed&quot;</span>                             <span class="err">│</span><span class="mi">1</span><span class="p">.</span><span class="mi">8618210862619833</span><span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Disappearance&quot;</span>                      <span class="err">│</span><span class="mi">1</span><span class="p">.</span><span class="mi">7388149939540511</span><span class="err">│</span>
+<span class="err">├─────────────────────────────────────┼──────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Unresolved&quot;</span>                         <span class="err">│</span><span class="mi">1</span><span class="p">.</span><span class="mi">3230769230769233</span><span class="err">│</span>
+<span class="err">└─────────────────────────────────────┴──────────────────┘</span>
+</pre></div>
+
+
+<p>On average, people that died because of suicide visited more locations than those that were killed or dissapeared.</p>
+<h3>Number of people linked to a location</h3>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">as</span> <span class="n">victimCount</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">victimCount</span> <span class="k">desc</span>
+<span class="k">limit</span> <span class="mi">10</span>
+
+<span class="err">╒════════════════════════════════╤═════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;l.location&quot;</span>                    <span class="err">│</span><span class="ss">&quot;victimCount&quot;</span><span class="err">│</span>
+<span class="err">╞════════════════════════════════╪═════════════╡</span>
+<span class="err">│</span><span class="ss">&quot;Villa Grimaldi&quot;</span>                <span class="err">│</span><span class="mi">109</span>          <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Santiago&quot;</span>                      <span class="err">│</span><span class="mi">107</span>          <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Medical Legal Institue&quot;</span>        <span class="err">│</span><span class="mi">74</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span>                 <span class="err">│</span><span class="mi">56</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Cuatro Alamos&quot;</span>                 <span class="err">│</span><span class="mi">55</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Medical Legal Institute&quot;</span>       <span class="err">│</span><span class="mi">49</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;San Bernardo Infantry Regiment&quot;</span><span class="err">│</span><span class="mi">49</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Paine substation&quot;</span>              <span class="err">│</span><span class="mi">36</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;La Moneda Palace&quot;</span>              <span class="err">│</span><span class="mi">36</span>           <span class="err">│</span>
+<span class="err">├────────────────────────────────┼─────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Chile Stadium&quot;</span>                 <span class="err">│</span><span class="mi">32</span>           <span class="err">│</span>
+<span class="err">└────────────────────────────────┴─────────────┘</span>
+</pre></div>
+
+
+<p>Ignoring the first three for being too ambiguous, we observe that in the fourth place is Londres 38, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and currently is acting as a <em>center for memory (my translation),</em> open to the community. There is an active group of people working on researching and exposing the activities that happened in this place, <a href="https://www.londres38.cl/1937/w3-channel.html">you can read more about them here</a> (in spanish only).</p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">where</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="ss">&quot;.*Londres.*&quot;</span>
+<span class="k">return</span> <span class="n">p</span>
+</pre></div>
+
+
+<p><img alt="Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png" src="/images/Modeling the Pinochet Dataset using Neo4j ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled 7.png" /></p>
+<div class="highlight"><pre><span></span><span class="k">MATCH</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">VICTIM_OF</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">IN_LOCATION</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="k">Location</span><span class="p">)</span>
+<span class="k">where</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span> <span class="o">=~</span> <span class="ss">&quot;.*Londres.*&quot;</span>
+<span class="k">return</span> <span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">last_name</span>
+
+<span class="err">╒═══════════════╤═══════════════════════╤═══════════════════════╕</span>
+<span class="err">│</span><span class="ss">&quot;l.location&quot;</span>   <span class="err">│</span><span class="ss">&quot;v.first_name&quot;</span>         <span class="err">│</span><span class="ss">&quot;v.last_name&quot;</span>          <span class="err">│</span>
+<span class="err">╞═══════════════╪═══════════════════════╪═══════════════════════╡</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Gregorio Antonio&quot;</span>     <span class="err">│</span><span class="ss">&quot;Gaete Farias&quot;</span>         <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Rodolfo Alejandro&quot;</span>    <span class="err">│</span><span class="ss">&quot;Espejo Gomez&quot;</span>         <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Bautista&quot;</span>             <span class="err">│</span><span class="ss">&quot;Maturana Perez&quot;</span>       <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Washington Hernán&quot;</span>    <span class="err">│</span><span class="ss">&quot;Maturana Perez&quot;</span>       <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Eduardo Enrique&quot;</span>      <span class="err">│</span><span class="ss">&quot;Lara Petrovic&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Enrique Segundo&quot;</span>      <span class="err">│</span><span class="ss">&quot;Toro Romero&quot;</span>          <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;María Elena&quot;</span>          <span class="err">│</span><span class="ss">&quot;Gonzalez Inostroza&quot;</span>   <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Hernán Galo&quot;</span>          <span class="err">│</span><span class="ss">&quot;Gonzalez Inostroza&quot;</span>   <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Alvaro Miguel&quot;</span>        <span class="err">│</span><span class="ss">&quot;Barrios Duque&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Muriel&quot;</span>               <span class="err">│</span><span class="ss">&quot;Dockendorff Navarrete&quot;</span><span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;María Angélica&quot;</span>       <span class="err">│</span><span class="ss">&quot;Andreoli Bravo&quot;</span>       <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Zacarías Antonio&quot;</span>     <span class="err">│</span><span class="ss">&quot;Machuca Muñoz&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Juan Ernesto&quot;</span>         <span class="err">│</span><span class="ss">&quot;Ibarra Toledo&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Ramón Osvaldo&quot;</span>        <span class="err">│</span><span class="ss">&quot;Nuñez Espinoza&quot;</span>       <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;José Manuel&quot;</span>          <span class="err">│</span><span class="ss">&quot;Ramirez Rosales&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Sergio Daniel&quot;</span>        <span class="err">│</span><span class="ss">&quot;Tormen Mendez&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Luis Julio&quot;</span>           <span class="err">│</span><span class="ss">&quot;Guajardo Zamorano&quot;</span>    <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Juan Rosendo&quot;</span>         <span class="err">│</span><span class="ss">&quot;Chacon Olivares&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Alvaro Modesto&quot;</span>       <span class="err">│</span><span class="ss">&quot;Vallejos Villagrin&quot;</span>   <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Jorge Arturo&quot;</span>         <span class="err">│</span><span class="ss">&quot;Grez Aburto&quot;</span>          <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Carlos Luis&quot;</span>          <span class="err">│</span><span class="ss">&quot;Cubillos Galvez&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Jorque Enrique&quot;</span>       <span class="err">│</span><span class="ss">&quot;Espinoza Mendez&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Jaime Mauricio&quot;</span>       <span class="err">│</span><span class="ss">&quot;Buzzio Lorca&quot;</span>         <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Jaime del Tránsito&quot;</span>   <span class="err">│</span><span class="ss">&quot;Cadiz Norambuena&quot;</span>     <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Sergio Arturo&quot;</span>        <span class="err">│</span><span class="ss">&quot;Flores Ponce&quot;</span>         <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Luis Armando&quot;</span>         <span class="err">│</span><span class="ss">&quot;Valenzuela Figueroa&quot;</span>  <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Alfonso René&quot;</span>         <span class="err">│</span><span class="ss">&quot;Chanfreau Oyarce&quot;</span>     <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Newton Larrín&quot;</span>        <span class="err">│</span><span class="ss">&quot;Morales Saaverdra&quot;</span>    <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Carlos Eladio&quot;</span>        <span class="err">│</span><span class="ss">&quot;Salcedo Morales&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Sonia de las Mercedes&quot;</span><span class="err">│</span><span class="ss">&quot;Bustos Reyes&quot;</span>         <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Joel&quot;</span>                 <span class="err">│</span><span class="ss">&quot;Huaiquiñir Benavides&quot;</span> <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Alejandro Arturo&quot;</span>     <span class="err">│</span><span class="ss">&quot;Parada Gonzalez&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Segio Sebastían&quot;</span>      <span class="err">│</span><span class="ss">&quot;Montecinos Alfaro&quot;</span>    <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Oscar Manuel&quot;</span>         <span class="err">│</span><span class="ss">&quot;Castro Videla&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Juan Aniceto&quot;</span>         <span class="err">│</span><span class="ss">&quot;Meneses Reyes&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Germán Rodolfo&quot;</span>       <span class="err">│</span><span class="ss">&quot;Moreno Fuenzalida&quot;</span>    <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Bárbara&quot;</span>              <span class="err">│</span><span class="ss">&quot;Uribe Tamblay&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Edwin Francisco&quot;</span>      <span class="err">│</span><span class="ss">&quot;Van Jurick Altamirano&quot;</span><span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Abundio Alejandro&quot;</span>    <span class="err">│</span><span class="ss">&quot;Contreras Gonzalez&quot;</span>   <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Marcos Esteban&quot;</span>       <span class="err">│</span><span class="ss">&quot;Quiñones Lembach&quot;</span>     <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Martín&quot;</span>               <span class="err">│</span><span class="ss">&quot;Elgueta Pinto&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Leopoldo Daniel&quot;</span>      <span class="err">│</span><span class="ss">&quot;Muñoz Andrade&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Pedro Enrique&quot;</span>        <span class="err">│</span><span class="ss">&quot;Poblete Cordoba&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Máximo Antonio&quot;</span>       <span class="err">│</span><span class="ss">&quot;Gedda Ortiz&quot;</span>          <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Agustín Eduardo&quot;</span>      <span class="err">│</span><span class="ss">&quot;Reyes Gonzalez&quot;</span>       <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Germán Rodolfo&quot;</span>       <span class="err">│</span><span class="ss">&quot;Moreno Fuenzalida&quot;</span>    <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Jaime Mauricio&quot;</span>       <span class="err">│</span><span class="ss">&quot;Buzzio Lorca&quot;</span>         <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;José Caupolicán&quot;</span>      <span class="err">│</span><span class="ss">&quot;Villagra Astudillo&quot;</span>   <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Arnoldo&quot;</span>              <span class="err">│</span><span class="ss">&quot;Laurie Luengo&quot;</span>        <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Hernán&quot;</span>               <span class="err">│</span><span class="ss">&quot;Sarmiento Sabater&quot;</span>    <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Jorge Alejandro&quot;</span>      <span class="err">│</span><span class="ss">&quot;Olivares Graindorge&quot;</span>  <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;María Ines&quot;</span>           <span class="err">│</span><span class="ss">&quot;Alvarado Borgel&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Francisco Javier&quot;</span>     <span class="err">│</span><span class="ss">&quot;Fuentealba Fuentealba&quot;</span><span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Artemio Segundo&quot;</span>      <span class="err">│</span><span class="ss">&quot;Gutierrez Avila&quot;</span>      <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;Daniel Abraham&quot;</span>       <span class="err">│</span><span class="ss">&quot;Reyes Piña&quot;</span>           <span class="err">│</span>
+<span class="err">├───────────────┼───────────────────────┼───────────────────────┤</span>
+<span class="err">│</span><span class="ss">&quot;Londres No.38&quot;</span><span class="err">│</span><span class="ss">&quot;María Ines&quot;</span>           <span class="err">│</span><span class="ss">&quot;Alvarado Borgel&quot;</span>      <span class="err">│</span>
+<span class="err">└───────────────┴───────────────────────┴───────────────────────┘</span>
+</pre></div>
+
+
+<p>From the Londres38 site, we can more about some of these persons. For instance, <a href="https://www.londres38.cl/1937/w3-article-97854.html#ficha_completa">María Ines Alvarado Borgel</a> was taken with 21 years by national security agents (DINA). From the english version of the report (p. 690).</p>
+<blockquote>
+<p><em>On July 17, 1974, DINA agents arrested the MIR activist María Inés ALVARADO BORGEL in the Providencia district. Her captors later took her to the home of Martín ELGUETA PINTO, who was also arrested along with Juan Rosendo CHACON OLIVARES. These two were active in MIR. Other persons were arrested with them but were later released. During the days after her arrest, her captors took María Inés Alvarado to her family's house several times. All three disappeared from the Londres No. 38 site, where they had been seen by witnesses. The Commission is convinced that the disappearance of these three people was the work of government agents who thus violated their human rights.</em></p>
+</blockquote>
+<p>The list of the 98 persons known to date that were killed, dissapeared or died after being held captives in Londres 38 is extensively documented in <a href="https://www.londres38.cl/1937/w3-propertyvalue-35254.html">https://www.londres38.cl/1937/w3-propertyvalue-35254.html</a>. The loaded dataset is displaying 58 of them.</p>
+<h2>Wrapping up</h2>
+<p>I am stopping now. Thanks for reading until here! You can check the live repository in <a href="https://github.com/diegoquintanav/pinochet-analyze">Github</a>.</p>
+<p>It's better to look at this data using a map. For this purpose, we will expose this graph through a graphql service layer, and we will deploy a leaflet map that consumes it.</p>
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+</body>
+
+</html>

@@ -764,7 +764,7 @@ max-height:100%;
 
 <p>On average, people that died because of suicide visited more locations than those that were killed or dissapeared. It's hard to consider this fact as final, since there is that "NA" messing with the data.</p>
 <h3>Longest paths</h3>
-<p>We would like to</p>
+<p>We want to know about those victims that moved the most, i.e. have the longest trajectories. We can do so with</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">VICTIM_OF</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="w"></span>
 <span class="k">WITH</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"></span>
 <span class="k">MATCH</span><span class="w"> </span><span class="n">pathA</span><span class="p">=(</span><span class="n">fl</span><span class="p">:</span><span class="n">Location</span><span class="p">)</span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">FIRST_LOCATION</span><span class="o">]-</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">LAST_LOCATION</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">ll</span><span class="p">:</span><span class="n">Location</span><span class="p">)</span><span class="w"></span>

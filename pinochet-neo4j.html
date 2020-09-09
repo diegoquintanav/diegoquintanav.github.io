@@ -812,7 +812,7 @@ max-height:100%;
 
 
 <h3>Londres 38</h3>
-<p>We observe that Londres 38 appears in the list, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and currently is acting as a <em>memorial center</em> (my rough translation) and open to the community.</p>
+<p>We observe that Londres 38 appears in the list, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and is currently open to the community, acting as a <em>memorial center</em> (my rough translation).</p>
 <p>There is an active group of people working on researching and exposing the activities that happened in this place, <a href="https://www.londres38.cl/1937/w3-channel.html">you can read more about them here</a> (in spanish only).</p>
 <p>From the graph, we can fetch the names of the victims that passed at some point by Londres 38.</p>
 <div class="highlight"><pre><span></span><span class="k">MATCH</span><span class="w"> </span><span class="n">p</span><span class="p">=(</span><span class="n">v</span><span class="p">:</span><span class="n">Victim</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">VICTIM_OF</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="n">ViolentEvent</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">IN_LOCATION</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="n">Location</span><span class="p">)</span><span class="w"></span>

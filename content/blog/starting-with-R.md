@@ -1,9 +1,10 @@
-Title: <TODO>
+Title: Starting with R
+<!-- Title: <TODO>
 Date: <TODO>
 Category: <TODO>
 Tags: <TODO>
 Slug: <TODO>
-Authors: Diego Quintana
+Authors: Diego Quintana -->
 Status: draft
 Summary:
 

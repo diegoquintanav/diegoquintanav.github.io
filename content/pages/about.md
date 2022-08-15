@@ -3,9 +3,9 @@ Status: published
 
 # Hi there! 👋
 
-I'm Diego. This is my blog. I'm interested in how technology can help people and societies make smarter decisions, among other things. You can check my resume [here]({filename}/pages/resume.md), and you can also check what's going on with me [now]({filename}/pages/now.md). Feel free to reach me at [my personal email](mailto:daquintanav@gmail.com) if you feel like it.
+I'm Diego. This is my blog. I'm interested in how technology can help people, among other things. You can also check what's going on with me [now]({filename}/pages/now.md). You can also check some of the music I listen to in my [spotify profile](https://open.spotify.com/user/11102438968?si=gpPHdO6HQCeP4-V3NGnOhw). I'm on a quest for ways to do meaningful work.
 
-My current goal in life is to maximize adventure and to minimize regret.
+Feel free to reach me at [my personal email](mailto:daquintanav@gmail.com) if you feel like it. You can check my [LinkedIn profile](https://www.linkedin.com/in/diego-quintana-valenzuela/) for qualifications.
 
 ## About the name of the blog
 
@@ -17,7 +17,7 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_gian
 
 ## About the _Castells_
 
-The picture from the title is a part of a _Castell_, and it represents an old tradition of building human castles. I like castells because, to make one, _everybody counts_.
+The picture from the header is a part of a _Castell_, and it represents an old tradition of building human castles. I like castells because, to make one, _everybody counts_.
 
 [Watch this video](https://www.youtube.com/watch?v=-iSHfrmGdyo) and then read more about _castells_ in [Wikipedia](https://en.wikipedia.org/wiki/Castell).
 

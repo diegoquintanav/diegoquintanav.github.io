@@ -1,0 +1,9 @@
+[submodule "project/themes/alchemy"]
+	path = project/themes/alchemy
+	url = git@github.com:nairobilug/pelican-alchemy.git
+[submodule "project/themes/pelican-alchemy"]
+	path = project/themes/pelican-alchemy
+	url = https://github.com/nairobilug/pelican-alchemy
+[submodule "project/plugins/pelican_plugins"]
+	path = project/plugins/pelican_plugins
+	url = https://github.com/getpelican/pelican-plugins.git

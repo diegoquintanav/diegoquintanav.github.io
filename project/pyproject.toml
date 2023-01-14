@@ -10,9 +10,9 @@ ghp-import = "^2.1.0"
 pelican = "^4.8.0"
 python = "^3.8.1,<4.0"
 markdown = "^3.4.1"
-nbconvert = "^7.2.7"
 beautifulsoup4 = "^4.11.1"
 matplotlib = "^3.6.3"
+pelican-jupyter = "^0.10.1"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.20.1"

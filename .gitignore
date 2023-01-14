@@ -174,5 +174,5 @@ build-iPhoneSimulator/
 # Local ignores
 
 content/drafts
-output.vscode
-.vscode/
+output
+.vscode

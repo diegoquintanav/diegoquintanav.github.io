@@ -21,6 +21,5 @@ CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 DELETE_OUTPUT_DIRECTORY = True
 
 # Following items are often useful when publishing
-
 DISQUS_SITENAME = "bluesmonk"
 GOOGLE_ANALYTICS = "UA-108898322-1"

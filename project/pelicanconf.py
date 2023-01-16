@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = "Diego Quintana"
-SITENAME = "On the shoulders of giants"
+SITENAME = "Something something"
 SITEURL = ""
 
 PATH = "content"
@@ -40,9 +40,9 @@ THEME = "themes/pelican-alchemy/alchemy"
 
 MARKUP = ("md", "ipynb")
 
-PLUGIN_PATHS = ["./plugins"]
-PLUGINS = ["ipynb.markup", "pelican_plugins.render_math", "pelican_resume"]
+from pelican_jupyter import markup as nb_markup
 
+PLUGINS = [nb_markup]
 
 # pelican-resume settings
 # https://github.com/cmenguy/pelican-resume#settings
@@ -55,7 +55,7 @@ PLUGINS = ["ipynb.markup", "pelican_plugins.render_math", "pelican_resume"]
 # --- pelican-alchemy settings --------------------------------------
 # https://github.com/nairobilug/pelican-alchemy/wiki/Settings
 
-SITESUBTITLE = "Diego Quintana's blog"
+SITESUBTITLE = "Things I've learned along the way. Naming things is hard."
 SITEIMAGE = "/images/profile.png width=400 height=400"
 HIDE_AUTHORS = True
 
@@ -63,7 +63,6 @@ ICONS = (
     ("github", "https://github.com/diegoquintanav"),
     ("linkedin", "https://www.linkedin.com/in/diego-quintana-valenzuela/"),
     ("stack-overflow", "https://stackoverflow.com/users/5819113/bluesmonk"),
-    ("book", "https://www.goodreads.com/user/show/67875829-diego-quintana"),
     ("envelope", "mailto:daquintanav@gmail.com"),
 )
 

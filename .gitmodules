@@ -7,3 +7,6 @@
 [submodule "project/plugins/pelican_plugins"]
 	path = project/plugins/pelican_plugins
 	url = https://github.com/getpelican/pelican-plugins.git
+[submodule "project/plugins/ipynb"]
+	path = project/plugins/ipynb
+	url = https://github.com/danielfrg/pelican-jupyter.git

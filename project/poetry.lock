@@ -812,18 +812,18 @@ testing = ["Django (<3.1)", "attrs", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "jinja2"
-version = "3.1.2"
+version = "3.0.0"
 description = "A very fast and expressive template engine."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 files = [
-    {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
-    {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
+    {file = "Jinja2-3.0.0-py3-none-any.whl", hash = "sha256:2f2de5285cf37f33d33ecd4a9080b75c87cd0c1994d5a9c6df17131ea1f049c6"},
+    {file = "Jinja2-3.0.0.tar.gz", hash = "sha256:ea8d7dd814ce9df6de6a761ec7f1cac98afe305b8cdc4aaae4e114b8d8ce24c5"},
 ]
 
 [package.dependencies]
-MarkupSafe = ">=2.0"
+MarkupSafe = ">=2.0.0rc2"
 
 [package.extras]
 i18n = ["Babel (>=2.7)"]
@@ -1535,6 +1535,25 @@ dev = ["black", "flake8", "isort (==5.5.4)", "jupyterlab", "markdown", "nbconver
 test = ["pytest", "pytest-cov", "toml"]
 
 [[package]]
+name = "pelican-render-math"
+version = "1.0.3"
+description = "Render mathematics in Pelican site content"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "pelican-render-math-1.0.3.tar.gz", hash = "sha256:8ec02b410346d50d27211b7e0474516eb0bedf3e1b748d34f84d7cd8e85c859a"},
+    {file = "pelican_render_math-1.0.3-py3-none-any.whl", hash = "sha256:168c58168b22875d966df81f7d660bf9cc2206b7cf4fde46dab63536c87a5438"},
+]
+
+[package.dependencies]
+pelican = ">=4.5,<5.0"
+typogrify = ">=2.0.7,<3.0.0"
+
+[package.extras]
+markdown = ["markdown (>=3.2.2,<4.0.0)"]
+
+[[package]]
 name = "pexpect"
 version = "4.8.0"
 description = "Pexpect allows easy control of interactive console applications."
@@ -2111,6 +2130,17 @@ files = [
 ]
 
 [[package]]
+name = "smartypants"
+version = "2.0.1"
+description = "Python with the SmartyPants"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "smartypants-2.0.1-py2.py3-none-any.whl", hash = "sha256:8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d"},
+]
+
+[[package]]
 name = "sniffio"
 version = "1.3.0"
 description = "Sniff out which async library your code is running under"
@@ -2252,6 +2282,20 @@ files = [
 ]
 
 [[package]]
+name = "typogrify"
+version = "2.0.7"
+description = "Filters to enhance web typography, including support for Django & Jinja templates"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "typogrify-2.0.7.tar.gz", hash = "sha256:8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38"},
+]
+
+[package.dependencies]
+smartypants = ">=1.8.3"
+
+[[package]]
 name = "unidecode"
 version = "1.3.6"
 description = "ASCII transliterations of Unicode text"
@@ -2335,4 +2379,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1,<4.0"
-content-hash = "6f72ec9a662f14e2fc23b980d5e1f2b2da50e00cb61f191ef1eb9a7f808e28e8"
+content-hash = "f6d49a70ea114fc986d7a652678da627ae2f60ee82dea831ce19f63a37ca3e51"

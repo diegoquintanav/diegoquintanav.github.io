@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Sistemas recomendadores, parte 1 | On the shoulders of giants
+</title>
+  <link rel="canonical" href="/recsys-1-ES.html">
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+
+  
+  <meta name="description" content="Primera parte de sistemas recomendadores">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
+      <p class="text-muted">Diego Quintana's blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fab fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-envelope" href="/mailto:daquintanav@gmail.com" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Sistemas recomendadores, parte 1
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2017-10-26T18:01:00-06:00">
+          <i class="fas fa-clock"></i>
+          Thu 26 October 2017
+        </li>
+        <li class="list-inline-item">
+          <i class="fas fa-folder-open"></i>
+          <a href="/category/recommender-systems.html">Recommender Systems</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fas fa-tag"></i>
+              <a href="/tag/recsys.html">#recsys</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <h1>Por qué esta serie</h1>
+<p>Me encuentro tomando el módulo de sistemas de recomendación en la PUC
+(<a href="https://educacionprofesional.ing.uc.cl/?diplomado=diplomado-big-data">programa</a>)
+con el profesor <a href="http://dparra.sitios.ing.uc.cl/">Dennis Parra</a> y como tarea del
+ módulo se solicitó crear un post por clase, a modo de resumen.</p>
+<h2>Índice</h2>
+<p>La serie consiste de cinco posts, los que se resumen de la siguiente manera</p>
+<ul>
+<li>En la <a href="/drafts/recsys-2-ES.html">parte 2</a> se revisan las distintas
+  clasificaciones de sistemas recomendadores o <em>SR</em>, con énfasis en el <em>filtrado colaborativo</em></li>
+<li>En la parte 3 continuamos con la clasificación
+  de sistemas recomendadores, y revisamos los <em>SR</em> basados en contenido y el análisis de texto.</li>
+<li>Todos los <em>SR</em> tienen sus desventajas y debilidades. En la parte 4
+  revisamos cómo es posible combinar distintos <em>SR</em> para sobreponerse a estas
+  debilidades. También vemos cómo es posible evaluar un <em>SR</em> y compararlo con
+  otro a través de algunas métricas usadas en clasificación.</li>
+<li>Finalmente en la parte 5 revisamos las máquinas
+  de factorización, un tipo de implementación de máquinas de vectores de
+  soporte que da excelentes resultados en aplicaciones de recomendación y es extensible a otras áreas.</li>
+</ul>
+<h2>Sistemas de recomendación</h2>
+<p>Las recomendaciones son una parte importante de nuestra sociedad.
+Seguimos recomendaciones de nuestros padres, amigos y compañeros. Las
+seguimos porque de alguna forma, confiamos en ellos, su experiencia y
+dado que (generalmente) tenemos una idea de las preferencias en nuestros
+círculos, podemos estimar qué tipo de cosas nos pueden recomendar.</p>
+<p>Hasta cierto punto esto es cierto. Nuestros padres y cercanos no saben
+de todo, y a veces tenemos que acudir al pensamiento colectivo que se encuentra.
+en internet. Allí es posible encontrar contenidos curados y tratados por
+gente que tiene un interés especial sobre algún tema.</p>
+<p>Algunos ejemplos de recomendaciones en internet podrían ser, para Chile y Santiago:</p>
+<ul>
+<li><a href="http://www.paniko.cl/">Discos, medios en general</a></li>
+<li><a href="https://elpicadista.cl/">Picadas de comida</a></li>
+<li><a href="http://estoy.cl/">Actividades culturales en Santiago</a></li>
+</ul>
+<p>Sin embargo, tampoco podemos confiar ciegamente en la opinión de anónimos. Tampoco
+resulta práctico leer todas las reseñas en internet. Debe existir algún tipo de
+<em>cuantificar</em> las recomendaciones, y alguna estrategia para <em>validarlas</em>. 
+No todas las recomendaciones son <em>buenas</em> desde el punto de vista de cada uno.</p>
+<h2>Modelando la confianza</h2>
+<p>La forma más elemental de validar algo en internet a través de votaciones, <em>ratings</em>
+o <em>likes</em>. Esto nos permite tratar las opiniones de la gente como números, y permite
+además extraer promedios, varianzas, <em>y todas esas cosas</em>.</p>
+<p>El concepto de rating no es nuevo, y algunas de las aplicaciones que se apoyan en esto
+son:</p>
+<ol>
+<li><a href="http://netflix.com/">Netflix</a> recomienda películas</li>
+<li><a href="https://mubi.com/">Spotify</a> recomienda música</li>
+<li>Facebook decide <em>qué contenidos y publicidad mostrar en el feed</em>,
+     en base a hábitos de navegación y clicks</li>
+</ol>
+<p>Los sistemas de recomendación permiten lidiar con el problema de la <strong>sobrecarga de información</strong>.
+Sin estos modelos, lo natural sería que cada uno procesara esta información individualmente.</p>
+<p>Sería algo así como el equivalente de ir a una biblioteca a leer las
+contraportadas de libros hasta que alguno parezca valer la pena. Volviendo a los ejemplos
+anteriores,</p>
+<ul>
+<li>En el año 2016, Netflix tenía alrededor de <a href="http://time.com/4272360/the-number-of-movies-on-netflix-is-dropping-fast/">5500 títulos</a>
+  entre películas y series</li>
+<li>Para el año 2013, Spotify tenía alrededor de <a href="https://www.digitalmusicnews.com/2013/10/11/songsonspotify/">20 millones</a> de canciones.
+ de ellas, al menos un 20% no había sido reproducida ni siquiera una vez. <a href="https://open.spotify.com/album/0ke5cFySqu1XkaVM4RWUZk">Quizás algo commo esto</a></li>
+<li>En el 2018 Facebook tiene alrededor de <a href="https://www.statista.com/statistics/264810/number-of-monthly-active-facebook-users-worldwide/">2 billones de usuarios activos</a></li>
+</ul>
+<h2>¿Por qué es bueno entender los sistemas de recomendación?</h2>
+<p>En general estos servicios son gratuitos. Nadie paga por usar Facebook.
+Conocida es la frase <a href="https://www.reddit.com/r/explainlikeimfive/comments/2m3f05/eli5_if_something_is_free_you_are_the_product/"><em>"If you are not paying, then <strong>you</strong> are the product"</em></a>,
+que se traduce como <em>"Si tú no estás pagando por el producto, es porque tú eres el producto"</em></p>
+<p>En lo personal creo que esta frase dice muchas cosas.</p>
+<ul>
+<li>Primero, es que un algoritmo de recomendación tiene el poder para dirigir <em>inadvertidamente</em> a ciertos productos.</li>
+<li>Un algoritmo de recomendación puede <em>manipular</em> la realidad de manera <a href="https://www.theguardian.com/technology/2014/jun/29/facebook-users-emotions-news-feeds">imperceptible</a>. Las consecuencias son de tintes morales y bueno, no es el punto revisarlas aquí.</li>
+<li>Un algoritmo de recomendación puede en algunos casos -incluso no intencionalmente- <a href="https://www.dw.com/en/spotify-how-a-swedish-startup-transformed-the-music-industry/a-43230609">atrofiar industrias creativas</a>.</li>
+</ul>
+<p>Pero no todo es malo. El filtrado colaborativo permite, entre otras cosas ayudar
+ a usuarios a elegir un item (noticia, canción, película, libro) de un conjunto
+ masivo de opciones.</p>
+<p>Finalmente, los sistemas de recomendación son una manifestación de
+inteligencia colectiva, lo que es bueno: Más gente involucrada en algo es mejor. 
+Lo importante es entender cómo funcionan estos modelos y así, eventualmente, poder crear modelos propios.</p>
+<h2>Definición formal del problema</h2>
+<p>Siguiendo la formalización presentada en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&amp;rep=rep1&amp;type=pdf">este paper</a>,
+para un conjunto de usuarios $U$ y un conjunto de items $I$, se desea obtener un
+ conjunto recomendado de items $R$, tal que</p>
+<p>$$R: I \times U \rightarrow R_0$$</p>
+<p>Esta transformación $R$ o <em>función de utilidad</em>, se define como la medida de
+<em>precisión</em> o <em>propiedad</em> de recomendar el item $i \in I$ al usuario $u \in U$,
+ y $R_0$ se asume como subconjunto de $I \times U$ en el cual se conoce el valor de $R$$.</p>
+<p>Es así entonces que se tiene, en el contexto de recomendación, la necesidad de</p>
+<ol>
+<li><em>Estimar o aproximar la función de utilidad $R(i,u)$ sobre aquellos items
+     $i$ sobre los cuales $R$ no se conoce, y</em></li>
+<li><em>Elegir el ítem o el conjunto de ítems tal que maximicen $R$ i.e.</em></li>
+</ol>
+<p>$$\forall u \in U, i = \mbox{argmax } R(i,u) \mbox{, }  i \in I$$</p>
+<h2>Métricas de predicción</h2>
+<p>Podemos cuantificar el error entre el valor esperado $\hat{r}$ y la predicción $r$, de las cuales se destacan</p>
+<ol>
+<li>RMSE, o <em>root mean square error</em> como</li>
+</ol>
+<p>$$\sqrt{\frac{\sum_{i=1}^{n}\left(\hat{r}<em ui>{ui}-r</em>\right)^2}{n}}$$</p>
+<ol>
+<li>MSE, o <em>Mean square error</em></li>
+</ol>
+<p>$$\frac{\sum_{i=1}^{n}\left(\hat{r}<em ui>{ui}-r</em>\right)^2}{n}$$</p>
+<ol>
+<li>MAE, o <em>Mean absolute error</em></li>
+</ol>
+<p>$$\frac{\sum_{i=1}^{n}|\hat{r}<em ui>{ui}-r</em>|}{n}$$</p>
+<p>Estas métricas basadas en el error son de uso frecuente en distintas áreas como
+ la estadística y <em>machine learning</em>.</p>
+<h2>Conclusiones</h2>
+<ul>
+<li>Los métodos de recomendación buscan lidiar con la sobrecarga de información,
+y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
+<li>Algunos tipos de recomendaciones van desde películas hasta inversiones en la bolsa.</li>
+<li>Una forma de evaluar un sistema recomendador es a través del error en las
+  predicciones realizadas</li>
+</ul>
+<h2>A continuación</h2>
+<p>En la <a href="/drafts/recsys-2-ES.html">parte 2</a> se verán otras cosas, entre ellas, <strong>tipos de clasificadores.</strong></p>
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

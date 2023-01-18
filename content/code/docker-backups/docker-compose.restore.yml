@@ -1,7 +1,0 @@
-version: '3.1'
-
-services:
-  db:
-    command: [ 'gunzip -c "/etc/pg_dump/${BACKUP_FILEPATH}" | psql "$$PG_USER" "$$PG_DATABASE"' ]
-    volumes:
-      - ${BACKUP_FILEPATH}:/etc/pg_dumps/

@@ -6,7 +6,7 @@ Tags: recsys
 Slug: recsys-1
 Authors: Diego Quintana
 Summary: Primera parte de sistemas recomendadores
-Status: published
+Status: draft
 Modified: 2018-11-24 13:10 -0600
 
 # Por qué esta serie

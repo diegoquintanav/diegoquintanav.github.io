@@ -6,7 +6,7 @@ Tags: recsys
 Slug: recsys-3
 Authors: Diego Quintana
 Summary: Tercera parte de sistemas recomendadores
-Status: published
+Status: draft
 Lang: ES
 
 # _previously_

@@ -1,2 +1,2 @@
 make publish
-ghp-import output -b master -p -m 'update blog contents'
+ghp-import output -b main -p -m 'update blog contents'

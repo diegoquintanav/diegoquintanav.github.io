@@ -40,9 +40,9 @@ THEME = "themes/pelican-alchemy/alchemy"
 
 MARKUP = ("md", "ipynb")
 
-PLUGIN_PATHS = ["./plugins"]
-PLUGINS = ["ipynb.markup", "pelican_plugins.render_math", "pelican_resume"]
+from pelican_jupyter import markup as nb_markup
 
+PLUGINS = [nb_markup]
 
 # pelican-resume settings
 # https://github.com/cmenguy/pelican-resume#settings
@@ -63,13 +63,13 @@ ICONS = (
     ("github", "https://github.com/diegoquintanav"),
     ("linkedin", "https://www.linkedin.com/in/diego-quintana-valenzuela/"),
     ("stack-overflow", "https://stackoverflow.com/users/5819113/bluesmonk"),
-    ("book", "https://www.goodreads.com/user/show/67875829-diego-quintana"),
     ("envelope", "mailto:daquintanav@gmail.com"),
+    ("spotify", "https://open.spotify.com/user/11102438968?si=a22574d2e0214ba8"),
 )
 
 STATIC_PATHS = ["extras", "images"]
-# PYGMENTS_STYLE = 'monokai'
-PYGMENTS_STYLE = "borland"
+PYGMENTS_STYLE = 'monokai'
+# PYGMENTS_STYLE = "borland"
 RFG_FAVICONS = True
 
 DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "sitemap"]

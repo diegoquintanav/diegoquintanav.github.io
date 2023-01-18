@@ -8,39 +8,21 @@
 
   <title>  Flask contexts (And how to use them) | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/flask-contexts.html">
+  <link rel="canonical" href="/flask-contexts.html">
 
-    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
-  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
-        href="https://diegoquintanav.github.io/feeds/web-development.rss.xml">  
+  
   <meta name="description" content="How to test Flask applications with pytest">
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      a.async = 1;
-      a.src = g;
-      m = s.getElementsByTagName(o)[0];
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-108898322-1', 'auto');
-    ga('send', 'pageview');
-  </script>
 
 
 </head>
@@ -50,22 +32,22 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="https://diegoquintanav.github.io/">
-        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
             <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-book" href="https://www.goodreads.com/user/show/67875829-diego-quintana" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-envelope" href="mailto:daquintanav@gmail.com" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-envelope" href="/mailto:daquintanav@gmail.com" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-spotify" href="https://open.spotify.com/user/11102438968?si=a22574d2e0214ba8" target="_blank"></a></li>
       </ul>
   </div>
 </div>    </div>
@@ -80,24 +62,23 @@
     <header>
       <ul class="list-inline">
         <li class="list-inline-item text-muted" title="2018-11-24T13:14:00-06:00">
-          <i class="fa fa-clock-o"></i>
+          <i class="fas fa-clock"></i>
           Sat 24 November 2018
         </li>
         <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="https://diegoquintanav.github.io/category/web-development.html">Web Development</a>
+          <i class="fas fa-folder-open"></i>
+          <a href="/category/web-development.html">Web Development</a>
         </li>
           <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="https://diegoquintanav.github.io/tag/flask.html">#flask</a>,               <a href="https://diegoquintanav.github.io/tag/python.html">#python</a>,               <a href="https://diegoquintanav.github.io/tag/pytest.html">#pytest</a>          </li>
+            <i class="fas fa-tag"></i>
+              <a href="/tag/flask.html">#flask</a>,               <a href="/tag/python.html">#python</a>,               <a href="/tag/pytest.html">#pytest</a>          </li>
       </ul>
     </header>
     <div class="content">
       <h1>Motivation</h1>
 <p>There's this thing going on with the <a href="http://flask.pocoo.org/docs/1.0/appcontext/#creating-an-application-context">flask context</a> and the <a href="http://flask.pocoo.org/docs/1.0/reqcontext/">request context</a>, that used to confuse me a lot. Before testing these two probably will never be used, but after reading <a href="http://flask.pocoo.org/docs/1.0/testing/">the documentation</a> and writing your first tests, it's probable that you run into something like</p>
-<div class="highlight"><pre><span></span><span class="err">Flask.url_for() error: Attempted to generate a URL without the application context being pushed</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>Flask.url_for() error: Attempted to generate a URL without the application context being pushed
+</code></pre></div>
 
 <p>So, what is that went <em>wrong</em>?</p>
 <p>Someone already wrote an <a href="http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html">exhaustive revision</a> of what are the different approaches, but it actually never closes the issue of <em>how</em> to test an application properly.</p>
@@ -143,7 +124,7 @@ information about the current application. Its life is bound to that of the requ
 information and encrypted with your <code>SECRET_KEY</code>.</p>
 <h2>Practical differences (in code)</h2>
 <p>This <a href="https://stackoverflow.com/a/33382823/5819113">SO answer</a> puts it simple, so I will be kinda adding my own comments to it.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span>
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
@@ -173,27 +154,25 @@ information and encrypted with your <code>SECRET_KEY</code>.</p>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in app context, after second request context&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be abc, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>And here's the output that it gives:</p>
-<div class="highlight"><pre><span></span><span class="err">in app context, before first request context</span>
-<span class="err">setting g.foo to abc</span>
-<span class="err">g.foo should be abc, is: abc</span>
-<span class="err">in first request context</span>
-<span class="err">g.foo should be abc, is: abc</span>
-<span class="err">setting g.foo to xyz</span>
-<span class="err">g.foo should be xyz, is: xyz</span>
-<span class="err">in app context, after first request context</span>
-<span class="err">g.foo should be abc, is: xyz</span>
-<span class="err">in second request context</span>
-<span class="err">g.foo should be abc, is: xyz</span>
-<span class="err">setting g.foo to pqr</span>
-<span class="err">g.foo should be pqr, is: pqr</span>
-<span class="err">in app context, after second request context</span>
-<span class="err">g.foo should be abc, is: pqr</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>in app context, before first request context
+setting g.foo to abc
+g.foo should be abc, is: abc
+in first request context
+g.foo should be abc, is: abc
+setting g.foo to xyz
+g.foo should be xyz, is: xyz
+in app context, after first request context
+g.foo should be abc, is: xyz
+in second request context
+g.foo should be abc, is: xyz
+setting g.foo to pqr
+g.foo should be pqr, is: pqr
+in app context, after second request context
+g.foo should be abc, is: pqr
+</code></pre></div>
 
 <p>In this first example <code>g</code> is shared across contexts because it's the same
 context in <em>nested contexts</em>, and it's a <em>caveat</em> mentioned in the answer (some emphasis is mine)</p>
@@ -201,7 +180,7 @@ context in <em>nested contexts</em>, and it's a <em>caveat</em> mentioned in the
 <p>"Every request pushes a new application context". And <a href="http://flask.pocoo.org/docs/0.10/appcontext/">as the Flask docs say</a>, the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that <em>you should <strong>never</strong> explicitly create multiple request contexts nested inside one application context, because <code>flask.g</code> (and co) doesn't have any magic whereby it functions in the two different "levels" of context</em>, with different states existing independently at the application and request levels.</p>
 <p>The reality is that "application context" is potentially quite a misleading name, because <code>app.app_context()</code> <strong>is</strong> a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:</p>
 </blockquote>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span>
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
@@ -223,23 +202,21 @@ context in <em>nested contexts</em>, and it's a <em>caveat</em> mentioned in the
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;setting g.foo to pqr&#39;</span><span class="p">)</span>
     <span class="n">g</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;pqr&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;g.foo should be pqr, is: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">foo</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Which will give the expected results:</p>
-<div class="highlight"><pre><span></span><span class="err">in app context, before first request context</span>
-<span class="err">setting g.foo to abc</span>
-<span class="err">g.foo should be abc, is: abc</span>
-<span class="err">in first request context</span>
-<span class="err">g.foo should be None, is: None</span>
-<span class="err">setting g.foo to xyz</span>
-<span class="err">g.foo should be xyz, is: xyz</span>
-<span class="err">in second request context</span>
-<span class="err">g.foo should be None, is: None</span>
-<span class="err">setting g.foo to pqr</span>
-<span class="err">g.foo should be pqr, is: pqr</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>in app context, before first request context
+setting g.foo to abc
+g.foo should be abc, is: abc
+in first request context
+g.foo should be None, is: None
+setting g.foo to xyz
+g.foo should be xyz, is: xyz
+in second request context
+g.foo should be None, is: None
+setting g.foo to pqr
+g.foo should be pqr, is: pqr
+</code></pre></div>
 
 <p>In this second example, all three <code>with</code> blocks are pushing independent contexts. The difference is that
 last two are also pushing an application context <em>implicitly</em>, and the first one is not pushing a request context.</p>
@@ -248,32 +225,28 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 <p>This <a href="https://stackoverflow.com/a/17377101/5819113">SO answer</a> summarizes the differences in the best way I've found so far.</p>
 <blockquote>
 <p>If you want to make a request to your application, use the <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_client"><code>test_client</code></a>.</p>
-<div class="highlight"><pre><span></span><span class="err">c = app.test_client()</span>
-<span class="err">response = c.get(&#39;/test/url&#39;)</span>
-<span class="err"># test response</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>c = app.test_client()
+response = c.get(&#39;/test/url&#39;)
+# test response
+</code></pre></div>
 
 <p>If you want to test code which uses an application context (<code>current_app</code>, <code>g</code>, <code>url_for</code>), push an <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.app_context"><code>app_context</code></a>.</p>
-<div class="highlight"><pre><span></span><span class="err">with app.app_context():</span>
-<span class="err">    # test your app context code</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>with app.app_context():
+    # test your app context code
+</code></pre></div>
 
 <p>If you want test code which uses a request context (<code>request</code>, <code>session</code>), push a <a href="http://flask.pocoo.org/docs/latest/api/#flask.Flask.test_request_context"><code>test_request_context</code></a>.</p>
-<div class="highlight"><pre><span></span><span class="err">with current_app.test_request_context():</span>
-<span class="err">    # test your request context code</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>with current_app.test_request_context():
+    # test your request context code
+</code></pre></div>
 
 </blockquote>
 <p>It's also important to note that</p>
 <blockquote>
 <p>Both app and request contexts can also be pushed manually, which is useful when using the interpreter.</p>
-<div class="highlight"><pre><span></span><span class="err">&gt;&gt;&gt; ctx = app.app_context()</span>
-<span class="err">&gt;&gt;&gt; ctx.push()</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>&gt;&gt;&gt; ctx = app.app_context()
+&gt;&gt;&gt; ctx.push()
+</code></pre></div>
 
 </blockquote>
 <p>So far there are <em>two</em> approaches:</p>
@@ -284,7 +257,7 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 </ol>
 <p>Everything in the middle is prone to produce weird results and drive you crazy, so <em>try</em> to be consistent!</p>
 <p><a href="http://lucumr.pocoo.org/about/">Armin Ronacher</a> suggests a pytest fixture pattern in <a href="https://youtu.be/1ByQhAM5c1I?t=2285">this presentation</a> (<a href="https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52">slides</a>), which relies in the first approach. The code is as follows:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -310,18 +283,17 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
     <span class="n">request</span><span class="o">.</span><span class="n">addfinalizer</span><span class="p">(</span>
         <span class="k">lambda</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">client</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Note that <code>request</code> here refers to the <a href="https://docs.pytest.org/en/latest/reference.html#request"><code>pytest</code> fixture</a></p>
 <h2>But how do I test? really</h2>
 <p>After a lot of churning and with the help of <code>#pocoo</code> in IRC, I came up with this:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
 
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">runner</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A test runner for the app&#39;s Click commands.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A test runner for the app&#39;s Click commands.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">test_cli_runner</span><span class="p">()</span>
 
 
@@ -333,14 +305,14 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">app_context</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a flask app context&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a flask app context&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
         <span class="k">yield</span> <span class="n">app</span>
 
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span> <span class="nf">request_context</span><span class="p">(</span><span class="n">app_context</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a flask request context&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a flask request context&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">app_context</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">():</span>
         <span class="k">yield</span>
 
@@ -373,8 +345,7 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 <span class="k">def</span> <span class="nf">seed_db</span><span class="p">():</span>
     <span class="c1"># insert default users and roles</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Seeding the database or something&quot;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This is working for me. In short</p>
 <ul>
@@ -383,8 +354,8 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 <li>If your test requires examining a part of the request, import the <code>request_context</code> fixture</li>
 <li>If your test requires a logged in user, you can use the <code>client</code> fixture and <code>flask_login</code> as</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A helper method that logs in users&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A helper method that logs in users&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">),</span>
                     <span class="n">data</span><span class="o">=</span><span class="p">{</span>
                         <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
@@ -393,7 +364,7 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 
 
 <span class="k">def</span> <span class="nf">test_with_logged_in_user</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Tests a view that requires authentication&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests a view that requires authentication&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">current_user</span>
 
     <span class="c1"># client is a pytest fixture</span>
@@ -409,30 +380,11 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
 
         <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
         <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;Stuff that should appear in your view&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>That's all I have to say about it.</p>
     </div>
   </article>
-  <hr>
-  <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/flask-contexts.html';
-      this.page.identifier = 'flask-contexts';
-    };
-    (function() {
-      var d = document;
-      var s = d.createElement('script');
-      s.src = '//bluesmonk.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript class="text-muted">
-    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
-  </noscript>
     </div>
   </div>
 
@@ -440,9 +392,9 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
@@ -450,6 +402,7 @@ last two are also pushing an application context <em>implicitly</em>, and the fi
   </p>
 </div>    </div>
   </footer>
+
 </body>
 
 </html>

@@ -6,21 +6,43 @@ Modified: 2021-03-01
 
 (_[This is a now page](https://nownownow.com/about), and it is inspired by [Derek Sivers](https://sivers.org/now3) and [many others](https://nownownow.com/)._)
 
-<!-- January 2021 -->
 # Life
 
-I finished my master's degree! I worked hard and it paid off in the end. A lot of time has passed since I arrived to Barcelona, and I went back to Chile to visit my family  and friends for the holidays. I visited old friends I've made over the years, places I've lived in and landscapes that were familiar to me somewhere in the past. I drove all along Valle del Elqui and hiked (sort of) to the top (or almost) of the Osorno volcano, around my hometown. I also participated in the recent presidential elections and I'm hopeful about the future of chilean politics. I have been trying linocuts and I got myself a new tattoo. I swam a race in the ocean.
+I'm living in Barcelona. I've been here for a while, and it's been _okay_. I can't say much is going on nowadays, times are weird.
+
+Recently I participated in a [Full Stack Deep Learning Course](fullstackdeeplearning.com), and our team did a project that got featured on their website. Make sure to check out the project at [GitHub](https://github.com/diegoquintanav/fsdl-2022-weak-supervision-project).
+# What I am doing now
+
+I'm working at <https://aiguasol.coop>, doing all kinds of software development. I'm learning a lot about QGIS and GIS in general. I'm trying to draw more, run more, play more. Trying to find people to play more board games with. I'm reading American Gods, and I recently got caught up with Saga.
+
+# The future
+
+It's foggy. My family and I are trying to figure out the next step. Everything is going to be alright.
+
+## Older Entries
+
+<details>
+<summary><b>January 2021</b></summary>
+
+<!-- January 2021 -->
+
+# Life
+
+I finished my master's degree! I worked hard and it paid off in the end. A lot of time has passed since I arrived to Barcelona, and I went back to Chile to visit my family and friends for the holidays. I visited old friends I've made over the years, places I've lived in and landscapes that were familiar to me somewhere in the past. I drove all along Valle del Elqui and hiked (sort of) to the top (or almost) of the Osorno volcano, around my hometown. I also participated in the recent presidential elections and I'm hopeful about the future of chilean politics. I have been trying linocuts and I got myself a new tattoo. I swam a race in the ocean.
 
 What else can I say? I have rediscovered many things with new eyes. I feel refreshed and happy, and I'm ready for whatever the next thing is.
+
 # What I am doing now
 
 I'm looking for a job! I'm looking to work as a data scientist in urban development, mobility and energy, and/or as an artificial intelligence engineer. A dream job would be where I get to assist with and/or do some research in these topics. Hit me with any offer you have! I am open for remote work from Barcelona, and I don't have a work permit so we would have to sort that out. If you are from Chile, I'd love to hear from you too!.
 
 In the meantime I will get back to my portfolio. I have lots of projects I did during the master's and others that I have on hold.
+
 # The future
 
 I'm not sure. Finding a way to do interesting and meaningful (and paid) work now is my top priority. I also hope to get back to train with the colla of castellers de Gràcia in Barcelona, and to do more linocuts and other artsy things.
-## Older Entries
+
+</details>
 
 <details>
 <summary><b>September 2020</b></summary>

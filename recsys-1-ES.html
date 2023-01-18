@@ -8,39 +8,21 @@
 
   <title>  Sistemas recomendadores, parte 1 | On the shoulders of giants
 </title>
-  <link rel="canonical" href="https://diegoquintanav.github.io/recsys-1-ES.html">
+  <link rel="canonical" href="/recsys-1-ES.html">
 
-    <link rel="apple-touch-icon" href="https://diegoquintanav.github.io/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://diegoquintanav.github.io/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="https://diegoquintanav.github.io/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#333333">
 
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/pygments/borland.min.css">
-  <link rel="stylesheet" href="https://diegoquintanav.github.io/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/borland.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://diegoquintanav.github.io/feeds/all.atom.xml">
-  <link rel="alternate" type="application/rss+xml" title="Categories RSS Feed"
-        href="https://diegoquintanav.github.io/feeds/recommender-systems.rss.xml">  
+  
   <meta name="description" content="Primera parte de sistemas recomendadores">
-  <script>
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      a.async = 1;
-      a.src = g;
-      m = s.getElementsByTagName(o)[0];
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-108898322-1', 'auto');
-    ga('send', 'pageview');
-  </script>
 
 
 </head>
@@ -50,22 +32,21 @@
     <div class="container">
 <div class="row">
     <div class="col-sm-4">
-      <a href="https://diegoquintanav.github.io/">
-        <img class="img-fluid rounded" src=https://diegoquintanav.github.io/images/profile.png width=400 height=400 alt="On the shoulders of giants">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/profile.png width=400 height=400 alt="On the shoulders of giants">
       </a>
     </div>
   <div class="col-sm-8">
-    <h1 class="title"><a href="https://diegoquintanav.github.io/">On the shoulders of giants</a></h1>
+    <h1 class="title"><a href="/">On the shoulders of giants</a></h1>
       <p class="text-muted">Diego Quintana's blog</p>
       <ul class="list-inline">
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/about.html">About</a></li>
-            <li class="list-inline-item"><a href="https://diegoquintanav.github.io/pages/now-EN.html">Now</a></li>
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class="list-inline-item"><a href="/pages/now-EN.html">Now</a></li>
             <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-book" href="https://www.goodreads.com/user/show/67875829-diego-quintana" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-envelope" href="mailto:daquintanav@gmail.com" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-github" href="https://github.com/diegoquintanav" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-linkedin" href="https://www.linkedin.com/in/diego-quintana-valenzuela/" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-stack-overflow" href="https://stackoverflow.com/users/5819113/bluesmonk" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-envelope" href="/mailto:daquintanav@gmail.com" target="_blank"></a></li>
       </ul>
   </div>
 </div>    </div>
@@ -80,16 +61,16 @@
     <header>
       <ul class="list-inline">
         <li class="list-inline-item text-muted" title="2017-10-26T18:01:00-06:00">
-          <i class="fa fa-clock-o"></i>
+          <i class="fas fa-clock"></i>
           Thu 26 October 2017
         </li>
         <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="https://diegoquintanav.github.io/category/recommender-systems.html">Recommender Systems</a>
+          <i class="fas fa-folder-open"></i>
+          <a href="/category/recommender-systems.html">Recommender Systems</a>
         </li>
           <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="https://diegoquintanav.github.io/tag/recsys.html">#recsys</a>          </li>
+            <i class="fas fa-tag"></i>
+              <a href="/tag/recsys.html">#recsys</a>          </li>
       </ul>
     </header>
     <div class="content">
@@ -101,7 +82,7 @@ con el profesor <a href="http://dparra.sitios.ing.uc.cl/">Dennis Parra</a> y com
 <h2>Índice</h2>
 <p>La serie consiste de cinco posts, los que se resumen de la siguiente manera</p>
 <ul>
-<li>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se revisan las distintas
+<li>En la <a href="/drafts/recsys-2-ES.html">parte 2</a> se revisan las distintas
   clasificaciones de sistemas recomendadores o <em>SR</em>, con énfasis en el <em>filtrado colaborativo</em></li>
 <li>En la parte 3 continuamos con la clasificación
   de sistemas recomendadores, y revisamos los <em>SR</em> basados en contenido y el análisis de texto.</li>
@@ -175,33 +156,33 @@ inteligencia colectiva, lo que es bueno: Más gente involucrada en algo es mejor
 Lo importante es entender cómo funcionan estos modelos y así, eventualmente, poder crear modelos propios.</p>
 <h2>Definición formal del problema</h2>
 <p>Siguiendo la formalización presentada en <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.423.5258&amp;rep=rep1&amp;type=pdf">este paper</a>,
-para un conjunto de usuarios <span class="math">\(U\)</span> y un conjunto de items <span class="math">\(I\)</span>, se desea obtener un
- conjunto recomendado de items <span class="math">\(R\)</span>, tal que</p>
-<div class="math">$$R: I \times U \rightarrow R_0$$</div>
-<p>Esta transformación <span class="math">\(R\)</span> o <em>función de utilidad</em>, se define como la medida de
-<em>precisión</em> o <em>propiedad</em> de recomendar el item <span class="math">\(i \in I\)</span> al usuario <span class="math">\(u \in U\)</span>,
- y <span class="math">\(R_0\)</span> se asume como subconjunto de <span class="math">\(I \times U\)</span> en el cual se conoce el valor de <span class="math">\(R\)</span>$.</p>
+para un conjunto de usuarios $U$ y un conjunto de items $I$, se desea obtener un
+ conjunto recomendado de items $R$, tal que</p>
+<p>$$R: I \times U \rightarrow R_0$$</p>
+<p>Esta transformación $R$ o <em>función de utilidad</em>, se define como la medida de
+<em>precisión</em> o <em>propiedad</em> de recomendar el item $i \in I$ al usuario $u \in U$,
+ y $R_0$ se asume como subconjunto de $I \times U$ en el cual se conoce el valor de $R$$.</p>
 <p>Es así entonces que se tiene, en el contexto de recomendación, la necesidad de</p>
 <ol>
-<li><em>Estimar o aproximar la función de utilidad <span class="math">\(R(i,u)\)</span> sobre aquellos items
-     <span class="math">\(i\)</span> sobre los cuales <span class="math">\(R\)</span> no se conoce, y</em></li>
-<li><em>Elegir el ítem o el conjunto de ítems tal que maximicen <span class="math">\(R\)</span> i.e.</em></li>
+<li><em>Estimar o aproximar la función de utilidad $R(i,u)$ sobre aquellos items
+     $i$ sobre los cuales $R$ no se conoce, y</em></li>
+<li><em>Elegir el ítem o el conjunto de ítems tal que maximicen $R$ i.e.</em></li>
 </ol>
-<div class="math">$$\forall u \in U, i = \mbox{argmax } R(i,u) \mbox{, }  i \in I$$</div>
+<p>$$\forall u \in U, i = \mbox{argmax } R(i,u) \mbox{, }  i \in I$$</p>
 <h2>Métricas de predicción</h2>
-<p>Podemos cuantificar el error entre el valor esperado <span class="math">\(\hat{r}\)</span> y la predicción <span class="math">\(r\)</span>, de las cuales se destacan</p>
+<p>Podemos cuantificar el error entre el valor esperado $\hat{r}$ y la predicción $r$, de las cuales se destacan</p>
 <ol>
 <li>RMSE, o <em>root mean square error</em> como</li>
 </ol>
-<div class="math">$$\sqrt{\frac{\sum_{i=1}^{n}\left(\hat{r}_{ui}-r_{ui}\right)^2}{n}}$$</div>
+<p>$$\sqrt{\frac{\sum_{i=1}^{n}\left(\hat{r}<em ui>{ui}-r</em>\right)^2}{n}}$$</p>
 <ol>
 <li>MSE, o <em>Mean square error</em></li>
 </ol>
-<div class="math">$$\frac{\sum_{i=1}^{n}\left(\hat{r}_{ui}-r_{ui}\right)^2}{n}$$</div>
+<p>$$\frac{\sum_{i=1}^{n}\left(\hat{r}<em ui>{ui}-r</em>\right)^2}{n}$$</p>
 <ol>
 <li>MAE, o <em>Mean absolute error</em></li>
 </ol>
-<div class="math">$$\frac{\sum_{i=1}^{n}|\hat{r}_{ui}-r_{ui}|}{n}$$</div>
+<p>$$\frac{\sum_{i=1}^{n}|\hat{r}<em ui>{ui}-r</em>|}{n}$$</p>
 <p>Estas métricas basadas en el error son de uso frecuente en distintas áreas como
  la estadística y <em>machine learning</em>.</p>
 <h2>Conclusiones</h2>
@@ -213,82 +194,9 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
   predicciones realizadas</li>
 </ul>
 <h2>A continuación</h2>
-<p>En la <a href="https://diegoquintanav.github.io/recsys-2-ES.html">parte 2</a> se verán otras cosas, entre ellas, <strong>tipos de clasificadores.</strong></p>
-<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width < 768) ? "left" : align;
-        indent = (screen.width < 768) ? "0em" : indent;
-        linebreak = (screen.width < 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-</script>
+<p>En la <a href="/drafts/recsys-2-ES.html">parte 2</a> se verán otras cosas, entre ellas, <strong>tipos de clasificadores.</strong></p>
     </div>
   </article>
-  <hr>
-  <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function() {
-      this.page.url = 'https://diegoquintanav.github.io/recsys-1-ES.html';
-      this.page.identifier = 'recsys-1';
-    };
-    (function() {
-      var d = document;
-      var s = d.createElement('script');
-      s.src = '//bluesmonk.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript class="text-muted">
-    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
-  </noscript>
     </div>
   </div>
 
@@ -296,9 +204,9 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
     <div class="container">
 <div class="row">
   <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="https://diegoquintanav.github.io/categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="https://diegoquintanav.github.io/tags.html">Tags</a></li>
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
   </ul>
   <p class="col-sm-6 text-sm-right text-muted">
     Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
@@ -306,6 +214,7 @@ y reducen el espacio de búsqueda en grupos muy grandes de ítems.</li>
   </p>
 </div>    </div>
   </footer>
+
 </body>
 
 </html>

@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = "Diego Quintana"
-SITENAME = "Something something"
+SITENAME = "On the shoulders of giants"
 SITEURL = ""
 
 PATH = "content"
@@ -55,7 +55,7 @@ PLUGINS = [nb_markup]
 # --- pelican-alchemy settings --------------------------------------
 # https://github.com/nairobilug/pelican-alchemy/wiki/Settings
 
-SITESUBTITLE = "Things I've learned along the way. Naming things is hard."
+SITESUBTITLE = "Diego Quintana's blog"
 SITEIMAGE = "/images/profile.png width=400 height=400"
 HIDE_AUTHORS = True
 
@@ -64,11 +64,12 @@ ICONS = (
     ("linkedin", "https://www.linkedin.com/in/diego-quintana-valenzuela/"),
     ("stack-overflow", "https://stackoverflow.com/users/5819113/bluesmonk"),
     ("envelope", "mailto:daquintanav@gmail.com"),
+    ("spotify", "https://open.spotify.com/user/11102438968?si=a22574d2e0214ba8"),
 )
 
 STATIC_PATHS = ["extras", "images"]
-# PYGMENTS_STYLE = 'monokai'
-PYGMENTS_STYLE = "borland"
+PYGMENTS_STYLE = 'monokai'
+# PYGMENTS_STYLE = "borland"
 RFG_FAVICONS = True
 
 DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "sitemap"]

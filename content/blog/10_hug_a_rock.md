@@ -13,8 +13,6 @@ On the subject of the _ethics_ of information, he quotes a passage in one of Alb
 
 > A human being is part of a whole, called by us the “Universe,” a part limited in time and space. He experiences himself, his thoughts and feelings, as something separated from the rest — a kind of optical delusion of his consciousness. This delusion is a kind of prison for us, restricting us to our personal desires and to affection for a few persons nearest us. Our task must be to free ourselves from this prison by widening our circles of compassion to embrace all living creatures and the whole of nature in its beauty. Nobody is capable of achieving this completely, but the striving for such achievement is in itself a part of the liberation and a foundation for inner security.
 
-(I had to stop reading here)
-
 Then he quotes a passage from Lynn Townsend White Jr.:
 
 > Do people have ethical obligations toward rocks? (...) If the time comes when any considerable group of us such a question is no longer ridiculous, we may be on the verge of a change of value structures that will make possible measures to cope with growing ecologic crisis. One hopes that there is enough time left.

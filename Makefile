@@ -77,4 +77,9 @@ publish:
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
 
 
-.PHONY: html help clean regenerate serve serve-global devserver stopserver publish 
+requirements.txt:
+	poetry export -f requirements.txt --without-hashes --only main -o requirements.txt &&\
+	poetry export -f requirements.txt --without-hashes --only dev -o requirements-dev.txt 
+
+
+.PHONY: html help clean regenerate serve serve-global devserver stopserver publish requirements.txt

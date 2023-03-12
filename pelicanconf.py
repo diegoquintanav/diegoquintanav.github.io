@@ -63,15 +63,15 @@ ICONS = (
     ("github", "https://github.com/diegoquintanav"),
     ("linkedin", "https://www.linkedin.com/in/diego-quintana-valenzuela/"),
     ("stack-overflow", "https://stackoverflow.com/users/5819113/bluesmonk"),
-    ("envelope", "mailto:daquintanav@gmail.com"),
     ("spotify", "https://open.spotify.com/user/11102438968?si=a22574d2e0214ba8"),
+    ("envelope", "mailto:daquintanav@gmail.com"),
 )
 
 STATIC_PATHS = ["extras", "images"]
-PYGMENTS_STYLE = 'monokai'
-# PYGMENTS_STYLE = "borland"
+# PYGMENTS_STYLE = 'monokai'
+PYGMENTS_STYLE = "borland"
 RFG_FAVICONS = True
-
+THEME_CSS_OVERRIDES = ['theme/css/oldstyle.css']
 DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "sitemap"]
 
 # --- pelican plugins settings ---------------------

@@ -6,7 +6,6 @@ readme = "README.md"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-ghp-import = "^2.1.0"
 pelican = "^4.8.0"
 python = "^3.8.1,<4.0"
 markdown = "^3.4.1"

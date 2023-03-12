@@ -172,7 +172,4 @@ build-iPhoneSimulator/
 .rvmrc
 
 # Local ignores
-
 content/drafts
-output
-.vscode

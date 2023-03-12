@@ -76,7 +76,7 @@ endif
 publish:
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
 
-deploy publish:
+deploy:
 	git add output/ && git add content/ && git commit -m "Update new contents" && git push origin main
 
 requirements.txt:

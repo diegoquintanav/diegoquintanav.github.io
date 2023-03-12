@@ -76,10 +76,12 @@ endif
 publish:
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
 
+deploy publish:
+	git add output/ && git add content/ && git commit -m "Update new contents" && git push origin main
 
 requirements.txt:
 	poetry export -f requirements.txt --without-hashes --only main -o requirements.txt &&\
 	poetry export -f requirements.txt --without-hashes --only dev -o requirements-dev.txt 
 
 
-.PHONY: html help clean regenerate serve serve-global devserver stopserver publish requirements.txt
+.PHONY: html help clean regenerate serve serve-global devserver stopserver publish requirements.txt deploy

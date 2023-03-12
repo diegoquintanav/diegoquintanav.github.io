@@ -21,6 +21,4 @@ The picture from the header is a part of a _Castell_, and it represents an old t
 
 [Watch this video](https://www.youtube.com/watch?v=-iSHfrmGdyo) and then read more about _castells_ in [Wikipedia](https://en.wikipedia.org/wiki/Castell).
 
-Weird flex but ok: This is [me doing a pilar in Barcelona](https://imgur.com/KUcT21A). I don't do that anymore, but I still like to watch them.
-
 On a side note, [Pablo Picasso did a fascinating mural](http://todosobrebarcelona.com/friso-los-gigantes-picasso-del-colegio-arquitectos-de-cataluna/) that features a _Castell_.

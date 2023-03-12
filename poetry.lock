@@ -727,7 +727,7 @@ test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.21)", "pa
 name = "ipython-genutils"
 version = "0.2.0"
 description = "Vestigial utilities from IPython"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 files = [
@@ -2397,4 +2397,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1,<4.0"
-content-hash = "f246a28afe24f768e4f9b75bc76ddb72a42d99d438e471fc692154fd5c5092b7"
+content-hash = "8fc79abda8e5e35b46ff88b464f8a0cbec18bc30f35ab9c5714cf35482a7067f"

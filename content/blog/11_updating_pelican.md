@@ -1,5 +1,5 @@
 Title: Pelican (and personal) update
-Date: 2022-01-1 13:14:00 -0600
+Date: 2023-03-12 13:14:00 -0600
 Category: Personal
 Tags: development
 Slug: pelican-update

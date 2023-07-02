@@ -14,7 +14,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: pelican-blog
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     permissions:
       packages: write

@@ -26,7 +26,7 @@ env:
   IMAGE_TAG: latest
 jobs:
   build-html:
-    runs-on: $REGISTRY/IMAGE_NAME:$IMAGE_TAG
+    runs-on: ghcr.io/diegoquintanav/pelican-blog:latest
     steps:
       - name: Build html using production settings
         run: make publish

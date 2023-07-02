@@ -22,7 +22,9 @@ concurrency:
 
 jobs:
   build-html:
-    runs-on: ghcr.io/diegoquintanav/pelican-blog:latest
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/diegoquintanav/pelican-blog:latest
     steps:
       - name: Build html using production settings
         run: make publish

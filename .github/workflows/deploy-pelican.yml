@@ -25,9 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/diegoquintanav/pelican-blog:latest
+    volumes:
+      .:/blog/
     steps:
       - name: Build html using production settings
-        script: make publish
+        run: make publish
       - name: create build artifacts
         uses: actions/upload-artifact@v3
         with:

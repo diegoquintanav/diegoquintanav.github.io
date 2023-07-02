@@ -20,10 +20,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: pelican-blog
-  IMAGE_TAG: latest
 jobs:
   build-html:
     runs-on: ghcr.io/diegoquintanav/pelican-blog:latest

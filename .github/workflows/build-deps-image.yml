@@ -35,7 +35,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=schedule
@@ -49,7 +49,7 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           # List of external cache sources for buildx (e.g., user/app:cache, type=local,src=path/to/dir)
-          cache-from: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
           # List of cache export destinations for buildx (e.g., user/app:cache, type=local,dest=path/to/dir)
           context: .
           # Path to the Dockerfile

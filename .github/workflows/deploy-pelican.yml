@@ -27,7 +27,7 @@ jobs:
       image: ghcr.io/diegoquintanav/pelican-blog:latest
     steps:
       - name: Build html using production settings
-        run: make publish
+        script: make publish
       - name: create build artifacts
         uses: actions/upload-artifact@v3
         with:

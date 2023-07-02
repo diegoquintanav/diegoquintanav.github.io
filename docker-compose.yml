@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  blog:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: blog-serve
+      cache_from:
+        - ghcr.io/diegoquintanav/pelican-blog:latest
+    container_name: blog
+    ports:
+      - "8000:80"

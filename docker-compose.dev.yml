@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  blog:
+    image: ghcr.io/diegoquintanav/pelican-blog:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: blog-editor
+    command: /bin/sh -c "while sleep 1000; do :; done" # keep container running
+    container_name: blog-editor
+    ports:
+      - "8010:8000"
+    volumes:
+      - .:/blog
+      - venv:/blog/.venv
+volumes:
+  venv:

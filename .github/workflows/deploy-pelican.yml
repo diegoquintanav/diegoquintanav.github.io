@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/diegoquintanav/pelican-blog:latest
+      options: --user root # https://github.com/actions/checkout/issues/956
     steps:
       - name: Checkout
         uses: actions/checkout@v3

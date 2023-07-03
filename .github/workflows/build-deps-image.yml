@@ -6,7 +6,7 @@ on:
     types:
       - created
   push:
-    branches: ["feature/*"]
+    branches: ["main"]
     paths:
       - 'Dockerfile'
       - 'pyproject.toml'

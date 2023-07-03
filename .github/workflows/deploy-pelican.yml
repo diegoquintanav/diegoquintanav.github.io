@@ -30,11 +30,6 @@ concurrency:
 jobs:
   build-html:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/diegoquintanav/pelican-blog:latest
-      options: --user root # https://github.com/actions/checkout/issues/956
-      volumes:
-        - ${{ github.workspace }}/blog-output:/blog/output
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,14 +37,14 @@ jobs:
           submodules: recursive
       - name: create .env file
         run: |
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" > .env
+          echo "GITHUB_SHA=${{ github.sha }}" >> .env
       - name: Build html using production settings
-        run: make publish
+        run: make docker.publish
       - name: create build artifacts
         uses: actions/upload-pages-artifact@v1
         with:
           path: |
-            ${{ github.workspace }}/blog-output
+            output
   deploy-pages:
     # https://github.com/actions/deploy-pages
     needs: build-html

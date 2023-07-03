@@ -86,3 +86,6 @@ docker.publish: ## runs make publish from docker
 docker.html: ## runs make html from docker
 	docker compose -f docker-compose.dev.yml run --rm  --entrypoint make blog html
 
+docker.serve: ## runs make html from docker
+	docker compose -f docker-compose.dev.yml run --rm  --entrypoint make blog devserver
+

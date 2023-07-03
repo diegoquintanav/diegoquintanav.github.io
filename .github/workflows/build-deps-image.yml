@@ -7,6 +7,9 @@ on:
       - created
   push:
     branches: ["feature/*"]
+    paths:
+      - 'Dockerfile'
+      - 'pyproject.toml'
 
 env:
   REGISTRY: ghcr.io

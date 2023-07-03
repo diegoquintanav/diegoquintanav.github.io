@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy pelican content to Github Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/diegoquintanav/pelican-blog:latest
+      volumes:
+        - $GITHUB_WORKSPACE:/blog
     steps:
       - name: Checkout
         uses: actions/checkout@v3

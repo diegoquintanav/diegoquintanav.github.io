@@ -26,7 +26,7 @@ jobs:
     container:
       image: ghcr.io/diegoquintanav/pelican-blog:latest
       volumes:
-        - $GITHUB_WORKSPACE:/blog
+        - ${{ GITHUB_WORKSPACE }}:/blog
     steps:
       - name: Checkout
         uses: actions/checkout@v3

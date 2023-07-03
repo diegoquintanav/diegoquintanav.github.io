@@ -5,12 +5,12 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-    paths:
-        - 'content/**'
-        - 'pelicanconf.py'
-        - 'publishconf.py'
-        - 'Makefile'
-        - 'pyproject.toml'
+    # paths:
+    #     - 'content/**'
+    #     - 'pelicanconf.py'
+    #     - 'publishconf.py'
+    #     - 'Makefile'
+    #     - 'pyproject.toml'
   
 
   # Allows you to run this workflow manually from the Actions tab
@@ -44,7 +44,7 @@ jobs:
       - name: Build html using production settings
         run: make publish
       - name: create build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v1
         with:
           name: github-pages
           path: |

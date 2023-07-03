@@ -111,12 +111,6 @@ COPY pyproject.toml poetry.lock ./
 # Install dependencies
 RUN poetry install --no-root --only main
 
-# git submodules
-COPY --chown=$USER_UID:$USER_GID .gitmodules .gitignore ./ 
-COPY --chown=$USER_UID:$USER_GID .git/ .git/
-
-RUN git submodule update --init --recursive
-
 EXPOSE 8000
 
 # ---------------------------------------------------------------------------- #
@@ -126,6 +120,7 @@ EXPOSE 8000
 FROM blog-editor AS blog-builder
 
 # copy everything needed for building the page
+# make sure to run git submodule update --init --recursive before building
 COPY --chown=$USER_UID:$USER_GID . .
 
 # refresh global arguments

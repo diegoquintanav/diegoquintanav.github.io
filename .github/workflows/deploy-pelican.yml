@@ -4,14 +4,13 @@ name: Deploy pelican content to Github Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["main", "fix/*"]
     # paths:
     #     - 'content/**'
     #     - 'pelicanconf.py'
     #     - 'publishconf.py'
     #     - 'Makefile'
     #     - 'pyproject.toml'
-  
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,6 +29,11 @@ concurrency:
 jobs:
   build-html:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/diegoquintanav/pelican-blog:latest
+      options: --user root # https://github.com/actions/checkout/issues/956
+      volumes:
+        - ${{ github.workspace }}/blog-output:/blog/output
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -39,12 +43,11 @@ jobs:
         run: |
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
       - name: Build html using production settings
-        run: make docker.publish
+        run: make publish
       - name: create build artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          path: |
-            output
+          path: output
   deploy-pages:
     # https://github.com/actions/deploy-pages
     needs: build-html

@@ -87,5 +87,5 @@ docker.html: ## runs make html from docker
 	docker compose -f docker-compose.dev.yml run --rm  --entrypoint make blog html
 
 docker.serve: ## runs make html from docker
-	docker compose -f docker-compose.dev.yml run --rm  --entrypoint make blog devserver
+	docker compose -f docker-compose.dev.yml run --rm  --service-ports --entrypoint make blog devserver
 

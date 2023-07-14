@@ -71,7 +71,7 @@ STATIC_PATHS = ["extras", "images"]
 # PYGMENTS_STYLE = 'monokai'
 PYGMENTS_STYLE = "borland"
 RFG_FAVICONS = True
-THEME_CSS_OVERRIDES = ['theme/css/oldstyle.css']
+THEME_CSS_OVERRIDES = ["theme/css/oldstyle.css"]
 DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "sitemap"]
 
 # --- pelican plugins settings ---------------------
@@ -83,3 +83,13 @@ IGNORE_FILES = [".ipynb_checkpoints"]
 IPYNB_GENERATE_SUMMARY = True
 IPYNB_FIX_CSS = True
 IPYNB_EXPORT_TEMPLATE = "./themes/nb_templates/custom.tpl"
+
+MARKDOWN = {
+    "extension_configs": {
+        "markdown.extensions.toc": {"title": ""},
+        "markdown.extensions.codehilite": {"css_class": "highlight"},
+        "markdown.extensions.extra": {},
+        "markdown.extensions.meta": {},
+    },
+    "output_format": "html5",
+}

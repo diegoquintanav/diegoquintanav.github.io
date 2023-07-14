@@ -78,7 +78,7 @@ $$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{i})(r_{u,j}-\bar{r
 
 Donde $r_{u,j}$ es el rating del usuario $u$ sobre el ítem $j$ y $\bar{r}_{j}$ es el _rating_ promedio sobre el otro ítem.
 
-![IB-CF1]({filename}/images/CF-IB_1.png "IB-CF")
+![IB-CF1]({static}/images/CF-IB_1.png "IB-CF")
 
 #### Similitud coseno ajustada
 
@@ -88,7 +88,7 @@ $$sim(i,j) = \frac{ \sum_{u \in \mathcal{U}}(r_{u,i}-\bar{r}_{u})(r_{u,j}-\bar{r
 
 De los tres métodos indicados, es esta noción de similitud la que obtiene mejores resultados
 
-![IB-CF2]({filename}/images/similarities.png "Similarities comparison")
+![IB-CF2]({static}/images/similarities.png "Similarities comparison")
 
 ## Otra propuesta de clasificación
 
@@ -260,7 +260,7 @@ donde
 
 ## La maldición de la dimensionalidad (o _Curse of dimensionality_)
 
-![curse-of-dimenzionality]({filename}/images/curse-of-dimensionality.png "omgsocursed")
+![curse-of-dimenzionality]({static}/images/curse-of-dimensionality.png "omgsocursed")
 
 (Kudos al [maravilloso ser humano que hizo la imagen.](https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html))
 
@@ -292,4 +292,4 @@ _The curse of dimensionality_ es un tema recurrente en los _SR_, y me limitaré 
 - [Este blog](https://erikbern.com/2015/10/20/nearest-neighbors-and-vector-models-epilogue-curse-of-dimensionality.html) tiene más información aún ~~además de ahorrarme el tiempo de hacer mi propia imagen~~.
 - [Este otro post](http://www.visiondummy.com/2014/04/curse-dimensionality-affect-classification/) presenta una explicación más detallada, _que también incluye perritos._
 
-![curse-of-dimenzinality]({filename}/images/3Dproblem_separated.png "omgin3D")
+![curse-of-dimenzinality]({static}/images/3Dproblem_separated.png "omgin3D")

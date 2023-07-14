@@ -26,7 +26,7 @@ Dadas dos clases **A** y **B**, una SVM es un clasificador $\mathcal{C}$ que enc
 
 Un _kernel_ resuelve un problema donde para algún conjunto de datos, no existe un plano de decisión $h$ o en otras palabras las clases no son separables. El kernel actúa como una transformación que en ciertas condiciones, permite operar sobre una representación de $\mathcal{C}$ donde sí existe la separación $h$.
 
-![kernel1]({filename}/images/data_2d_to_3d.png)
+![kernel1]({static}/images/data_2d_to_3d.png)
 
 Un kernel se escribe matemáticamente como
 

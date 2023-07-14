@@ -31,7 +31,7 @@ The [repository](https://github.com/danilofreire/pinochet) explains this better
 > _This Github repository contains data and documented R code for Deaths and Disappearances in the Pinochet Regime: A New Dataset by Freire et al (2019). We coded the personal details of 2,398 victims named in the Chilean Truth Commission Report along with information about the perpetrators and geographical coordinates for all identifiable atrocity locations. The dataset covers from 1973 to 1990 and includes 59 indicators. Please refer to our accompanying article and our online appendix for more details._
 
 <div id="container">
-    <img src="{filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png"/>
+    <img src="{static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png"/>
     <br>
     <small><i>map of events from the pinochet repository</i></small>
 </div>
@@ -188,7 +188,7 @@ A `ViolentEvent` has thus the following node properties:
 
 There are up to 6 locations per event, according to the codebook. We will associate a violent event to a series of locations, like
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/violentEvent.png)
 
 <small>series of locations associated to one violent event</small>
 
@@ -206,7 +206,7 @@ Where `location_n` describes the _n-th_ location from a series of events. From t
 
 These locations look like this in the original dataset
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png)
 
 _head of the dataset, slicing on the location related attributes_
 
@@ -250,7 +250,7 @@ class ViolentEvent(BaseModel):
 
 From the rules mentioned above, we end up with a graph that has this shape
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/fullGraph.png)
 
 shape of the final graph
 
@@ -262,7 +262,7 @@ Take for example all the locations that refer to _La Legua,_ a _Población_ or s
 
 > La Legua has likely consolidated as a recognizable entity within the urban weave of Santiago because of the superposition of segregation, political conflicts and a disciplined culture. The structure of its community and its culture have been what have marked its boundaries with precision, rather than its spatial reality
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%202.png)
 
 [http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693](http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693)
 
@@ -293,7 +293,7 @@ $ MATCH (n:Location) where n.location =~ '.*Legua.*' return n LIMIT 5
 
 We observe that although these are different nodes, they have the same attributes. The problem here is that we are loading repeated nodes in our database. We want to resolve these entities as equivalent at insertion time, to merge them into one single node.
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png)
 
 _Five nodes representing the same thing. We can merge them into one node._
 
@@ -576,7 +576,7 @@ We could have done something using Cypher and APOC, a library for many kinds of 
 
 After we've done this, we can start querying the graph with things like
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%204.png)
 
 ## General statistics
 
@@ -692,11 +692,11 @@ LIMIT 5
 
 From the second result, we can check with google maps that the distance approximatedly 9 kilometers
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%205.png)
 
 From "Ñuble 1034" to the "Central Emergency Clinic" it's a 3 km distance, approximately.
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%206.png)
 
 ### Which type of events are linked to more locations?
 
@@ -769,7 +769,7 @@ ORDER BY pathLength DESC
 LIMIT 1
 ```
 
-![longestpath]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/longestpath.png)
+![longestpath]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/longestpath.png)
 
 This result corresponds to [Jose Manuel Díaz Inostroza](https://www.memoriaviva.com/Ejecutados/Ejecutados_D/diaz_inostroza_jose_manuel.htm), a 29 years old farm worker that was tortured and killed after one month since he was taken, along with other four people.
 
@@ -822,7 +822,7 @@ return p
 
 It is hard to represent all the names visually in one screenshot, and this is the best I could do for now.
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png]({filename}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png)
+![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%207.png)
 
 We can get the list of names with Cypher directly
 

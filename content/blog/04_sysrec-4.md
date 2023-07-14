@@ -41,19 +41,19 @@ Estas siguen 3 diseños generales
 
 Se refiere a la unión de dos o más _SR_ en uno solo. Ejemplos de esto son aquellos que implementan _Feature augmentation, Feature combination_
 
-![monolithic]({filename}/images/monolithic_hybrid.png)
+![monolithic]({static}/images/monolithic_hybrid.png)
 
 ### Paralelizado
 
 Se refiere a la ejecución de diversos _SR_ en paralelo, cuyas recomendaciones son combinadas en la salida. Ejemplos de esto implementan _Weighted, Switching, Mixed_
 
-![parallel]({filename}/images/parallel_hybrid.png)
+![parallel]({static}/images/parallel_hybrid.png)
 
 ### Pipeline
 
 Se refieren a los _SR_ cuya entrada es la salida de otro _SR_, siguiendo una ejecución en serie. Ejemplos de esto implementam _Cascade, Meta-Level_
 
-![pipeline]({filename}/images/pipeline_hybrid.png)
+![pipeline]({static}/images/pipeline_hybrid.png)
 
 ## Evaluación de un recomendador
 
@@ -78,7 +78,7 @@ En el contexto de _SR_, sin embargo, se define un _acierto_ en un conjunto de re
 
 Entonces estas nuevas clases dan lugar a una serie de indicadores que ayudan a valorizar un _SR_ por sobre otro en un caso determinado. Si se visualizan estas clases en un diagrama de conjuntos, se tiene
 
-![venn1]({filename}/images/venn1.png)
+![venn1]({static}/images/venn1.png)
 
 De aquí se tiene que la **Precisión** es la fracción de instancias _relevantes_ obtenidas en alguna tarea en específico, del resultado de recomendaciones.
 
@@ -115,7 +115,7 @@ $$
 \mbox{FPR} = {\frac {\mbox{FP}}{\mbox{N}}}={\frac {\mbox{FP}}{\mbox{FP+TN}}}
 $$
 
-![roc_vs_pr]({filename}/images/roc_vs_pr.png)
+![roc_vs_pr]({static}/images/roc_vs_pr.png)
 
 Finalmente, algunas notas sobre este tema
 

@@ -5,11 +5,15 @@ Tags: tools, python, containers
 Slug: poetry-primer
 Authors: Diego Quintana
 Status: published
-Summary: Getting control back of your python development tools.
+Summary: Taking back control of your python development tools.
 
 [TOC]
 
-# About
+# Sharpen your axe
+
+> If I had to chop down a tree in eight hours, I would spend six hours sharpening my axe.
+
+This saying is usually attributed to Abraham Lincoln, who [seemed very good at chopping down trees](https://www.thoughtco.com/abe-lincoln-and-his-ax-reality-behind-the-legend-1773585). The idea is that taking care of your tools will make your craft easier. This is true for any craft and specially of software development.
 
 I wrote this as a short tutorial for a job I had. The idea was to introduce [`Poetry`](https://python-poetry.org/) and dependency management to the people I worked with, and to move away from the `requirements.txt` file. These are the tools I use nowadays to manage my python projects and they have been working great for me. I will use Docker to show you how it all fits together, so you don't need to install anything.
 

@@ -61,7 +61,7 @@ Esto a su vez permite otras representaciones, una es VSM o _Vector space model_,
 
 Un ejemplo se puede ver en la siguiente imagen, donde la palabra _likes_ se representa como la frecuencia en la que la palabra aparece en tres documentos distintos:
 
-![vsm1]({filename}/images/vsm1.png "vsm1")
+![vsm1]({static}/images/vsm1.png "vsm1")
 
 Usando un procedimiento similar, es posible también representar un **documento** como un vector, donde cada elemento del vector es la frecuencia de cada palabra de un corpus que aparece en el documento.
 

@@ -69,7 +69,7 @@ Make sure to read this <https://realpython.com/python-virtual-environments-a-pri
 - You have now a dependency conflict: A and C have the same dependency, but with different versions
   - Library A does not support version 3.0.0 of dependency X, and vice versa
   - Can’t go installing and uninstalling versions every time I want to use A or C. I expect a `42` on the first case and a `None` on the second.
-- Solution: install two instances of python at different locations that can coexist becuase their dependencies are now isolated: we have a _separated_ version of python installed per each project
+- Solution: install two instances of python at different locations that can coexist because their dependencies are now isolated: we have a _separated_ version of python installed per each project
 
 ## The easy win: using `virtualenv`
 
@@ -236,7 +236,7 @@ poetry remove pandas
 
 Every time you `add` or `remove` packages with poetry, two things happen:
 
-- the `pyproject.toml` file is updated and a new line is added under the dependencies section
+- the `pyproject.toml` file is updated and a new line is added or deleted under the dependencies section
 - a `poetry.lock` file is created or updated, containing the exact versions of the dependencies you are using and their relations.
 
 Let's install `cowsay` with `poetry`:
@@ -366,7 +366,7 @@ You may also want to add dependencies from private repositories. These repos nor
 
 1. Add a `source` to `pyproject.toml` file
 
-   1. `poetry source add myprivaterepo [https://pypi.](https://pypi.datuma.aiguasol.coop/simple)myprivaterepo.org`
+   1. `poetry source add myprivaterepo https://pypi.myprivaterepo.org`
    2. This should modify your `pyproject.toml` file and will add something like this
 
       ```toml

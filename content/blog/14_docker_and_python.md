@@ -1,4 +1,4 @@
-Title: Python 
+Title: Python and Docker
 Date: 2023-09-02 15:00:00 +0200
 Category: Development
 Tags: python, containers

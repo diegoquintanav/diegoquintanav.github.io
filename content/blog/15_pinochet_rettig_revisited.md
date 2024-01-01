@@ -1,6 +1,6 @@
 Title: The Pinochet-Rettig dataset, Revisited
 Date: 2024-01-01 15:00:00 +0400
-Category: Development
+Category: Data Engineering
 Tags: dbt, docker, data-engineering
 Slug: pinochet-rettig-v2
 Authors: Diego Quintana

@@ -9,6 +9,10 @@ Summary: Taking back control of your python development tools.
 
 [TOC]
 
+# Update
+
+I have formatted this entry into a workshop format for [Som Energia](https://somenergia.coop), the cooperative I work with at Girona. You can find it [here](https://som-energia.github.io/somenergia-poetry-docker-workshop/).
+
 # Sharpen your axe
 
 > If I had to chop down a tree in eight hours, I would spend six hours sharpening my axe.

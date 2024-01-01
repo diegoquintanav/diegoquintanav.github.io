@@ -9,6 +9,10 @@ Summary: Getting python containers right
 
 [TOC]
 
+# Update
+
+I have formatted this entry into a workshop format for [Som Energia](https://somenergia.coop), the cooperative I work with at Girona. You can find it [here](https://som-energia.github.io/somenergia-poetry-docker-workshop/).
+
 ## What
 
 I've toyed with docker a fair amount of time. There's a lot going on to get a working container so let me summarize a bit of what I'll show here:

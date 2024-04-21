@@ -1,5 +1,8 @@
 Title: About
 Status: published
+Lang: EN
+Date: 2020-09-24 20:01:00 -0600
+Modified: 2023-07-14 20:01:00 -0600
 
 # 🐢
 
@@ -15,7 +18,7 @@ I make monthly playlists, it's fun and it works like a musical diary of sorts. Y
 
 ## What's up with that bird?
 
-The picture is from a huge engraving [I saw in an exhibition in Santiago de Chile](https://www.cclm.cl/exposicion/grabado-hecho-en-chile/). It's a _treile_ or _queltehue_ and it's a common bird in the south of Chile. If I'm not mistaken, the work is from Daniel Lagos Ramírez (Castro, 1976). Hopefully he's okay with me using it.
+The picture is from a huge engraving [I saw in an exhibition in Santiago de Chile](https://www.cclm.cl/exposicion/grabado-hecho-en-chile/). It's a _treile_ or _queltehue_ and it's a common bird in the south of Chile. If I'm not mistaken, the work is from Daniel Lagos Ramírez (Castro, 1976). Hopefully he's okay with me using it. I didn't find a website or anything to link to.
 
 <img src="{static}/images/treile-grande.jpg"  height="600">
 

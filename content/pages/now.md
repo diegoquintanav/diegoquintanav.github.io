@@ -2,27 +2,26 @@ Title: Now
 Lang: EN
 Status: published
 Date: 2020-09-24 20:01:00 -0600
-Modified: 2023-07-14 20:01:00 -0600
+Modified: 2024-04-21 13:01:00 +0200
 
 (_[This is a now page](https://nownownow.com/about), and it is inspired by [Derek Sivers](https://sivers.org/now3) and [many others](https://nownownow.com/)._)
 
-<!-- july 2023 -->
+<!-- april 2023 -->
 
-I'm still in Barcelona. I started a position as a Software Developer/Data Engineer at [Som Energia](https://somenergia.coop). It's an amazing place to work and I'm learning a lot about data architectures. I'm also learning a lot about the energy sector and the cooperative movement, which is something I would like to entertain further in Chile, eventually. I also get to improve my horrible Catalan skills every day and I'm starting to get the hang of it.
 
 # Life
 
-I'm back to swimming after a shoulder injury. I missed it so much. Hopefully I can join a competition before the end of the year. I feel more tired than ever.
+I moved back to my country with my family this year, while keeping my job remotely. It has been challenging in many ways but I feel like everything is going well.
 
 # What I am doing now
 
-I learned how to skate! I'm probably that lame not-so-young-guy at the skate park that is afraid of speed, but skating takes all of my focus and I find it awesome. I'm also learning rust because it feels like a second chance to learn C properly. What else? I'm still going slow at that linocut project I had in mind. I've also done some puzzles and I've had tons of fun and not so much of sleep.
+At the time of writing this, I'm in Barcelona for a couple of months to deal with paperwork and visa stuff. I'm travelling solo this time and I feel like this is a good opportunity to reflect on my life and my goals. I want to create more, write more, and learn more. I'm also trying to get back to running and swimming. I'm at 5k now, but my goal is to reach 10k by the end of the year. It's not much but it's a start.
 
-There's not much going on besides work, but I'm okay.
+There's not much going on besides work, but I'm okay. I need to step up my game and read DDIA, which I've been postponing for a while now. I'm mostly working on [pinochet-analyze-50](https://github.com/diegoquintanav/pinochet-analyze-50), a pet project that I started a while ago and that it's been fun to work on. Hopefully I can present something by the end of the year.
 
 # The future
 
-It's hard to tell. For now the idea is to take care of myself and my family, save money, and try to have fun. I'm not sure what else to do.
+I don't know. There are a lot of things going on now but with clear deadlines, so right now it's more about staying focused and not dropping the ball. Professionally, it feels like I should be doing more so I'm looking how to get there.
 
 # Archive
 
@@ -32,3 +31,4 @@ It's hard to tell. For now the idea is to take care of myself and my family, sav
 - [2020-09-01]({filename}now-archive/2020-09-01-now.md)
 - [2021-01-01]({filename}now-archive/2021-01-01-now.md)
 - [2021-08-01]({filename}now-archive/2021-08-01-now.md)
+- [2023-07-14]({filename}now-archive/2023-07-14-now.md)

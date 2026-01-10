@@ -1,8 +1,8 @@
 {
-	"python.pythonPath": "/home/diego/.pyenv/versions/giants/bin/python",
-	"workbench.colorCustomizations": {
-		"activityBar.background": "#56180E",
-		"titleBar.activeBackground": "#792213",
-		"titleBar.activeForeground": "#FEF8F7"
-	}
+  "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#56180E",
+    "titleBar.activeBackground": "#792213",
+    "titleBar.activeForeground": "#FEF8F7"
+  }
 }

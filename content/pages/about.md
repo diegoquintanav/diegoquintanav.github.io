@@ -14,7 +14,7 @@ Feel free to [send me an email to](mailto:hello@301621.xyz) if you feel like it.
 
 ## I also make monthly playlists
 
-I make monthly playlists, it's fun and it works like a musical diary of sorts. You can check them out at my [spotify profile](https://open.spotify.com/user/11102438968?si=gpPHdO6HQCeP4-V3NGnOhw).
+I make monthly playlists, where I collect songs I've listened to during the month. They are very random but it's fun to come back to them, like a musical diary of sorts. You can check them out at my [spotify profile](https://open.spotify.com/user/11102438968?si=gpPHdO6HQCeP4-V3NGnOhw).
 
 ## What's up with that bird?
 

@@ -8,7 +8,7 @@ SITEURL = ""
 
 PATH = "content"
 
-TIMEZONE = "Europe/Madrid"
+TIMEZONE = "America/Santiago"
 
 DEFAULT_LANG = "en"
 
@@ -40,7 +40,7 @@ THEME = "themes/pelican-alchemy/alchemy"
 
 MARKUP = ("md", "ipynb")
 
-from pelican_jupyter import markup as nb_markup
+from pelican_jupyter import markup as nb_markup  # noqa: E402
 
 PLUGINS = [nb_markup]
 
@@ -55,7 +55,7 @@ PLUGINS = [nb_markup]
 # --- pelican-alchemy settings --------------------------------------
 # https://github.com/nairobilug/pelican-alchemy/wiki/Settings
 
-SITESUBTITLE = "Diego Quintana's blog"
+SITESUBTITLE = ""
 SITEIMAGE = "/images/profile.jpg width=400 height=400"
 HIDE_AUTHORS = True
 

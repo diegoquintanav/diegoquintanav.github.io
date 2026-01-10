@@ -2,23 +2,29 @@ Title: Now
 Lang: EN
 Status: published
 Date: 2020-09-24 20:01:00 -0600
-Modified: 2024-04-21 13:01:00 +0200
+Modified: 2026-01-10 18:19:00 -0300
 
 > (*[This is a now page](https://nownownow.com/about), and it is inspired by [Derek Sivers](https://sivers.org/now3) and [many others](https://nownownow.com/). This was written on April 21st, 2024.*)
 
 # Life
 
-I moved back to my country with my family this year, while keeping my job remotely. It has been challenging in many ways but I feel like everything is going well.
+Wow, it's been a while. Last time I wrote something here was mid 2024. I've been living in Chile for almost two years and 2025 was a weird year. I guess I could summarize 2025 as an attempt to catch up with my writings.
 
-# What I am doing now
+I traveled to Barcelona for work, and attended the PyConES event in Sevilla. I presented in the PyCon Chile myself!. I went to Argentina and Colombia. Went to Salento and fell in love with coffee again after tasting on a ripe coffee cherry that I plucked from a tree. I ran my first 21K and it was very hard, and I want to do better this year. I also met the first newborn child of a cherished friend.
 
-At the time of writing this, I'm in Barcelona for a couple of months to deal with paperwork and visa stuff. I'm travelling solo this time and I feel like this is a good opportunity to reflect on my life and my goals. I want to create more, write more, and learn more. I'm also trying to get back to running and swimming. I'm at 5k now, but my goal is to reach 10k by the end of the year. It's not much but it's a start.
+## What I am doing now
 
-There's not much going on besides work, but I'm okay. I need to step up my game and read DDIA, which I've been postponing for a while now. I'm mostly working on [pinochet-analyze-50](https://github.com/diegoquintanav/pinochet-analyze-50), a pet project that I started a while ago and that it's been fun to work on. Hopefully I can present something by the end of the year.
+I'm trying to find a good thing to invest my time in this year. I've come to terms with the idea that I can't do everything at the same time. So I'm going to pick *some things* and see where they take me.
 
-# The future
+I've put engravings on a pause. I've put academic prospects on pause. I'm going to focus on my career and having fun, but maybe with a sharper intention, if that makes sense.
 
-I don't know. There are a lot of things going on now but with clear deadlines, so right now it's more about staying focused and not dropping the ball. Professionally, it feels like I should be doing more so I'm looking how to get there.
+## The future
+
+The world feels like a it's about to enter into a new phase or something, and I'm finding it hard to visualize whatever is coming about the new shifts regarding the AI bubble, climate crisis, and the new (and old) warmongers trying to install war for profit. It's going to be a tough year for many.
+
+On a more personal note, I want to learn music this year, again, like previous years. But I feel like I'm making progress now more than ever. I also wish to get certified on some things this year. I'm going to keep running and trying to improve. Maybe staying at 21k this year.
+
+I also found that other people are writing their thoughts on a weekly basis and I'd like to try that this time. So hopefully you'll find more things now at [/weeknotes]({filename}weeknotes.md).
 
 # Archive
 
@@ -29,3 +35,4 @@ I don't know. There are a lot of things going on now but with clear deadlines, s
 - [2021-01-01]({filename}now-archive/2021-01-01-now.md)
 - [2021-08-01]({filename}now-archive/2021-08-01-now.md)
 - [2023-07-14]({filename}now-archive/2023-07-14-now.md)
+- [2024-01-21]({filename}now-archive/2024-01-21-now.md)

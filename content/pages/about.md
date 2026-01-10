@@ -4,17 +4,9 @@ Lang: EN
 Date: 2020-09-24 20:01:00 -0600
 Modified: 2026-01-10 14:06:00 -0300
 
-# 🐢
-
 This is my blog. Sometimes I write about Python and other things. I'm on a quest for ways to do meaningful work. You can check what's going on with me [now]({filename}now.md).
 
-## Reach out to me
-
 Feel free to [send me an email to](mailto:hello@301621.xyz) if you feel like it. You can check my [LinkedIn profile](https://www.linkedin.com/in/diego-quintana-valenzuela/) for qualifications.
-
-## I also make monthly playlists
-
-I make monthly playlists, where I collect songs I've listened to during the month. They are very random but it's fun to come back to them, like a musical diary of sorts. You can check them out at my [spotify profile](https://open.spotify.com/user/11102438968?si=gpPHdO6HQCeP4-V3NGnOhw).
 
 ## What's up with that bird?
 

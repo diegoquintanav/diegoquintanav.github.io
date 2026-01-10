@@ -2,11 +2,19 @@
 
 Hello, World! This is my github site. Feel free to look around. It is developed using [Pelican](https://getpelican.com/), a static site generator written in Python.
 
+## Installation
+
+I use [Poetry](https://python-poetry.org/) to manage dependencies. To set up the development environment, run:
+
+```bash
+poetry install --with dev
+```
+
 ## Deploying the blog
 
 You can build, serve and publish the site using the provided `Makefile` targets.
 
-- **Build (generate HTML):**
+- **Build (generate HTML):**re
 
 ```bash
 make html

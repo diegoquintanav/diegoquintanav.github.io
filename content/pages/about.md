@@ -2,7 +2,7 @@ Title: About
 Status: published
 Lang: EN
 Date: 2020-09-24 20:01:00 -0600
-Modified: 2023-07-14 20:01:00 -0600
+Modified: 2026-01-10 14:06:00 -0300
 
 # 🐢
 
@@ -10,7 +10,7 @@ This is my blog. Sometimes I write about Python and other things. I'm on a quest
 
 ## Reach out to me
 
-Feel free to [send me an email to](mailto:daquintanav@gmail.com) if you feel like it. You can check my [LinkedIn profile](https://www.linkedin.com/in/diego-quintana-valenzuela/) for qualifications.
+Feel free to [send me an email to](mailto:hello@301621.xyz) if you feel like it. You can check my [LinkedIn profile](https://www.linkedin.com/in/diego-quintana-valenzuela/) for qualifications.
 
 ## I also make monthly playlists
 
@@ -25,3 +25,7 @@ The picture is from a huge engraving [I saw in an exhibition in Santiago de Chil
 [Here's a wholesome video about treiles](https://www.youtube.com/watch?v=c1sTGP14pyQ)
 
 [Here's another one](https://www.youtube.com/watch?v=3Fz6ejt5eCg)
+
+## What's up with moving rocks around?
+
+See <https://xkcd.com/505/>

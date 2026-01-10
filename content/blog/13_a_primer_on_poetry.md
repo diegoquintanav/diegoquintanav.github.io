@@ -23,12 +23,12 @@ I wrote this as a short tutorial for a job I had. The idea was to introduce [`Po
 
 # Pin those dependencies
 
-Pinned dependencies are important, as they help maintain and control functionalities of your project. Listing pinned dependencies ensures projects get outdated (i.e. they “rot”) in a _manageable_ and _understandable_ way.
+Pinned dependencies are important, as they help maintain and control functionalities of your project. Listing pinned dependencies ensures projects get outdated (i.e. they “rot”) in a *manageable* and *understandable* way.
 
 There are some levels to how reproducible your project is:
 
-1. Mention _somewhere evident_ what version of Python your project is supposed to work with. A badge would suffice. See for example [static badges](https://shields.io/badges/static-badge), like this one ![badge](https://img.shields.io/badge/python-3.10-blue).
-2. Provide _at least_ a `requirements.txt` with pinned dependencies.
+1. Mention *somewhere evident* what version of Python your project is supposed to work with. A badge would suffice. See for example [static badges](https://shields.io/badges/static-badge), like this one ![badge](https://img.shields.io/badge/python-3.10-blue).
+2. Provide *at least* a `requirements.txt` with pinned dependencies.
 3. Provide a `setup.py` file declaring dependencies.
 4. Provide a `pyproject.toml` file in the best case
 5. Use a dependency manager such as [`poetry`](https://python-poetry.org/), [`pipenv`](https://pipenv.pypa.io/en/latest/#install-pipenv-today) or [`hatch`](https://hatch.pypa.io/latest/) or [conda](https://docs.conda.io/en/latest/).
@@ -41,11 +41,11 @@ There are some levels to how reproducible your project is:
 Old is the [xkcd comic about python environments](https://xkcd.com/1987/). The gist is that isolated environments are important and you should use them. Even better if you know what python version you are using at all times and where is it installed. `whereis python` is your friend.
 
 Same as with dependencies, there are some levels to how isolated your python environments are:
-  
+
 - First level `python -m venv .venv` at your project level
 - Second level is to have `pipx` manage your system level utilities, i.e. normally CLI tools like `cowsay` or `poetry` or `black`
 - Second level is to let `poetry` manage your virtual environments
-- Third level is to let `pyenv` manage your python versions _and_ your environments and let poetry just do dependency management
+- Third level is to let `pyenv` manage your python versions *and* your environments and let poetry just do dependency management
 - Fourth level is some python version manager that does not use shims and does not suck but I don't know of any as of today.
 - Fifth level is using Docker to build an isolated environment.
 
@@ -53,7 +53,7 @@ Same as with dependencies, there are some levels to how isolated your python env
 
 - A project may depend on another library: consider for example the [`pandas`](https://github.com/pandas-dev/pandas) library. You normally install this with `pip install pandas`. That means that your project now has a dependency on `pandas`.
 - Pandas is a very large project and it has its own dependencies too. Depending on the complexity of the project, these may be hard to understand at first. For `pandas`, this may be very well listed as [anaconda dependencies](https://github.com/pandas-dev/pandas/blob/main/environment.yml).
-- Each library at some point grows past the point where it needs to start tracking such growth through some kind of a versioning system. This is so that users (e.g. other developers like _you_) can write code depending on a specific expectated behaviours.
+- Each library at some point grows past the point where it needs to start tracking such growth through some kind of a versioning system. This is so that users (e.g. other developers like *you*) can write code depending on a specific expectated behaviours.
 - Sometimes a change of the version won't mean anything to your own code. Other times, however, it may introduce a change of its expected behaviour when running the same thing. This is loosely referred to as a breaking change. Consider the example for [`distutils` telling its users how to migrate to new versions so their code won't break](https://numpy.org/devdocs/reference/distutils_status_migration.html).
 
 ## What is a virtual environment?
@@ -63,9 +63,9 @@ Make sure to read this <https://realpython.com/python-virtual-environments-a-pri
 ## Why do we need a virtual environment?
 
 - Virtual environment are there to keep you sane.
-- A virtual environment is a directory (a.k.a _folder)_ holding a _copy_ of python, isolated from other copies that you may have installed in your system.
+- A virtual environment is a directory (a.k.a *folder)* holding a *copy* of python, isolated from other copies that you may have installed in your system.
   - Oftentimes such an environment is installed in a folder, generally called `.venv`
-  - Any libraries installed with `./.venv/bin/python -m pip` are _linked_ to that version, i.e. they will be located under `./.venv/lib/pythonX.Y/site-packages/`
+  - Any libraries installed with `./.venv/bin/python -m pip` are *linked* to that version, i.e. they will be located under `./.venv/lib/pythonX.Y/site-packages/`
 - Imagine the following weird example: You own three python projects, each one with its own dependencies
   - Library A has dependency X with version 1.0.0. Running something like `python -m X.foo` will yield the integer `42`
   - Library B has dependency Y with version 2.0.0.
@@ -73,7 +73,7 @@ Make sure to read this <https://realpython.com/python-virtual-environments-a-pri
 - You have now a dependency conflict: A and C have the same dependency, but with different versions
   - Library A does not support version 3.0.0 of dependency X, and vice versa
   - Can’t go installing and uninstalling versions every time I want to use A or C. I expect a `42` on the first case and a `None` on the second.
-- Solution: install two instances of python at different locations that can coexist because their dependencies are now isolated: we have a _separated_ version of python installed per each project
+- Solution: install two instances of python at different locations that can coexist because their dependencies are now isolated: we have a *separated* version of python installed per each project
 
 ## The easy win: using `virtualenv`
 
@@ -87,7 +87,7 @@ Make sure to read this <https://realpython.com/python-virtual-environments-a-pri
 └── lib64 -> lib
 ```
 
-And you normally "activate" it by calling the script inside `/bin/activate`. 
+And you normally "activate" it by calling the script inside `/bin/activate`.
 
 ## The "a bit more involved" win using `pyenv` + `pipx` + `poetry`
 
@@ -101,7 +101,7 @@ In short, it means
 - let [pipx](https://github.com/pypa/pipx) manage your system level utilities e.g. `poetry`
 - let [poetry](https://github.com/python-poetry/poetry) manage dependencies
   - install it system-wide with `pipx install poetry`
-  - poetry creates virtual environments by default, _we want to deactivate it_
+  - poetry creates virtual environments by default, *we want to deactivate it*
     - `poetry config virtualenvs.create false`
     - `poetry config virtualenvs.in-project false`
 
@@ -184,7 +184,7 @@ exec "$SHELL"
 Let's install `poetry` with `pipx`:
 
 ```bash
-$ pipx install poetry==1.4.2 --force
+pipx install poetry==1.4.2 --force
 ```
 
 And confirm it's installed with:
@@ -286,7 +286,6 @@ if __name__ == "__main__":
 
 Confirm that your program works by running it with `python mypackage/cli.py`:
 
-
 ```bash
 $ python mypackage/cli.py
 ___________
@@ -340,9 +339,8 @@ mypackage-cli # launch cli
 
 Make sure you have a valid account at [pypi](https://pypi.org/). You can create one [here](https://pypi.org/account/register/).
 
-
 Run `poetry build` (at the level where a valid `pyproject.toml` is present). From this point on, you have two options:
-  
+
 ## Publish to pypi
 
 Run  `poetry publish --username myprivaterepo --password <password> --repository pypi`
@@ -357,16 +355,13 @@ if you wish to publish to a private repository, say, `pypi.myprivaterepo.org`:
 
 Now you can run  `poetry publish --username myprivaterepo --password <password> --repository myprivaterepo`. See <https://python-poetry.org/docs/libraries#publishing-to-pypi> for more documentation
 
-
 ## Creating your own private repository using docker compose
 
 Launch your own pypi repository with <https://github.com/pypiserver/pypiserver> and <https://github.com/pypiserver/pypiserver/blob/master/docker-compose.yml>
 
-
 ## Adding dependencies from private repositories to pyproject.toml
 
 You may also want to add dependencies from private repositories. These repos normally need keys to access them. Make sure to follow the instructions from your private repository to add credentials to your `pyproject.toml` file. Generally, the process is as follows:
-
 
 1. Add a `source` to `pyproject.toml` file
 
@@ -391,11 +386,11 @@ You may also want to add dependencies from private repositories. These repos nor
 
 # Managing virtual environments inside docker
 
-Last but not least. People tend to argue over such scenario. _Is isolation within isolation necessary? Is a virtual environment needed inside a docker container?_ See
+Last but not least. People tend to argue over such scenario. *Is isolation within isolation necessary? Is a virtual environment needed inside a docker container?* See
 
 - <https://github.com/python-poetry/poetry/discussions/1879#discussioncomment-346113>
 - <https://github.com/python-poetry/poetry/pull/3209#issuecomment-710678083>
 
-Answer is “_it depends_”, but it gives more control over dependencies and their state. I prefer it using docker multistage builds. I will cover this in a next post hopefully soon.
+Answer is “*it depends*”, but it gives more control over dependencies and their state. I prefer it using docker multistage builds. I will cover this in a next post hopefully soon.
 
 Until next time!

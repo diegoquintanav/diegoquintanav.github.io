@@ -13,10 +13,10 @@ On September 11, 1973, Chile faced a military coup lead by Augusto Pinochet [and
 
 As part of the efforts to shed light on the truth about what happened, two official reports can be noted:
 
-- The first one was issued under the presidency of Patricio Alwyin in the year 1991, shortly after the military dictatorship ended. This document is known as the _[Rettig Report](https://en.wikipedia.org/wiki/Rettig_Report)_.
-- The second report was issued during the first presidency of Michelle Bachelet, and it attempts to extend these efforts in what is known as the _[Valech Report](https://en.wikipedia.org/wiki/Valech_Report)._
+- The first one was issued under the presidency of Patricio Alwyin in the year 1991, shortly after the military dictatorship ended. This document is known as the *[Rettig Report](https://en.wikipedia.org/wiki/Rettig_Report)*.
+- The second report was issued during the first presidency of Michelle Bachelet, and it attempts to extend these efforts in what is known as the *[Valech Report](https://en.wikipedia.org/wiki/Valech_Report).*
 
-It came to my knowledge that _some people,_ more specifically, Danilo Freire and others, [published a dataset and an article containing the information about the 903 pages of the report](https://osf.io/vqnwu/), along with a [Github repository](https://github.com/danilofreire/pinochet).
+It came to my knowledge that *some people,* more specifically, Danilo Freire and others, [published a dataset and an article containing the information about the 903 pages of the report](https://osf.io/vqnwu/), along with a [Github repository](https://github.com/danilofreire/pinochet).
 
 ```text
 Freire, Danilo, David Skarbek, John Meadowcroft, and Eugenia Guerrero. 2019. “Deaths and Disappearances in the Pinochet Regime: A New Dataset.” SocArXiv. May 31. doi:10.31235/osf.io/vqnwu.
@@ -24,14 +24,14 @@ Freire, Danilo, David Skarbek, John Meadowcroft, and Eugenia Guerrero. 2019. “
 
 From the article that goes with the dataset,
 
-> _Although the (Rettig) Report is a valuable source of information for scholars, quantitative researchers cannot readily use the rich data it contains. In this paper, we present a manually-coded dataset with all information from the Truth Commission Report plus new variables we collected to complement the original records. We transcribed every personal detail from the 903 pages of the English translation of the Report, assigned a unique identification number to each victim, then georeferenced the location of the human rights abuses. We added coordinates of latitude and longitude to every location mentioned in the report, such as places used to torture, interrogate or murder the victims._
+> *Although the (Rettig) Report is a valuable source of information for scholars, quantitative researchers cannot readily use the rich data it contains. In this paper, we present a manually-coded dataset with all information from the Truth Commission Report plus new variables we collected to complement the original records. We transcribed every personal detail from the 903 pages of the English translation of the Report, assigned a unique identification number to each victim, then georeferenced the location of the human rights abuses. We added coordinates of latitude and longitude to every location mentioned in the report, such as places used to torture, interrogate or murder the victims.*
 
 The [repository](https://github.com/danilofreire/pinochet) explains this better
 
-> _This Github repository contains data and documented R code for Deaths and Disappearances in the Pinochet Regime: A New Dataset by Freire et al (2019). We coded the personal details of 2,398 victims named in the Chilean Truth Commission Report along with information about the perpetrators and geographical coordinates for all identifiable atrocity locations. The dataset covers from 1973 to 1990 and includes 59 indicators. Please refer to our accompanying article and our online appendix for more details._
+> *This Github repository contains data and documented R code for Deaths and Disappearances in the Pinochet Regime: A New Dataset by Freire et al (2019). We coded the personal details of 2,398 victims named in the Chilean Truth Commission Report along with information about the perpetrators and geographical coordinates for all identifiable atrocity locations. The dataset covers from 1973 to 1990 and includes 59 indicators. Please refer to our accompanying article and our online appendix for more details.*
 
 <div id="container">
-    <img src="{static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png"/>
+    <img src="{static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled.png" alt="Map of events from the Pinochet repository"/>
     <br>
     <small><i>map of events from the pinochet repository</i></small>
 </div>
@@ -171,7 +171,7 @@ class Location(BaseModel):
 
 ### ViolentEvent
 
-Assuming each row describes a violent event, we say that a `ViolentEvent` develops in different _locations_ specified by the `location_n` attribute.
+Assuming each row describes a violent event, we say that a `ViolentEvent` develops in different *locations* specified by the `location_n` attribute.
 
 A `ViolentEvent` has thus the following node properties:
 
@@ -192,23 +192,25 @@ There are up to 6 locations per event, according to the codebook. We will associ
 
 <small>series of locations associated to one violent event</small>
 
-Where `location_n` describes the _n-th_ location from a series of events. From the codebook, we observe that
+Where `location_n` describes the *n-th* location from a series of events. From the codebook, we observe that
 
-- `exact_coordinates_n` : _We matched the event sites with coordinates of latitude and longitude.
+- `exact_coordinates_n` : *We matched the event sites with coordinates of latitude and longitude.
   As the report does not have the precise location of all events, we used the closest reference
   available. This is a dummy variable stating whether coordinates are precise (street level) or
   not. 1 = yes. There are six variables in the dataset, each pertaining to one location where the
-  individual was found or taken to._
-- `location_n` : _Where the individual was seen or found. There are up to 6 locations, so we coded them as location_1 to location_6 . The same pattern repeats in the variables below. The compilation of the location_n variable was based completely on information given in the Truth Report. However, since this information was in a string format (e.g. intersection
-  of Calle Grecia and Avenida Rosa), creating a new variable incorporating each location’s latitude and longitude was necessary to pursue further analysis of the trends in deaths and disappearances. The format chosen was decimal coordinates._
-- `place_n` : _Place where the individual was spotted/reported to be seen. (in chronological order,
-  from 1 to 6 places)._ - Categories: _Home; Work; University; In custody; In public; In hospital; Unknown_
+  individual was found or taken to.*
+- `location_n` : *Where the individual was seen or found. There are up to 6 locations, so we coded them as location_1 to location_6 . The same pattern repeats in the variables below. The compilation of the location_n variable was based completely on information given in the Truth Report. However, since this information was in a string format (e.g. intersection
+  of Calle Grecia and Avenida Rosa), creating a new variable incorporating each location’s latitude and longitude was necessary to pursue further analysis of the trends in deaths and disappearances. The format chosen was decimal coordinates.*
+- `place_n` : *Place where the individual was spotted/reported to be seen. (in chronological order,
+  from 1 to 6 places).* - Categories: *Home; Work; University; In custody; In public; In hospital; Unknown*
 
 These locations look like this in the original dataset
 
-![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png)
-
-_head of the dataset, slicing on the location related attributes_
+<div id="container">
+    <img src="{static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%201.png" alt="First rows of the dataset, slicing on the location related attributes"/>
+    <br>
+    <small><i>First rows of the dataset, slicing on the location related attributes</i></small>
+</div>
 
 ### More on modeling series of events
 
@@ -258,7 +260,7 @@ shape of the final graph
 
 The first approach is a bit flaky. We observe that we don't have a proper `id` or primary keys. These are not explicitly provided in the dataset, so we have to either create them artificially or pick one attribute from each node that will act as one. We can observe how this affects our final graph if we query entities with the same attributes.
 
-Take for example all the locations that refer to _La Legua,_ a _Población_ or shantytown in the south of Santiago that has a powerful history of struggle linked to political conflicts and lately to drug trafficking and crime, as in the words of [Rodrigo Ganter (2007, in spanish only)](https://scielo.conicyt.cl/scielo.php?script=sci_arttext&pid=S0717-69962007000100005&lng=es&nrm=iso).
+Take for example all the locations that refer to *La Legua,* a *Población* or shantytown in the south of Santiago that has a powerful history of struggle linked to political conflicts and lately to drug trafficking and crime, as in the words of [Rodrigo Ganter (2007, in spanish only)](https://scielo.conicyt.cl/scielo.php?script=sci_arttext&pid=S0717-69962007000100005&lng=es&nrm=iso).
 
 > La Legua has likely consolidated as a recognizable entity within the urban weave of Santiago because of the superposition of segregation, political conflicts and a disciplined culture. The structure of its community and its culture have been what have marked its boundaries with precision, rather than its spatial reality
 
@@ -266,9 +268,9 @@ Take for example all the locations that refer to _La Legua,_ a _Población_ or s
 
 [http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693](http://www.plataformaurbana.cl/archive/2009/09/12/la-legua-emergencia-incisiones-urbanas-contra-el-narcotrafico/#identifier_0_10693)
 
-_La Legua_ is known for being one of the places that [presented resistance from the first day to the militar strike](https://www.archivochile.com/Experiencias/exp_popu/EXPpopulares0002.pdf), which along with its history made it a target during the regime. In our graph database, we can observe the nodes that represent this location:
+*La Legua* is known for being one of the places that [presented resistance from the first day to the militar strike](https://www.archivochile.com/Experiencias/exp_popu/EXPpopulares0002.pdf), which along with its history made it a target during the regime. In our graph database, we can observe the nodes that represent this location:
 
-```cypher
+```plain
 $ MATCH (n:Location) where n.location =~ '.*Legua.*' return n LIMIT 5
 
 ╒══════════════════════════════════════════════════════════════════════╕
@@ -295,7 +297,7 @@ We observe that although these are different nodes, they have the same attribute
 
 ![Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png]({static}/images/Modeling%20the%20Pinochet%20Dataset%20using%20Neo4j%20ffebfd8f41eb47ccb6e24f93c9c8ee27/Untitled%203.png)
 
-_Five nodes representing the same thing. We can merge them into one node._
+*Five nodes representing the same thing. We can merge them into one node.*
 
 From the py2neo [documentation](https://py2neo.org/v4/ogm.html#py2neo.ogm.GraphObject), we could achieve this by using an existing attribute, like
 
@@ -306,9 +308,9 @@ class Location(BaseModel):
     # rest of model below
 ```
 
-But we will soon realize that we may be ignoring those locations that have equal _location_ attribute but are different in other attributes. Take for instance the following query:
+But we will soon realize that we may be ignoring those locations that have equal *location* attribute but are different in other attributes. Take for instance the following query:
 
-```cypher
+```plain
 MATCH (n:Location) where n.location =~ '.*Legua.*' return n.location, n.exact_location, n.place, n.latitude, n.longitude, n.location_order LIMIT 25
 
 
@@ -338,7 +340,7 @@ MATCH (n:Location) where n.location =~ '.*Legua.*' return n.location, n.exact_lo
 
 ```
 
-We see that although these nodes share the same latitude and longitude, some events occured _In public_ where as other events occured at the victim's home.
+We see that although these nodes share the same latitude and longitude, some events occured *In public* where as other events occured at the victim's home.
 
 In order to resolve this, we will hash these attributes and use the result as a key to avoid redundant data. In other words, we will use and MD5 hash function from python's `hashlib`
 
@@ -365,7 +367,7 @@ For tables and graphs that are intended to grow over time, you should think more
 
 For the case of `Perpetrator` we note that from 2398 total instances in the db, we have these unique entities:
 
-```cypher
+```plain
 $ MATCH (n:Perpetrator)  RETURN COUNT(DISTINCT n.perpetrator_affiliation_detail)
 228
 $ MATCH (n:Perpetrator)  RETURN COUNT(DISTINCT n.perpetrator_affiliation)
@@ -374,7 +376,7 @@ $ MATCH (n:Perpetrator)  RETURN COUNT(DISTINCT n.war_tribunal)
 2
 ```
 
-We can create 228\*3\*2 = 1392 unique _ids_ if we concatenate attribute values. We can compress this index to have some meaning, like a hash of (attr1 + attr2 + attr3). As it is, `Perpetrator` is sort of a [junk dimension in the Data Warehousing jargon.](https://key2consulting.com/building-a-data-warehouse-populating-and-using-a-junk-dimension/)
+We can create 228\*3\*2 = 1392 unique *ids* if we concatenate attribute values. We can compress this index to have some meaning, like a hash of (attr1 + attr2 + attr3). As it is, `Perpetrator` is sort of a [junk dimension in the Data Warehousing jargon.](https://key2consulting.com/building-a-data-warehouse-populating-and-using-a-junk-dimension/)
 
 ```python
 class Perpetrator(BaseModel):
@@ -387,7 +389,7 @@ class Perpetrator(BaseModel):
 
 For the case of `ViolentEvents` it is more difficult. We also have 2398 instances, but how do we tell them apart? Let's have a look at the dates, which seem promising as primary keys.
 
-```cypher
+```plain
 MATCH (n:ViolentEvent) RETURN COUNT(DISTINCT n.start_date_daily), COUNT(DISTINCT n.end_date_daily), COUNT(DISTINCT n.start_date_monthly), COUNT(DISTINCT n.end_date_monthly)
 
 ╒═════════╤═════════╤═════════╤═════════╕
@@ -401,7 +403,7 @@ MATCH (n:ViolentEvent) RETURN COUNT(DISTINCT n.start_date_daily), COUNT(DISTINCT
 └─────────┴─────────┴─────────┴─────────┘
 ```
 
-The main difficulty is with the data as we have it right now, _we have no way to know that two nodes refer to the same event_. We will assume that all instances in this table are unique i.e. all violent events are unique, and we will give them a UUID accordingly.
+The main difficulty is with the data as we have it right now, *we have no way to know that two nodes refer to the same event*. We will assume that all instances in this table are unique i.e. all violent events are unique, and we will give them a UUID accordingly.
 
 ```python
 class ViolentEvent(BaseModel):
@@ -414,7 +416,7 @@ class ViolentEvent(BaseModel):
 
 ---
 
-With these keys in place, we start over and recreate the graph. We check for locations referring to _La Legua_, and see that now there are three instances in total. We removed a lot of redundant data this way!
+With these keys in place, we start over and recreate the graph. We check for locations referring to *La Legua*, and see that now there are three instances in total. We removed a lot of redundant data this way!
 
 ```python
 MATCH (n:Location) where n.location =~ '.*Legua.*' return n LIMIT 25
@@ -582,7 +584,7 @@ After we've done this, we can start querying the graph with things like
 
 from [https://neo4j.com/developer/kb/how-do-i-produce-an-inventory-of-statistics-on-nodes-relationships-properties/](https://neo4j.com/developer/kb/how-do-i-produce-an-inventory-of-statistics-on-nodes-relationships-properties/) we can create an inventory of miscellaneous statistics of the graph.
 
-```cypher
+```plain
 MATCH (n)
 WITH labels(n) as labels, size(keys(n)) as props, size((n)--()) as degree
 RETURN
@@ -620,9 +622,9 @@ max(degree) AS MaxNumOfRelationships
 
 We observe right away that on average, a violent event is linked to ~4.7 nodes. We would like to be more specific, and for this we will craft the subgraph that we would like to match, and then we will get the outgoing degree of the event for all victims.
 
-This is equivalent to asking for the length on average of the paths walked for a victim. This boils down to fetch the _initial_ and the _last_ location of each event, and count how many locations are in the path formed by those locations.
+This is equivalent to asking for the length on average of the paths walked for a victim. This boils down to fetch the *initial* and the *last* location of each event, and count how many locations are in the path formed by those locations.
 
-```cypher
+```plain
 match (v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)
 with e
 match pathA=(fl:Location)<-[:FIRST_LOCATION]-(e)-[:LAST_LOCATION]->(ll:Location)
@@ -638,11 +640,11 @@ return avg(pathLength)
 └──────────────────┘
 ```
 
-In other words, a victim visits ~1.44 places on average before _ending its journey_ (either by getting killed, dissapeared, or suicide, for example).
+In other words, a victim visits ~1.44 places on average before *ending its journey* (either by getting killed, dissapeared, or suicide, for example).
 
 This is the same as above, but with substracting -2 to the length because this path contains the event twice each time
 
-```cypher
+```plain
 match (e:ViolentEvent)
 with e
 match path=(e)-[:FIRST_LOCATION]->(fl:Location)-[:NEXT_LOCATION*]->(ll:Location)<-[:LAST_LOCATION]-(e)
@@ -660,7 +662,7 @@ return avg(pathSize)
 
 From [https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/](https://neo4j.com/docs/cypher-manual/3.5/functions/spatial/), we could update relationships with their geodesic distance. For now we just want to see it.
 
-```cypher
+```plain
 MATCH (v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)
 WITH e
 MATCH pathA=(fl:Location)<-[:FIRST_LOCATION]-(e)-[:LAST_LOCATION]->(ll:Location)
@@ -700,7 +702,7 @@ From "Ñuble 1034" to the "Central Emergency Clinic" it's a 3 km distance, appro
 
 ### Which type of events are linked to more locations?
 
-```cypher
+```plain
 MATCH (v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)
 WITH e
 MATCH path=(e)-[r:IN_LOCATION]->(l:Location)
@@ -726,7 +728,7 @@ ORDER BY degree DESC
 
 If we analyze the average number of locations, we get a different perspective
 
-```cypher
+```plain
 MATCH (v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)
 WITH e
 MATCH path=(e)-[r:IN_LOCATION]->(l:Location)
@@ -757,7 +759,7 @@ On average, people that died because of suicide visited more locations than thos
 
 We want to know about those victims that moved the most, i.e. have the longest trajectories. We can do so with
 
-```cypher
+```plain
 MATCH (v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)
 WITH v, e
 MATCH pathA=(fl:Location)<-[:FIRST_LOCATION]-(e)-[:LAST_LOCATION]->(ll:Location)
@@ -775,7 +777,7 @@ This result corresponds to [Jose Manuel Díaz Inostroza](https://www.memoriaviva
 
 ### Number of people linked to a location
 
-```cypher
+```plain
 MATCH (v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)-[:IN_LOCATION]->(l:Location)
 return l.location, count(v) as victimCount
 order by victimCount desc
@@ -808,13 +810,13 @@ limit 10
 
 ### Londres 38
 
-We observe that Londres 38 appears in the list, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and is currently open to the community, acting as a _memorial center_ (my rough translation).
+We observe that Londres 38 appears in the list, a known place in the center of Santiago that acted as a clandestine detention center from 1973 to 1975, and is currently open to the community, acting as a *memorial center* (my rough translation).
 
 There is an active group of people working on researching and exposing the activities that happened in this place, [you can read more about them here](https://www.londres38.cl/1937/w3-channel.html) (in spanish only).
 
 From the graph, we can fetch the names of the victims that passed at some point by Londres 38.
 
-```cypher
+```plain
 MATCH p=(v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)-[:IN_LOCATION]->(l:Location)
 where l.location =~ ".*Londres.*"
 return p
@@ -826,7 +828,7 @@ It is hard to represent all the names visually in one screenshot, and this is th
 
 We can get the list of names with Cypher directly
 
-```cypher
+```plain
 MATCH p=(v:Victim)-[:VICTIM_OF]->(e:ViolentEvent)-[:IN_LOCATION]->(l:Location)
 where l.location =~ ".*Londres.*"
 return l.location, v.first_name, v.last_name
@@ -950,7 +952,7 @@ return l.location, v.first_name, v.last_name
 
 From the Londres 38 site, we can learn more about some of these persons. For instance, [María Ines Alvarado Borgel](https://www.londres38.cl/1937/w3-article-97854.html#ficha_completa) was taken with 21 years by national security agents (DINA). From the english version of the report (p. 690).
 
-> _On July 17, 1974, DINA agents arrested the MIR activist María Inés ALVARADO BORGEL in the Providencia district. Her captors later took her to the home of Martín ELGUETA PINTO, who was also arrested along with Juan Rosendo CHACON OLIVARES. These two were active in MIR. Other persons were arrested with them but were later released. During the days after her arrest, her captors took María Inés Alvarado to her family's house several times. All three disappeared from the Londres No. 38 site, where they had been seen by witnesses. The Commission is convinced that the disappearance of these three people was the work of government agents who thus violated their human rights._
+> *On July 17, 1974, DINA agents arrested the MIR activist María Inés ALVARADO BORGEL in the Providencia district. Her captors later took her to the home of Martín ELGUETA PINTO, who was also arrested along with Juan Rosendo CHACON OLIVARES. These two were active in MIR. Other persons were arrested with them but were later released. During the days after her arrest, her captors took María Inés Alvarado to her family's house several times. All three disappeared from the Londres No. 38 site, where they had been seen by witnesses. The Commission is convinced that the disappearance of these three people was the work of government agents who thus violated their human rights.*
 
 The list of the 98 persons known to date that were killed, dissapeared or died after being held captives in Londres 38 is extensively documented in [https://www.londres38.cl/1937/w3-propertyvalue-35254.html](https://www.londres38.cl/1937/w3-propertyvalue-35254.html). The loaded dataset is displaying 58 of them.
 

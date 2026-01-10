@@ -15,11 +15,11 @@ There's this thing going on with the [flask context](http://flask.pocoo.org/docs
 Flask.url_for() error: Attempted to generate a URL without the application context being pushed
 ```
 
-So, what is that went _wrong_?
+So, what is that went *wrong*?
 
-Someone already wrote an [exhaustive revision](http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html) of what are the different approaches, but it actually never closes the issue of _how_ to test an application properly.
+Someone already wrote an [exhaustive revision](http://kronosapiens.github.io/blog/2014/08/14/understanding-contexts-in-flask.html) of what are the different approaches, but it actually never closes the issue of *how* to test an application properly.
 
-Others mention it, but it just _doesn't stick_
+Others mention it, but it just *doesn't stick*
 
 - [Delightful testing with pytest and Flask-SQLAlchemy - Alex Michael](http://alexmic.net/flask-sqlalchemy-pytest/)
 - [Flask url_for | Lua Software Code](https://code.luasoftware.com/tutorials/flask/flask-url-for/)
@@ -30,14 +30,14 @@ For the sake of completeness and for my own understanding of the issue, here's m
 
 ## Flask Contexts
 
-- In the lifecycle of a request, both an _Application context_ and a _Request Context_ are created at the beginning, and destroyed at the end (see [Advanced Flask Patterns - Speaker Deck, Slide 7](https://speakerdeck.com/mitsuhiko/advanced-flask-patterns-1?slide=7))
+- In the lifecycle of a request, both an *Application context* and a *Request Context* are created at the beginning, and destroyed at the end (see [Advanced Flask Patterns - Speaker Deck, Slide 7](https://speakerdeck.com/mitsuhiko/advanced-flask-patterns-1?slide=7))
 - The idea behind having two detached contexts is so an application can exist
-  outside of a request, and it's more of a design pattern (That a lot of people seems to _hate_) and it was different in previous versions of Flask [as discussed in this SO question (Which is also a great discussion about the internals of Flask).](https://stackoverflow.com/questions/15083967/when-should-flask-g-be-used)
+  outside of a request, and it's more of a design pattern (That a lot of people seems to *hate*) and it was different in previous versions of Flask [as discussed in this SO question (Which is also a great discussion about the internals of Flask).](https://stackoverflow.com/questions/15083967/when-should-flask-g-be-used)
 
-In short, _context locals_ can be summarized as (as shown in [Flask for Fun and Profit, Slide 27](https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=27))
+In short, *context locals* can be summarized as (as shown in [Flask for Fun and Profit, Slide 27](https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=27))
 
 - A pushed app context points the current app in use to `current_app`, and it gives
-  meaning to other proxies that only make sense for some parameters in a _live_
+  meaning to other proxies that only make sense for some parameters in a *live*
   app instance, like `url_for` and `g`
 - A request context is more expensive and maps the `request` proxy to the current
   request in process
@@ -64,12 +64,12 @@ at the moment, it pushes a new one. Starts and ends with a request.
 
 ### `g`
 
-A proxy that lives within a pushed **application** context, used to store _non sensible_
+A proxy that lives within a pushed **application** context, used to store *non sensible*
 information about the current application. Its life is bound to that of the request.
 
 ### `session`
 
-A proxy that lives within a pushed **request** context, used to store _sensible_
+A proxy that lives within a pushed **request** context, used to store *sensible*
 information and encrypted with your `SECRET_KEY`.
 
 ## Practical differences (in code)
@@ -130,9 +130,9 @@ g.foo should be abc, is: pqr
 ```
 
 In this first example `g` is shared across contexts because it's the same
-context in _nested contexts_, and it's a _caveat_ mentioned in the answer (some emphasis is mine)
+context in *nested contexts*, and it's a *caveat* mentioned in the answer (some emphasis is mine)
 
-> "Every request pushes a new application context". And [as the Flask docs say](http://flask.pocoo.org/docs/0.10/appcontext/), the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that _you should **never** explicitly create multiple request contexts nested inside one application context, because `flask.g` (and co) doesn't have any magic whereby it functions in the two different "levels" of context_, with different states existing independently at the application and request levels.
+> "Every request pushes a new application context". And [as the Flask docs say](http://flask.pocoo.org/docs/0.10/appcontext/), the application context "will not be shared between requests". Now, what hasn't been explicitly stated (although I guess it's implied from these statements), and what my testing clearly shows, is that *you should **never** explicitly create multiple request contexts nested inside one application context, because `flask.g` (and co) doesn't have any magic whereby it functions in the two different "levels" of context*, with different states existing independently at the application and request levels.
 >
 > The reality is that "application context" is potentially quite a misleading name, because `app.app_context()` **is** a per-request context, exactly the same as the "request context". Think of it as a "request context lite", only required in the case where you need some of the variables that normally require a request context, but you don't need access to any request object (e.g. when running batch DB operations in a shell script). If you try and extend the application context to encompass more than one request context, you're asking for trouble. So, rather than my test above, you should instead write code like this with Flask's contexts:
 
@@ -178,7 +178,7 @@ g.foo should be pqr, is: pqr
 ```
 
 In this second example, all three `with` blocks are pushing independent contexts. The difference is that
-last two are also pushing an application context _implicitly_, and the first one is not pushing a request context.
+last two are also pushing an application context *implicitly*, and the first one is not pushing a request context.
 
 ## So, how do I test my app?
 
@@ -209,13 +209,13 @@ It's also important to note that
 >     >>> ctx = app.app_context()
 >     >>> ctx.push()
 
-So far there are _two_ approaches:
+So far there are *two* approaches:
 
 1. push an application context at the beginning inside a fixture, and pop it at the end
 2. pass an application object from the fixture and produce contexts locally inside
    each test
 
-Everything in the middle is prone to produce weird results and drive you crazy, so _try_ to be consistent!
+Everything in the middle is prone to produce weird results and drive you crazy, so *try* to be consistent!
 
 [Armin Ronacher](http://lucumr.pocoo.org/about/) suggests a pytest fixture pattern in [this presentation](https://youtu.be/1ByQhAM5c1I?t=2285) ([slides](https://speakerdeck.com/mitsuhiko/flask-for-fun-and-profit?slide=52)), which relies in the first approach. The code is as follows:
 

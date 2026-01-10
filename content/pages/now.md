@@ -4,9 +4,7 @@ Status: published
 Date: 2020-09-24 20:01:00 -0600
 Modified: 2024-04-21 13:01:00 +0200
 
-(_[This is a now page](https://nownownow.com/about), and it is inspired by [Derek Sivers](https://sivers.org/now3) and [many others](https://nownownow.com/). This was written on April 21st, 2024._)
-
-
+> (*[This is a now page](https://nownownow.com/about), and it is inspired by [Derek Sivers](https://sivers.org/now3) and [many others](https://nownownow.com/). This was written on April 21st, 2024.*)
 
 # Life
 

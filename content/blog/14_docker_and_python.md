@@ -19,7 +19,7 @@ I've toyed with docker a fair amount of time. There's a lot going on to get a wo
 
 1. We use a multistage docker build to separate the **build** (`builder`) stage from the **final** (`app`) stage and a development stage (`dev`) for development purposes.
 2. We use `pipx` to install `poetry` and `poetry` to install our dependencies.
-3. We pivot from the `app-pre` stage for doing development e.g. using _devcontainers_, and from the `app` stage for production.
+3. We pivot from the `app-pre` stage for doing development e.g. using *devcontainers*, and from the `app` stage for production.
 4. We create a user and a group to avoid running as root at both levels. At both dev and prod levels, this user may or not may have access to `sudo`.
 
 What follows are my dry, unpolished notes about how to do this. My goal is to turn this into a workshop at some point.
@@ -28,7 +28,7 @@ What follows are my dry, unpolished notes about how to do this. My goal is to tu
 
 When building a docker image, we wish to achieve the following:
 
-1. Security: we don't want to run as root in production. In development, we may or may not want to run as root. We achieve this by defining a user and a group and granting sudo access depending on the docker build stage. There are rootless options such as _podman_ or even docker itself, but I haven't explored them yet.
+1. Security: we don't want to run as root in production. In development, we may or may not want to run as root. We achieve this by defining a user and a group and granting sudo access depending on the docker build stage. There are rootless options such as *podman* or even docker itself, but I haven't explored them yet.
 2. Size: we want to keep the image size as small as possible. We achieve this by using a multistage build where the final image is based on a slim python image and it only contains the virtual environment with the dependencies, installed using `poetry` at a previous stage.
 3. Speed: we want to keep the build time as small as possible. We can achieve this by leveraging docker caching and by separating the build stage from the final stage.
 4. Flexibility: we want to be able to use the same image for development and production. We achieve this by defining a `dev` stage that is based on the `app-pre` stage and that allows us to install additional dependencies for development purposes.
@@ -113,22 +113,22 @@ ARG PIPX_VERSION=1.2.0
 
 # prepare the $PATH
 ENV PATH=/opt/pipx/bin:${WORKDIR}/.venv/bin:$PATH \
-	PIPX_BIN_DIR=/opt/pipx/bin \
-	PIPX_HOME=/opt/pipx/home \
-	PIPX_VERSION=$PIPX_VERSION \
-	POETRY_VERSION=$POETRY_VERSION \
-	PYTHONPATH=${WORKDIR} \
-	# Don't buffer `stdout`
-	PYTHONUNBUFFERED=1 \
-	# Don't create `.pyc` files:
-	PYTHONDONTWRITEBYTECODE=1 \
-	# make poetry create a .venv folder in the project
-	POETRY_VIRTUALENVS_IN_PROJECT=true
+ PIPX_BIN_DIR=/opt/pipx/bin \
+ PIPX_HOME=/opt/pipx/home \
+ PIPX_VERSION=$PIPX_VERSION \
+ POETRY_VERSION=$POETRY_VERSION \
+ PYTHONPATH=${WORKDIR} \
+ # Don't buffer `stdout`
+ PYTHONUNBUFFERED=1 \
+ # Don't create `.pyc` files:
+ PYTHONDONTWRITEBYTECODE=1 \
+ # make poetry create a .venv folder in the project
+ POETRY_VIRTUALENVS_IN_PROJECT=true
 
 # ------------------------------ add user ----------------------------- #
 
 RUN groupadd --gid $USER_GID "${USERNAME}" \
-	&& useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
+ && useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
 
 # -------------------------- add python dependencies ------------------------- #
 
@@ -209,17 +209,17 @@ ARG USER_GID
 
 # refresh PATH
 ENV PATH=/opt/pipx/bin:${WORKDIR}/.venv/bin:$PATH \
-	POETRY_VERSION=$POETRY_VERSION \
-	PYTHONPATH=${WORKDIR} \
-	# Don't buffer `stdout`
-	PYTHONUNBUFFERED=1 \
-	# Don't create `.pyc` files:
-	PYTHONDONTWRITEBYTECODE=1
+ POETRY_VERSION=$POETRY_VERSION \
+ PYTHONPATH=${WORKDIR} \
+ # Don't buffer `stdout`
+ PYTHONUNBUFFERED=1 \
+ # Don't create `.pyc` files:
+ PYTHONDONTWRITEBYTECODE=1
 
 # ------------------------------ user management ----------------------------- #
 
 RUN groupadd --gid $USER_GID "${USERNAME}" \
-	&& useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
+ && useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
 
 # ------------------------------- app specific ------------------------------- #
 
@@ -263,9 +263,9 @@ USER root
 
 # Add USERNAME to sudoers. Omit if you don't need to install software after connecting.
 RUN apt-get update \
-	&& apt-get install -y sudo git iputils-ping wget \
-	&& echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
-	&& chmod 0440 /etc/sudoers.d/${USERNAME}
+ && apt-get install -y sudo git iputils-ping wget \
+ && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
+ && chmod 0440 /etc/sudoers.d/${USERNAME}
 
 USER ${USERNAME}
 
@@ -327,7 +327,7 @@ A few notes about this file:
 
 1. Using the `cache_from` option, we can use the cache from previous builds. This is useful to speed up the build process.
 2. Setting `replicas: 0` ensures that the service is never started. We only use it for building the image.
-3. We mount the virtual environment at `/app/.venv` using a _named volume_. This is very important because we don't want to share this directory with the host machine. This is useful for development purposes because otherwise you may run into permission issues when trying to install dependencies from the host machine (e.g. if you decide to use another user id or another group). See <https://stackoverflow.com/a/74015989/5819113> for details.
+3. We mount the virtual environment at `/app/.venv` using a *named volume*. This is very important because we don't want to share this directory with the host machine. This is useful for development purposes because otherwise you may run into permission issues when trying to install dependencies from the host machine (e.g. if you decide to use another user id or another group). See <https://stackoverflow.com/a/74015989/5819113> for details.
 
 Using this file, we can build the images using `docker compose build`.
 
@@ -399,22 +399,22 @@ ARG PIPX_VERSION=1.2.0
 
 # prepare the $PATH
 ENV PATH=/opt/pipx/bin:${WORKDIR}/.venv/bin:$PATH \
-	PIPX_BIN_DIR=/opt/pipx/bin \
-	PIPX_HOME=/opt/pipx/home \
-	PIPX_VERSION=$PIPX_VERSION \
-	POETRY_VERSION=$POETRY_VERSION \
-	PYTHONPATH=${WORKDIR} \
-	# Don't buffer `stdout`
-	PYTHONUNBUFFERED=1 \
-	# Don't create `.pyc` files:
-	PYTHONDONTWRITEBYTECODE=1 \
-	# make poetry create a .venv folder in the project
-	POETRY_VIRTUALENVS_IN_PROJECT=true
+ PIPX_BIN_DIR=/opt/pipx/bin \
+ PIPX_HOME=/opt/pipx/home \
+ PIPX_VERSION=$PIPX_VERSION \
+ POETRY_VERSION=$POETRY_VERSION \
+ PYTHONPATH=${WORKDIR} \
+ # Don't buffer `stdout`
+ PYTHONUNBUFFERED=1 \
+ # Don't create `.pyc` files:
+ PYTHONDONTWRITEBYTECODE=1 \
+ # make poetry create a .venv folder in the project
+ POETRY_VIRTUALENVS_IN_PROJECT=true
 
 # ------------------------------ add user ----------------------------- #
 
 RUN groupadd --gid $USER_GID "${USERNAME}" \
-	&& useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
+ && useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
 
 # -------------------------- add python dependencies ------------------------- #
 
@@ -465,17 +465,17 @@ ARG USER_GID
 
 # refresh PATH
 ENV PATH=/opt/pipx/bin:${WORKDIR}/.venv/bin:$PATH \
-	POETRY_VERSION=$POETRY_VERSION \
-	PYTHONPATH=${WORKDIR} \
-	# Don't buffer `stdout`
-	PYTHONUNBUFFERED=1 \
-	# Don't create `.pyc` files:
-	PYTHONDONTWRITEBYTECODE=1
+ POETRY_VERSION=$POETRY_VERSION \
+ PYTHONPATH=${WORKDIR} \
+ # Don't buffer `stdout`
+ PYTHONUNBUFFERED=1 \
+ # Don't create `.pyc` files:
+ PYTHONDONTWRITEBYTECODE=1
 
 # ------------------------------ user management ----------------------------- #
 
 RUN groupadd --gid $USER_GID "${USERNAME}" \
-	&& useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
+ && useradd --uid $USER_UID --gid $USER_GID -m "${USERNAME}"
 
 # ------------------------------- app specific ------------------------------- #
 
@@ -508,9 +508,9 @@ USER root
 
 # Add USERNAME to sudoers. Omit if you don't need to install software after connecting.
 RUN apt-get update \
-	&& apt-get install -y sudo git iputils-ping wget \
-	&& echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
-	&& chmod 0440 /etc/sudoers.d/${USERNAME}
+ && apt-get install -y sudo git iputils-ping wget \
+ && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
+ && chmod 0440 /etc/sudoers.d/${USERNAME}
 
 USER ${USERNAME}
 

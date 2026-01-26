@@ -11,3 +11,4 @@ I found out about weekly notes or *weeknotes* in other blogs (like [here](https:
 - [Week 1: Cajón del Maipo]({filename}weeknotes/2026-W1.md)
 - [Week 2: Engravings on pause]({filename}weeknotes/2026-W2.md)
 - [Week 3: Heatstroke]({filename}weeknotes/2026-W3.md)
+- [Week 4: Cake]({filename}weeknotes/2026-W4.md)

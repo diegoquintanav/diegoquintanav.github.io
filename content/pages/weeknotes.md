@@ -13,3 +13,4 @@ I found out about weekly notes or *weeknotes* in other blogs (like [here](https:
 - [Week 3: Heatstroke]({filename}weeknotes/2026-W3.md)
 - [Week 4: Cake]({filename}weeknotes/2026-W4.md)
 - [Week 5: MCP]({filename}weeknotes/2026-W5.md)
+- [Week 6: Train Dreams]({filename}weeknotes/2026-W6.md)

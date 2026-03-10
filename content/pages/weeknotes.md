@@ -17,3 +17,4 @@ I found out about weekly notes or *weeknotes* in other blogs (like [here](https:
 - [Week 7: Coaching]({filename}weeknotes/2026-W7.md)
 - [Week 8: Injury]({filename}weeknotes/2026-W8.md)
 - [Week 9: Diamond Dogs]({filename}weeknotes/2026-W9.md)
+- [Week 10: Shock! Shock!]({filename}weeknotes/2026-W10.md)

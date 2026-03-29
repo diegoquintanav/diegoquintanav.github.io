@@ -18,3 +18,6 @@ I found out about weekly notes or *weeknotes* in other blogs (like [here](https:
 - [Week 8: Injury]({filename}weeknotes/2026-W8.md)
 - [Week 9: Diamond Dogs]({filename}weeknotes/2026-W9.md)
 - [Week 10: Shock! Shock!]({filename}weeknotes/2026-W10.md)
+- [Week 11: Sloppity slop]({filename}weeknotes/2026-W11.md)
+- [Week 12: Hanlon's Razor]({filename}weeknotes/2026-W12.md)
+- [Week 13: Making friends and influencing people]({filename}weeknotes/2026-W13.md)
